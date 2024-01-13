@@ -11,7 +11,7 @@
     "prepare": "lerna run prepare",
     "postinstall": "theia check:theia-version",
     "start:browser": "yarn --cwd browser-app start",
-    "start:electron": "yarn --cwd electron-app start",
+    "start:electron": "yarn --cwd gestola-core rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "watch:browser": "lerna run --parallel watch --ignore electron-app",
     "watch:electron": "lerna run --parallel watch --ignore browser-app"
   },

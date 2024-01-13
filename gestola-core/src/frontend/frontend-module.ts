@@ -6,20 +6,20 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution, WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
 //import { FileNavigatorContribution } from './file-navigator-contribution';
-import { CommandContribution, MenuContribution } from '@theia/core';
-import { GestolaCoreCommandContribution, GestolaCoreMenuContribution } from './trash/gestola-core-contribution';
 import { WidgetContribution } from './widget-contribution';
 import { WidgetWidget } from './widget-widget';
 import { GestolaProjectExplorerWidgetFactory } from './project-explorer/gestola-project-explorer-widget-factory';
 import { GestolaProjectsExplorerWidget } from './project-explorer/projects-explorer-widget';
 import { GestolaProjectsExplorerContribution } from './project-explorer/projects-explorer-contribution';
+import { ProjectManager } from './project-manager/project-manager';
 
 export default new ContainerModule((bind,_unbind, isBound, rebind) => {
-    
-    bind(CommandContribution).to(GestolaCoreCommandContribution);
-    bind(MenuContribution).to(GestolaCoreMenuContribution);
 
+    //Project Manager
+    bind(FrontendApplicationContribution).toService(ProjectManager);
+    bind(ProjectManager).toSelf();
 
+    //Trash
     bindViewContribution(bind, WidgetContribution);
     bind(FrontendApplicationContribution).toService(WidgetContribution);
     bind(WidgetWidget).toSelf();
@@ -41,21 +41,4 @@ export default new ContainerModule((bind,_unbind, isBound, rebind) => {
     bind(GestolaProjectExplorerWidgetFactory).toSelf().inSingletonScope();
     bind(WidgetFactory).toService(GestolaProjectExplorerWidgetFactory);
 
-    /*
-    bind(WidgetFactory).toDynamicValue(ctx => ({
-        id: WidgetWidget.ID,
-        createWidget: () => ctx.container.get<WidgetWidget>(WidgetWidget)
-    })).inSingletonScope();
-    */
-
-   // rebind(NavigatorWidgetFactory).to(CustomNavigatorWidgetFactory).inSingletonScope();
-
-/*
-    bindViewContribution(bind, WidgetContribution);
-    bind(FrontendApplicationContribution).toService(WidgetContribution);
-    bind(WidgetWidget).toSelf();
-    bind(WidgetFactory).toDynamicValue(ctx => ({
-        id: WidgetWidget.ID,
-        createWidget: () => ctx.container.get<WidgetWidget>(WidgetWidget)
-    })).inSingletonScope();*/
 });

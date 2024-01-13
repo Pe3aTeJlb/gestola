@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "rimraf": "latest",
-    "typescript": "~4.5.5"
+    "typescript": "~4.5.5",
+    "@types/node": "18.x"
   },
   "scripts": {
     "rebuild": "yarn run clean && yarn run build",
