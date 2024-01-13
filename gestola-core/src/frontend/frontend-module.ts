@@ -11,13 +11,8 @@ import { WidgetWidget } from './widget-widget';
 import { GestolaProjectExplorerWidgetFactory } from './project-explorer/gestola-project-explorer-widget-factory';
 import { GestolaProjectsExplorerWidget } from './project-explorer/projects-explorer-widget';
 import { GestolaProjectsExplorerContribution } from './project-explorer/projects-explorer-contribution';
-import { ProjectManager } from './project-manager/project-manager';
 
 export default new ContainerModule((bind,_unbind, isBound, rebind) => {
-
-    //Project Manager
-    bind(FrontendApplicationContribution).toService(ProjectManager);
-    bind(ProjectManager).toSelf();
 
     //Trash
     bindViewContribution(bind, WidgetContribution);

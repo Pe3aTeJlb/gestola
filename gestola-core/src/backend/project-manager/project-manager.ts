@@ -1,7 +1,8 @@
-import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
-import { FrontendApplicationContribution, CommonMenus } from '@theia/core/lib/browser';
+import { injectable, inject } from '@theia/core/shared/inversify';
+import { CommonMenus } from '@theia/core/lib/browser';
+import { BackendApplicationContribution } from '@theia/core/lib/node/backend-application';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import {  CommandRegistry, MessageService } from '@theia/core/lib/common';
+import { CommandRegistry, MessageService, MaybePromise} from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
@@ -25,7 +26,7 @@ export interface ProjectFavoriteStatusChangeEvent {
 //export const PROJECT_MANAGER_FILE = [...CommonMenus.FILE, '2_workspace'];
 
 @injectable()
-export class ProjectManager implements FrontendApplicationContribution {
+export class ProjectManager implements BackendApplicationContribution {
 
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
@@ -51,8 +52,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     private _onDidChangeProjectList: Emitter<ProjectsListChangeEvent>;
     private _onDidChangeFavoriteStatus: Emitter<ProjectFavoriteStatusChangeEvent>;
 
-    @postConstruct()
-    protected init(): void {
+    initialize(): MaybePromise<void> {
         this.doInit();
     }
 
