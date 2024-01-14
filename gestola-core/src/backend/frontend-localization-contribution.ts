@@ -15,8 +15,8 @@ export class FrontendLocalizationContribution implements LocalizationContributio
     }
 
     async registerLocalizations(registry: LocalizationRegistry): Promise<void> {
-        registry.registerLocalizationFromRequire(await this.getLanguageInformation('en', 'English', 'English'), require('./i18n/nls.en.json'));
-        registry.registerLocalizationFromRequire(await this.getLanguageInformation('ru', 'Russian', 'Russian'), require('./i18n/nls.ru.json'));
+        registry.registerLocalizationFromRequire(await this.getLanguageInformation('en', 'English', 'English'), require('./i18n/en.json'));
+        registry.registerLocalizationFromRequire(await this.getLanguageInformation('ru', 'Russian', 'Russian'), require('./i18n/ru.json'));
     }
 
 }

@@ -9,18 +9,19 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "latest"
+    "@theia/core": "latest",
+    "@theia/cli": "latest"
   },
   "devDependencies": {
     "rimraf": "latest",
-    "typescript": "~4.5.5",
-    "@types/node": "18.x"
+    "typescript": "~4.5.5"
   },
   "scripts": {
-    "rebuild": "yarn run clean && yarn run build",
+    "rebuild": "yarn run clean && yarn run build && yarn localize",
     "clean": "rimraf lib",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "localize": "cp -r ./src/backend/i18n ./lib/backend/i18n"
   },
   "theiaExtensions": [
     {
