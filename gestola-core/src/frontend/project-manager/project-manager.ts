@@ -1,6 +1,4 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
-import { CommonMenus } from '@theia/core/lib/browser';
-import { BackendApplicationContribution } from '@theia/core/lib/node/backend-application';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
 import { CommandRegistry, MessageService, MaybePromise} from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
@@ -8,8 +6,10 @@ import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
 import { defProjStruct, Project } from './project';
-import { ProjectManagerCommands } from './project-manager-commands';
 import { MenuModelRegistry } from '@theia/core/lib/common';
+import { CommonMenus, FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { ProjectManagerCommands } from './project-manager-commands';
+import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -23,10 +23,8 @@ export interface ProjectFavoriteStatusChangeEvent {
     readonly project: Project;
 }
 
-//export const PROJECT_MANAGER_FILE = [...CommonMenus.FILE, '2_workspace'];
-
 @injectable()
-export class ProjectManager implements BackendApplicationContribution {
+export class ProjectManager implements FrontendApplicationContribution {
 
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
@@ -42,6 +40,9 @@ export class ProjectManager implements BackendApplicationContribution {
 
     @inject(MenuModelRegistry)
     protected readonly menuRegistry: MenuModelRegistry;
+
+    @inject(FileService)
+    protected readonly fileService: FileService;
 
     projRoot: FileStat | undefined;
 
@@ -104,11 +105,11 @@ export class ProjectManager implements BackendApplicationContribution {
             canSelectFolders: true
         };
 
-        this.fileDialogService.showOpenDialog(options).then(uri => {
+        this.fileDialogService.showOpenDialog(options).then(async uri => {
 
             if (uri) {
-                if(utils.FSProvider.isDirEmpty(uri.path.fsPath())){
-                    utils.FSProvider.createDirStructure(uri.path.fsPath(), defProjStruct);
+                if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
+                    utils.FSProvider.createDirStructure(this.fileService, uri, defProjStruct);
                     this.addProject([uri]);
                 } else {
                     this.messageService.error("Selected directory is not empty");
@@ -129,13 +130,13 @@ export class ProjectManager implements BackendApplicationContribution {
             canSelectFolders: true
         };
 
-        this.fileDialogService.showOpenDialog(options).then(uri => {
+        this.fileDialogService.showOpenDialog(options).then(async uri => {
 
             if (uri) {
-                if(utils.FSProvider.isDirEmpty(uri.path.fsPath())){
+                if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
                     this.messageService.error("Selected directory is not a Gestola project");
                 } else {
-                    if(this.checkForGestolaProject(uri.path.fsPath())){
+                    if(await this.checkForGestolaProject(uri)){
                         if(this.openedProjects.filter(i => i.rootUri === uri).length > 0) {
                             this.setProject(this.openedProjects.filter(i => i.rootUri === uri)[0]);
                         } else {
@@ -152,10 +153,10 @@ export class ProjectManager implements BackendApplicationContribution {
 
     }
 
-    private refreshProjectsList(){
+    private async refreshProjectsList(){
         this.openedProjects = [];
         for(let i = 0; i < this.workspaceService.tryGetRoots().length; i++){
-            if(this.checkForGestolaProject(this.workspaceService.tryGetRoots()[i].resource.path.fsPath())){
+            if(await this.checkForGestolaProject(this.workspaceService.tryGetRoots()[i].resource)){
                 let j = i;
                 this.openedProjects.push(new Project(this.workspaceService.tryGetRoots()[j]));
             }
@@ -163,13 +164,13 @@ export class ProjectManager implements BackendApplicationContribution {
         this.fireProjectsListChangeEvent();
     }
 
-    addProjectByDrop(uri: URI | undefined){
+    async addProjectByDrop(uri: URI | undefined){
         
         if(!uri){
             return;
         }
 
-        if(this.checkForGestolaProject(uri.path.fsPath())){
+        if(await this.checkForGestolaProject(uri)){
             this.addProject([uri]);
         } else {
             this.messageService.error("Selected directory is not a Gestola project");
@@ -240,15 +241,15 @@ export class ProjectManager implements BackendApplicationContribution {
 
     //Utils
 
-    private checkForGestolaProject(path: string){
+    private async checkForGestolaProject(path: URI){
 
-        let dirs = utils.FSProvider.getSubDirList(path);
-
+        let dirs = Array.from((await utils.FSProvider.getSubDirList(this.fileService, path)).values());
+        
         return (
-            dirs.filter( i => i.match(new RegExp('system', "i"))).length   === 1 &&
-            dirs.filter( i => i.match(new RegExp('rtl', "i"))).length      === 1 &&
-            dirs.filter( i => i.match(new RegExp('topology', "i"))).length === 1 &&
-            dirs.filter( i => i.match(new RegExp('other', "i"))).length    === 1 
+            dirs.filter( i => i[0].match(new RegExp('system', "i"))).length   === 1 &&
+            dirs.filter( i => i[0].match(new RegExp('rtl', "i"))).length      === 1 &&
+            dirs.filter( i => i[0].match(new RegExp('topology', "i"))).length === 1 &&
+            dirs.filter( i => i[0].match(new RegExp('other', "i"))).length    === 1 
         );
 
     }
