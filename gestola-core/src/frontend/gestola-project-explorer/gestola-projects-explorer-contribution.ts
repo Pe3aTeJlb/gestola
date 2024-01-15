@@ -2,13 +2,13 @@ import { injectable } from '@theia/core/shared/inversify';
 import { MenuModelRegistry } from '@theia/core';
 import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
-import { GestolaProjectsExplorerWidget } from './projects-explorer-widget';
+import { ProjectsExplorerWidget } from './project-explorer/project-explorer-widget';
 import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer-widget-factory';
 
 export const GestolaProjectsExplorerCommand: Command = { id: 'gestola:command' };
 
 @injectable()
-export class GestolaProjectsExplorerContribution extends AbstractViewContribution<GestolaProjectsExplorerWidget> {
+export class GestolaProjectsExplorerContribution extends AbstractViewContribution<ProjectsExplorerWidget> {
 
     /**
      * `AbstractViewContribution` handles the creation and registering
@@ -21,8 +21,8 @@ export class GestolaProjectsExplorerContribution extends AbstractViewContributio
     constructor() {
         super({
             viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
-            widgetId: GestolaProjectsExplorerWidget.ID,
-            widgetName: GestolaProjectsExplorerWidget.LABEL,
+            widgetId: ProjectsExplorerWidget.ID,
+            widgetName: ProjectsExplorerWidget.LABEL,
             defaultWidgetOptions: { area: 'left' },
             toggleCommandId: GestolaProjectsExplorerCommand.id
         });

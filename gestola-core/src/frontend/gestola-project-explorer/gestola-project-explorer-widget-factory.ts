@@ -8,7 +8,7 @@ import {
 } from '@theia/core/lib/browser';
 //import { nls } from '@theia/core/lib/common/nls';
 import { WidgetWidget } from '../widget-widget';
-import { GestolaProjectsExplorerWidget } from './projects-explorer-widget';
+import { ProjectsExplorerWidget } from './project-explorer/project-explorer-widget';
 //import { FILE_NAVIGATOR_ID  } from '@theia/navigator/lib/browser/navigator-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
@@ -55,7 +55,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         const projectsNavigatorWidget = await this.widgetManager.getOrCreateWidget(WidgetWidget.ID);
         viewContainer.addWidget(projectsNavigatorWidget, this.projectsNavigatorWidgetOptions);
 
-        const navigatorWidget = await this.widgetManager.getOrCreateWidget(GestolaProjectsExplorerWidget.ID);
+        const navigatorWidget = await this.widgetManager.getOrCreateWidget(ProjectsExplorerWidget.ID);
         viewContainer.addWidget(navigatorWidget, this.projectsNavigatorWidgetOptions2);
 
         return viewContainer;
