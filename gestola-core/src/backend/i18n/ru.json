@@ -3,6 +3,13 @@
         "project-manager": {
             "open-gestola-project": "Открыть проект Гестола",
             "create-gestola-project": "Создать проект Гестола"
+        },
+        "gestola-project-explorer": {
+            "project-explorer": "Гестола: Обозреватель Проекта",
+            "file-explorer-systemLvl": "Системная Модель", 
+            "file-explorer-rtlLvl": "RTL", 
+            "file-explorer-topologyLvl": "Топология", 
+            "file-explorer-otherFiles": "Другие файлы"
         }
     }
 }

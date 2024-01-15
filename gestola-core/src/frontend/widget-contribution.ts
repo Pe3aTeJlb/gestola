@@ -3,7 +3,7 @@ import { MenuModelRegistry } from '@theia/core';
 import { WidgetWidget } from './widget-widget';
 import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
-import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer/gestola-project-explorer-widget-factory';
+import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer/project-explorer/gestola-project-explorer-widget-factory';
 
 export const WidgetCommand: Command = { id: 'widget:command' };
 

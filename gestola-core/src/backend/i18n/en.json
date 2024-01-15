@@ -3,6 +3,13 @@
         "project-manager": {
             "open-gestola-project": "Open Gstola Project",
             "create-gestola-project": "Create Gestola Project"
+        },
+        "gestola-project-explorer": {
+            "project-explorer": "Gestola: Project Explorer",
+            "file-explorer-systemLvl": "System Model", 
+            "file-explorer-rtlLvl": "RTL", 
+            "file-explorer-topologyLvl": "Topology", 
+            "file-explorer-otherFiles": "Other Files"
         }
     }
 }
