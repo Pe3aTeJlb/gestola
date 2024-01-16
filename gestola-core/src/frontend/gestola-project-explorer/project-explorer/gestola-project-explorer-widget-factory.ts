@@ -1,22 +1,16 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
-import {
-    codicon,
-    ViewContainer,
-    ViewContainerTitleOptions,
-    WidgetFactory,
-    WidgetManager
-} from '@theia/core/lib/browser';
+import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, WidgetManager } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common/nls';
 import { WidgetWidget } from '../../widget-widget';
-import { ProjectExplorerWidget } from './project-explorer-widget';
+import { FamilyTreeWidget } from '../../tree/family-tree-widget';
+//import { ProjectExplorerWidget } from './project-explorer-widget';
 //import { FILE_NAVIGATOR_ID  } from '@theia/navigator/lib/browser/navigator-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
-    //label: nls.localizeByDefault('Explorer'),
-    label: nls.localize("gestola-core/gestola-project-explorer/project-explorer", "Gestola: Project Explorer"),
+    label: nls.localize("gestola-core/gestola-project-explorer/gestola-project-explorer", "Gestola: Project Explorer"),
     iconClass: codicon('files'),
-    closeable: false
+    closeable: true
 };
 
 @injectable()
@@ -43,20 +37,30 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
 
     @inject(ViewContainer.Factory)
     protected readonly viewContainerFactory: ViewContainer.Factory;
-    @inject(WidgetManager) protected readonly widgetManager: WidgetManager;
+    
+    @inject(WidgetManager) 
+    protected readonly widgetManager: WidgetManager;
 
     async createWidget(): Promise<ViewContainer> {
+
         const viewContainer = this.viewContainerFactory({
             id: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-project-explorer'
+            progressLocationId: 'testtest'
         });
         viewContainer.setTitleOptions(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS);
-
-        const projectsNavigatorWidget = await this.widgetManager.getOrCreateWidget(WidgetWidget.ID);
-        viewContainer.addWidget(projectsNavigatorWidget, this.projectsNavigatorWidgetOptions);
-
+/*
         const navigatorWidget = await this.widgetManager.getOrCreateWidget(ProjectExplorerWidget.ID);
-        viewContainer.addWidget(navigatorWidget, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(navigatorWidget, this.projectsNavigatorWidgetOptions);
+        
+
+        const navigatorWidget2 = await this.widgetManager.getOrCreateWidget(FamilyTreeWidget.ID);
+        viewContainer.addWidget(navigatorWidget2, this.projectsNavigatorWidgetOptions2);
+*/
+        const projectsNavigatorWidget = await this.widgetManager.getOrCreateWidget(WidgetWidget.ID);
+        const navigatorWidget2 = await this.widgetManager.getOrCreateWidget(FamilyTreeWidget.ID);
+        
+        viewContainer.addWidget(projectsNavigatorWidget, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(navigatorWidget2, this.projectsNavigatorWidgetOptions2);
 
         return viewContainer;
     }

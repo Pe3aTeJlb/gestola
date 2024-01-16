@@ -5,6 +5,7 @@
             "create-gestola-project": "Создать проект Гестола"
         },
         "gestola-project-explorer": {
+            "gestola-project-explorer": "Гестола: Обозреватель Проекта",
             "project-explorer": "Гестола: Обозреватель Проекта",
             "file-explorer-systemLvl": "Системная Модель", 
             "file-explorer-rtlLvl": "RTL", 

@@ -1,10 +1,11 @@
 {
     "gestola-core": {
         "project-manager": {
-            "open-gestola-project": "Open Gstola Project",
+            "open-gestola-project": "Open Gestola Project",
             "create-gestola-project": "Create Gestola Project"
         },
         "gestola-project-explorer": {
+            "gestola-project-explorer": "Gestola: Project Explorer",
             "project-explorer": "Gestola: Project Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 

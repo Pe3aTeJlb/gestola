@@ -1,74 +1,55 @@
-import {
-    TreeImpl,
-    CompositeTreeNode,
-    TreeNode,
-    ExpandableTreeNode,
-    SelectableTreeNode
-  } from "@theia/core/lib/browser";
-  import { injectable } from "inversify";
+import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
+import { inject, injectable } from "inversify";
+import { ProjectManager } from "../../project-manager/project-manager";
+import { Project } from "../../project-manager/project";
   
-  @injectable()
-  export class ProjectExplorerImpl extends TreeImpl {
+@injectable()
+export class ProjectExplorerImpl extends TreeImpl {
 
-    protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
+  @inject(ProjectManager) 
+  protected readonly projManager: ProjectManager;
 
-        return Promise.resolve(this.projManager.openedProjects.sort((a, b) => {
-			if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
-				return a.projName.localeCompare(b.projName);	
-			} else {
-				return a.isFavorite ? -1 : 1;
-			}
-		}));
+  protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
-      if (FamilyRootNode.is(parent)) {
-        return Promise.resolve(
-          parent.family.members.map(m => this.makeMemberNode(m))
-        );
+    return Promise.resolve(this.projManager.openedProjects.sort((a, b) => {
+      if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
+        return a.projName.localeCompare(b.projName);	
+      } else {
+        return a.isFavorite ? -1 : 1;
       }
-  
-      if (MemberNode.is(parent) && parent.children) {
-        return Promise.resolve(
-          parent.member.children?.map(m => this.makeMemberNode(m)) || []
-        );
-      }
-  
-      return Promise.resolve(Array.from(parent.children));
+    }).map(i => this.makeTreeNode(i)));
 
+   /* if (FamilyRootNode.is(parent)) {
+      return Promise.resolve(
+        parent.family.members.map(m => this.makeMemberNode(m))
+      );
     }
-  
-    makeMemberNode(m: Member) {
-      const node: MemberNode = {
-        id: m.firstName + m.nickName,
-        name: `${m.firstName} (${m.nickName})`,
+
+    if (MemberNode.is(parent) && parent.children) {
+      return Promise.resolve(
+        parent.member.children?.map(m => this.makeMemberNode(m)) || []
+      );
+    }
+
+    return Promise.resolve(Array.from(parent.children));*/
+
+  }
+
+    makeTreeNode(proj: Project) {
+      const node: ProjectTreeItem = {
+        id: proj.projName,
+        name: proj.projName,
         parent: undefined,
-        expanded: false,
         selected: false,
         children: [],
-        member: m
+        project: proj
       };
       return node;
     }
-  }
-  
-  export interface FamilyRootNode extends CompositeTreeNode {
-    family: Family;
-  }
-  
-  export namespace FamilyRootNode {
-    export function is(node: object): node is FamilyRootNode {
-      return !!node && "family" in node;
-    }
-  }
-  
-  export interface MemberNode
-    extends CompositeTreeNode,
-      ExpandableTreeNode,
-      SelectableTreeNode {
-    member: Member;
-  }
-  
-  export namespace MemberNode {
-    export function is(node: object): node is MemberNode {
-      return !!node && "member" in node;
-    }
-  }
+
+
+ }
+
+export interface ProjectTreeItem extends CompositeTreeNode, SelectableTreeNode {
+  project: Project
+}

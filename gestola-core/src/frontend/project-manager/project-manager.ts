@@ -1,13 +1,13 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { CommandRegistry, MessageService, MaybePromise} from '@theia/core/lib/common';
+import { CommandRegistry, MessageService, MaybePromise, CommandContribution, MenuContribution} from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
 import { defProjStruct, Project } from './project';
 import { MenuModelRegistry } from '@theia/core/lib/common';
-import { CommonMenus, FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { CommonMenus } from '@theia/core/lib/browser';
 import { ProjectManagerCommands } from './project-manager-commands';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
@@ -24,7 +24,7 @@ export interface ProjectFavoriteStatusChangeEvent {
 }
 
 @injectable()
-export class ProjectManager implements FrontendApplicationContribution {
+export class ProjectManager implements CommandContribution, MenuContribution {
 
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
@@ -34,12 +34,6 @@ export class ProjectManager implements FrontendApplicationContribution {
     
     @inject(MessageService) 
     private readonly messageService: MessageService;
-
-    @inject(CommandRegistry)
-    protected readonly commandRegistry: CommandRegistry;
-
-    @inject(MenuModelRegistry)
-    protected readonly menuRegistry: MenuModelRegistry;
 
     @inject(FileService)
     protected readonly fileService: FileService;
@@ -72,21 +66,29 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.openedProjects.length > 0 
         ? this.currProj = this.openedProjects[0]
         : this.currProj = undefined;
+        
+    }
 
-        this.commandRegistry.registerCommand(ProjectManagerCommands.CREATE_GESTOLA_PROJECT, {
+    registerCommands(registry: CommandRegistry): void {
+
+        registry.registerCommand(ProjectManagerCommands.CREATE_GESTOLA_PROJECT, {
             execute: () => this.createProject()
         });
 
-        this.commandRegistry.registerCommand(ProjectManagerCommands.OPEN_GESTOLA_PROJECT, {
+        registry.registerCommand(ProjectManagerCommands.OPEN_GESTOLA_PROJECT, {
             execute: () => this.openProject()
         });
 
-        this.menuRegistry.registerMenuAction(CommonMenus.FILE, {
+    }
+
+    registerMenus(menus: MenuModelRegistry): void {
+
+        menus.registerMenuAction(CommonMenus.FILE_NEW_TEXT, {
             commandId: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.id,
             order: 'a'
         });
 
-        this.menuRegistry.registerMenuAction(CommonMenus.FILE, {
+        menus.registerMenuAction(CommonMenus.FILE_OPEN, {
             commandId: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
             order: 'a'
         });
