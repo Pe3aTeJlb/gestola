@@ -6,7 +6,7 @@
         },
         "gestola-project-explorer": {
             "gestola-project-explorer": "Gestola: Project Explorer",
-            "project-explorer": "Gestola: Project Explorer",
+            "project-explorer": "Project Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Topology", 

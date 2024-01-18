@@ -4,12 +4,22 @@ import { ProjectManager } from "../../project-manager/project-manager";
 import { Project } from "../../project-manager/project";
   
 @injectable()
-export class ProjectExplorerImpl extends TreeImpl {
+export class ProjectExplorerTreeImpl extends TreeImpl {
 
   @inject(ProjectManager) 
   protected readonly projManager: ProjectManager;
 
   protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(this.projManager.openedProjects.sort((a, b) => {
+      if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
+        return a.projName.localeCompare(b.projName);	
+      } else {
+        return a.isFavorite ? -1 : 1;
+      }
+    }).map(i => this.makeTreeNode(i)));
+    console.log("??????????????????");
 
     return Promise.resolve(this.projManager.openedProjects.sort((a, b) => {
       if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
@@ -41,6 +51,7 @@ export class ProjectExplorerImpl extends TreeImpl {
         name: proj.projName,
         parent: undefined,
         selected: false,
+        visible: true,
         children: [],
         project: proj
       };

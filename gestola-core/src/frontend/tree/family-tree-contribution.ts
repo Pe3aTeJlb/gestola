@@ -2,7 +2,7 @@ import { AbstractViewContribution } from "@theia/core/lib/browser";
 import { injectable } from "inversify";
 import { FamilyTreeWidget } from "./family-tree-widget";
 import { Command, CommandRegistry, MenuModelRegistry } from "@theia/core";
-import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from "../gestola-project-explorer/project-explorer/gestola-project-explorer-widget-factory";
+//import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from "../gestola-project-explorer/project-explorer/gestola-project-explorer-widget-factory";
 
 export const FamilyTreeWidgetCommand: Command = {
   id: "family-tree-widget:command"
@@ -14,7 +14,7 @@ export class FamilyTreeWidgetContribution extends AbstractViewContribution<
 > {
   constructor() {
     super({
-      viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
+      //viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
       widgetId: FamilyTreeWidget.ID,
       widgetName: FamilyTreeWidget.LABEL,
       defaultWidgetOptions: { area: "left" },

@@ -8,7 +8,7 @@
   "scripts": {
     "build:browser": "yarn --cwd browser-app bundle",
     "build:electron": "yarn --cwd gestola-core rebuild && yarn --cwd electron-app bundle",
-    "rebuild:electron": "yarn --cwd gestola-core rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "rebuild:electron": "yarn --cwd gestola-core rebuild && yarn --cwd electron-app bundle",
     "prepare": "lerna run prepare",
     "postinstall": "theia check:theia-version",
     "start:browser": "yarn --cwd browser-app start",
