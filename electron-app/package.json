@@ -16,6 +16,7 @@
     "@theia/process": "latest",
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
+    "@theia/vsx-registry": "latest",
     "gestola-core": "0.0.0"
   },
   "devDependencies": {
@@ -30,5 +31,6 @@
   },
   "theia": {
     "target": "electron"
-  }
+  },
+  "theiaPluginsDir": "../plugins"
 }

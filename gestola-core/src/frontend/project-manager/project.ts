@@ -1,4 +1,3 @@
-import { inject } from '@theia/core/shared/inversify';
 import { URI } from '@theia/core/lib/common/uri';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
@@ -7,10 +6,7 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 export const defProjStruct = ['system', 'rtl', 'topology', 'other'];
 
-export class Project{
-
-    @inject(FileService)
-    protected readonly fileService: FileService;
+export class Project {
 
     rootUri: URI;
     rootPath: Path;
@@ -36,14 +32,16 @@ export class Project{
                                 new RegExp('other', "i")
                             ];
     
-    constructor(workspaceRoot: FileStat){
+    constructor(fileService: FileService, workspaceRoot: FileStat){
 
         this.rootUri = workspaceRoot.resource;
         this.rootPath = workspaceRoot.resource.path;
         
         this.projName = workspaceRoot.name;
 
-        utils.FSProvider.getSubDirList(this.fileService, this.rootUri).then(res => {
+        console.log("Project subdir for paths");
+
+        utils.FSProvider.getSubDirList(fileService, this.rootUri).then(res => {
         
             let dirs = Array.from(res.flatMap(i => i[0][0]));
 

@@ -13,6 +13,7 @@ export default new ContainerModule((bind, _unbind) => {
     //Project Manager
     bind(CommandContribution).to(ProjectManager);
     bind(MenuContribution).to(ProjectManager);
+    bind(FrontendApplicationContribution).toService(ProjectManager);
     bind(ProjectManager).toSelf().inSingletonScope();
 
     //Works until this

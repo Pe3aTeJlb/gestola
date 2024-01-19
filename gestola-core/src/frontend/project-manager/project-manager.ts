@@ -1,13 +1,13 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { CommandRegistry, MessageService, MaybePromise, CommandContribution, MenuContribution} from '@theia/core/lib/common';
+import { CommandRegistry, MessageService, CommandContribution, MenuContribution} from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
 import { defProjStruct, Project } from './project';
 import { MenuModelRegistry } from '@theia/core/lib/common';
-import { CommonMenus } from '@theia/core/lib/browser';
+import { CommonMenus, FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { ProjectManagerCommands } from './project-manager-commands';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
@@ -24,7 +24,7 @@ export interface ProjectFavoriteStatusChangeEvent {
 }
 
 @injectable()
-export class ProjectManager implements CommandContribution, MenuContribution {
+export class ProjectManager implements FrontendApplicationContribution, CommandContribution, MenuContribution {
 
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
@@ -47,7 +47,8 @@ export class ProjectManager implements CommandContribution, MenuContribution {
     private _onDidChangeProjectList: Emitter<ProjectsListChangeEvent>;
     private _onDidChangeFavoriteStatus: Emitter<ProjectFavoriteStatusChangeEvent>;
 
-    initialize(): MaybePromise<void> {
+    initialize(): void {
+        console.log("proj manager init");
         this.doInit();
     }
 
@@ -160,7 +161,7 @@ export class ProjectManager implements CommandContribution, MenuContribution {
         for(let i = 0; i < this.workspaceService.tryGetRoots().length; i++){
             if(await this.checkForGestolaProject(this.workspaceService.tryGetRoots()[i].resource)){
                 let j = i;
-                this.openedProjects.push(new Project(this.workspaceService.tryGetRoots()[j]));
+                this.openedProjects.push(new Project(this.fileService, this.workspaceService.tryGetRoots()[j]));
             }
         }
         this.fireProjectsListChangeEvent();
@@ -244,6 +245,8 @@ export class ProjectManager implements CommandContribution, MenuContribution {
     //Utils
 
     private async checkForGestolaProject(path: URI){
+
+        console.log("check for gestola project");
 
         let dirs = Array.from((await utils.FSProvider.getSubDirList(this.fileService, path)).values());
         

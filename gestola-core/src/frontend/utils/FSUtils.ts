@@ -19,6 +19,11 @@ export namespace FSProvider{
     }
 
     export async function getSubDirList(fileService: FileService, path: URI) {
+
+        console.log(path);
+        let provider = await fileService.activateProvider(path.scheme);
+        console.log("lolxd provider ", provider);
+        console.log("lolxd dir", await provider.readdir(path));
         return await (await fileService.activateProvider(path.scheme)).readdir(path);
         //return fs.readdirSync(path);
     }

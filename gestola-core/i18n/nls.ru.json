@@ -1,4 +1,6 @@
 {
+    "a":"TESTTESTESTESTSETTESTES",
+    "gestola-core-test": "nls for test",
     "gestola-core": {
         "project-manager": {
             "open-gestola-project": "Открыть проект Гестола",
