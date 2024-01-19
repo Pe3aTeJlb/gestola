@@ -39,13 +39,9 @@ export class Project {
         
         this.projName = workspaceRoot.name;
 
-        console.log("Project subdir for paths");
-
         utils.FSProvider.getSubDirList(fileService, this.rootUri).then(res => {
         
             let dirs = Array.from(res.flatMap(i => i[0][0]));
-
-            console.log(dirs);
 
             dirs.filter( i => i[0].match(new RegExp('system', "i"))).length   === 1 &&
             dirs.filter( i => i[0].match(new RegExp('rtl', "i"))).length      === 1 &&

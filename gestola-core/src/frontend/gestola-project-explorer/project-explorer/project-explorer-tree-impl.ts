@@ -11,19 +11,6 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
 
   protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log(parent.toString());
-    console.log(this.projManager.toString());
-    console.log(this.projManager.openedProjects.toString());
-    console.log(this.projManager.openedProjects.sort((a, b) => {
-      if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
-        return a.projName.localeCompare(b.projName);	
-      } else {
-        return a.isFavorite ? -1 : 1;
-      }
-    }).map(i => this.makeTreeNode(i)));
-    console.log("??????????????????");
-
     return Promise.resolve(this.projManager.openedProjects.sort((a, b) => {
       if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
         return a.projName.localeCompare(b.projName);	

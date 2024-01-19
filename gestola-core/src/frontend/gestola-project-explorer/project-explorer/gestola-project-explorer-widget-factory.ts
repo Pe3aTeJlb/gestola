@@ -7,7 +7,7 @@ import { ProjectExplorerWidget } from './project-explorer-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
-    label: nls.localize("gestola-core/gestola-project-explorer/gestola-project-explorer", "Gestola: Project Explorer"),
+    label: nls.localize("gestola-core/gestola-project-explorer/view-container-title", "Gestola: Projects Explorer"),
     iconClass: codicon('files'),
     closeable: true
 };

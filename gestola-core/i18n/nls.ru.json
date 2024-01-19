@@ -1,14 +1,13 @@
 {
-    "a":"TESTTESTESTESTSETTESTES",
-    "gestola-core-test": "nls for test",
+   
     "gestola-core": {
         "project-manager": {
             "open-gestola-project": "Открыть проект Гестола",
             "create-gestola-project": "Создать проект Гестола"
         },
         "gestola-project-explorer": {
-            "gestola-project-explorer": "Гестола: Обозреватель Проекта",
-            "project-explorer": "Обозреватель Проектов",
+            "view-container-title": "Гестола: Обозреватель Проектов",
+            "project-explorer-view-title": "Обозреватель Проектов",
             "file-explorer-systemLvl": "Системная Модель", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Топология", 

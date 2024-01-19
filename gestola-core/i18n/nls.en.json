@@ -1,14 +1,12 @@
 {
-    "a":"TESTTESTESTESTSETTESTES",
-    "gestola-core-test": "nls for test",
     "gestola-core": {
         "project-manager": {
             "open-gestola-project": "Open Gestola Project",
             "create-gestola-project": "Create Gestola Project"
         },
         "gestola-project-explorer": {
-            "gestola-project-explorer": "Gestola: Project Explorer",
-            "project-explorer": "Project Explorer",
+            "view-container-title": "Gestola: Project Explorer",
+            "project-explorer-view-title": "Project Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Topology", 

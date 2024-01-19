@@ -3,12 +3,12 @@ import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-con
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { ProjectExplorerWidget } from './project-explorer-widget';
 import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer-widget-factory';
-import { Command, CommandRegistry, MenuModelRegistry, nls } from "@theia/core";
+import { Command, CommandRegistry, MenuModelRegistry } from "@theia/core";
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 
 export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
     id: "project-explorer:toggle",
-    label: nls.localize("gestola-core/gestola-project-explorer/project-explorer", "Gestola Project Explorer")
+    label: ProjectExplorerWidget.MENU_LABEL
 };
 
 @injectable()
@@ -18,7 +18,7 @@ export class ProjectExplorerViewContribution extends AbstractViewContribution<Pr
         super({
             viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
             widgetId: ProjectExplorerWidget.ID,
-            widgetName: ProjectExplorerWidget.LABEL,
+            widgetName: ProjectExplorerWidget.MENU_LABEL,
             defaultWidgetOptions: { area: 'left' },
             toggleCommandId: PROJECT_EXPLORER_TOGGLE_COMMAND.id,
         });

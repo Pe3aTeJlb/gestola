@@ -48,7 +48,6 @@ export class ProjectManager implements FrontendApplicationContribution, CommandC
     private _onDidChangeFavoriteStatus: Emitter<ProjectFavoriteStatusChangeEvent>;
 
     initialize(): void {
-        console.log("proj manager init");
         this.doInit();
     }
 
@@ -245,8 +244,6 @@ export class ProjectManager implements FrontendApplicationContribution, CommandC
     //Utils
 
     private async checkForGestolaProject(path: URI){
-
-        console.log("check for gestola project");
 
         let dirs = Array.from((await utils.FSProvider.getSubDirList(this.fileService, path)).values());
         

@@ -17,7 +17,8 @@ export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
     static readonly ID = 'gestola-core:project-explorer';
-    static readonly LABEL = nls.localize("gestola-core/gestola-project-explorer/project-explorer", "NLS Doesnt work");
+    static readonly MENU_LABEL = nls.localize("gestola-core/gestola-project-explorer/view-container-title", "Gestola: Projects Explorer")
+    static readonly VIEW_LABEL = nls.localize("gestola-core/gestola-project-explorer/project-explorer-view-title", "Project Explorer");
 
     @inject(ProjectManager)
     private readonly projManager: ProjectManager;
@@ -29,9 +30,9 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     ){
 
         super(props, model, contextMenuRenderer);
-        console.log("nls test2", nls.locale, nls.localization, nls.localize("a", "NLS Doesnt work"));
+
         this.id = ProjectExplorerWidget.ID;
-        this.title.label = ProjectExplorerWidget.LABEL;
+        this.title.label = ProjectExplorerWidget.VIEW_LABEL;
 
         const root: CompositeTreeNode = {
             id: "dummy-root",
