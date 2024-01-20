@@ -8,6 +8,9 @@
         "gestola-project-explorer": {
             "view-container-title": "Гестола: Обозреватель Проектов",
             "project-explorer-view-title": "Обозреватель Проектов",
+            "view-welcome": "Вы еще не создали проект",
+            "create-project": "Создать проект",
+            "open-project": "Открыть проект",
             "file-explorer-systemLvl": "Системная Модель", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Топология", 

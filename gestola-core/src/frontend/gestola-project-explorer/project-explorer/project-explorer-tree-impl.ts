@@ -36,7 +36,7 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
   }
 
     makeTreeNode(proj: Project) {
-      const node: ProjectTreeItem = {
+      const node: ProjectTreeNode = {
         id: proj.projName,
         name: proj.projName,
         parent: undefined,
@@ -51,6 +51,6 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
 
  }
 
-export interface ProjectTreeItem extends CompositeTreeNode, SelectableTreeNode {
+export interface ProjectTreeNode extends CompositeTreeNode, SelectableTreeNode {
   project: Project
 }
