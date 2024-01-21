@@ -21,16 +21,15 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     static readonly MENU_LABEL = nls.localize("gestola-core/gestola-project-explorer/view-container-title", "Gestola: Projects Explorer")
     static readonly VIEW_LABEL = nls.localize("gestola-core/gestola-project-explorer/project-explorer-view-title", "Project Explorer");
 
-    @inject(ProjectManager)
-    private readonly projManager: ProjectManager;
-
     constructor(
         @inject(TreeProps) readonly props: TreeProps,
         @inject(TreeModel) readonly model: TreeModel,
-        @inject(ContextMenuRenderer) contextMenuRenderer: ContextMenuRenderer
+        @inject(ContextMenuRenderer) contextMenuRenderer: ContextMenuRenderer,
+        @inject(ProjectManager) readonly projManager: ProjectManager,
     ){
-
+    
         super(props, model, contextMenuRenderer);
+        console.log("main widget");
 
         this.id = ProjectExplorerWidget.ID;
         this.title.label = ProjectExplorerWidget.VIEW_LABEL;
@@ -45,8 +44,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
         this.model.root = root;
 
         this.projManager.onDidChangeProjectList(() => this.model.refresh());
-		this.projManager.onDidChangeProjectFavoriteStatus(() => this.model.refresh());
-        /*
+		this.projManager.onDidChangeProjectFavoriteStatus(() => this.model.refresh())
 		this.projManager.onDidChangeProject((event) => {
 			if(event.proj){
 				this.title.label = ProjectExplorerWidget.VIEW_LABEL + ": " + event.proj.projName;
@@ -54,7 +52,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 				this.title.label = ProjectExplorerWidget.VIEW_LABEL;
 			}
 		});
-*/
+
     }
 
     static createContainer(container: interfaces.Container): Container {

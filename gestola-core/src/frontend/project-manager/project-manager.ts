@@ -1,14 +1,12 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { CommandRegistry, MessageService, CommandContribution, MenuContribution} from '@theia/core/lib/common';
+import { MessageService } from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
 import { defProjStruct, Project } from './project';
-import { MenuModelRegistry } from '@theia/core/lib/common';
-import { CommonMenus, FrontendApplicationContribution } from '@theia/core/lib/browser';
-import { ProjectManagerCommands } from './project-manager-commands';
+import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 export interface ProjectChangeEvent {
@@ -24,7 +22,7 @@ export interface ProjectFavoriteStatusChangeEvent {
 }
 
 @injectable()
-export class ProjectManager implements FrontendApplicationContribution, CommandContribution, MenuContribution {
+export class ProjectManager implements FrontendApplicationContribution {
 
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
@@ -43,21 +41,15 @@ export class ProjectManager implements FrontendApplicationContribution, CommandC
     openedProjects: Project[];
     currProj: Project | undefined;
 
-    private _onDidChangeProject: Emitter<ProjectChangeEvent>;
-    private _onDidChangeProjectList: Emitter<ProjectsListChangeEvent>;
-    private _onDidChangeFavoriteStatus: Emitter<ProjectFavoriteStatusChangeEvent>;
-
     initialize(): void {
         this.doInit();
     }
 
     protected async doInit(): Promise<void> {
 
-        this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
+        console.log("proj manager");
 
-        this._onDidChangeProject = new Emitter<ProjectChangeEvent>();
-        this._onDidChangeProjectList = new Emitter<ProjectsListChangeEvent>();
-        this._onDidChangeFavoriteStatus = new Emitter<ProjectFavoriteStatusChangeEvent>();
+        this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
     
         this.openedProjects = [];
 
@@ -67,32 +59,6 @@ export class ProjectManager implements FrontendApplicationContribution, CommandC
         ? this.currProj = this.openedProjects[0]
         : this.currProj = undefined;
         
-    }
-
-    registerCommands(registry: CommandRegistry): void {
-
-        registry.registerCommand(ProjectManagerCommands.CREATE_GESTOLA_PROJECT, {
-            execute: () => this.createProject()
-        });
-
-        registry.registerCommand(ProjectManagerCommands.OPEN_GESTOLA_PROJECT, {
-            execute: () => this.openProject()
-        });
-
-    }
-
-    registerMenus(menus: MenuModelRegistry): void {
-
-        menus.registerMenuAction(CommonMenus.FILE_NEW_TEXT, {
-            commandId: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.id,
-            order: 'a'
-        });
-
-        menus.registerMenuAction(CommonMenus.FILE_OPEN, {
-            commandId: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
-            order: 'a'
-        });
-
     }
 
 
@@ -211,32 +177,32 @@ export class ProjectManager implements FrontendApplicationContribution, CommandC
         this.fireProjectFavoriteStatusChangeEvent(proj);
     }
 
-
-
+   
     //Listeners
+
+    protected readonly onDidChangeProjectEmitter = new Emitter<ProjectChangeEvent>();
+    get onDidChangeProject(): Event<ProjectChangeEvent> {
+		return this.onDidChangeProjectEmitter.event;
+	}
     private fireProjectChangeEvent(){
-        this._onDidChangeProject.fire({proj: this.currProj} as ProjectChangeEvent);
+        this.onDidChangeProjectEmitter.fire({proj: this.currProj} as ProjectChangeEvent);
     }
 
+    protected readonly onDidChangeProjectListEmitter = new Emitter<ProjectsListChangeEvent>();
+    get onDidChangeProjectList(): Event<ProjectsListChangeEvent> {
+		return this.onDidChangeProjectListEmitter.event;
+	}
     private fireProjectsListChangeEvent(){
         //vscode.commands.executeCommand('setContext', 'gestola-core.isProjOpened', this.openedProjects.length > 0);
-        this._onDidChangeProjectList.fire({projects: this.openedProjects} as ProjectsListChangeEvent);
+        this.onDidChangeProjectListEmitter.fire({projects: this.openedProjects} as ProjectsListChangeEvent);
     }
 
-    private fireProjectFavoriteStatusChangeEvent(proj: Project){
-        this._onDidChangeFavoriteStatus.fire({project: proj} as ProjectFavoriteStatusChangeEvent);
-    }
-
-    get onDidChangeProject(): Event<ProjectChangeEvent> {
-		return this._onDidChangeProject.event;
-	}
-
-    get onDidChangeProjectList(): Event<ProjectsListChangeEvent> {
-		return this._onDidChangeProjectList.event;
-	}
-
+    protected readonly onDidChangeFavoriteStatusEmitter = new Emitter<ProjectFavoriteStatusChangeEvent>();
     get onDidChangeProjectFavoriteStatus(): Event<ProjectFavoriteStatusChangeEvent> {
-        return this._onDidChangeFavoriteStatus.event;
+        return this.onDidChangeFavoriteStatusEmitter.event;
+    }
+    private fireProjectFavoriteStatusChangeEvent(proj: Project){
+        this.onDidChangeFavoriteStatusEmitter.fire({project: proj} as ProjectFavoriteStatusChangeEvent);
     }
 
 
