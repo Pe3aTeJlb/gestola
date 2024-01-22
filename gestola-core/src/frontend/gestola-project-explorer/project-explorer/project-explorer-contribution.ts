@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { ProjectExplorerWidget } from './project-explorer-widget';
-import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer-widget-factory';
+import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from '../gestola-project-explorer-widget-factory';
 import { Command, CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, nls } from "@theia/core";
 import { CommonMenus, FrontendApplicationContribution, Widget } from '@theia/core/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';

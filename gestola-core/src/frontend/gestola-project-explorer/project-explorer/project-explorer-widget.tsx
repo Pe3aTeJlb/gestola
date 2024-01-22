@@ -29,7 +29,6 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     ){
     
         super(props, model, contextMenuRenderer);
-        console.log("main widget");
 
         this.id = ProjectExplorerWidget.ID;
         this.title.label = ProjectExplorerWidget.VIEW_LABEL;
