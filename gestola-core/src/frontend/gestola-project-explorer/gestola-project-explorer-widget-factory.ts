@@ -45,7 +45,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         const rtlModelFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl-model"});
         const topologyModelFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-topology-model"});
         const otherFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-otherFiles"});
-       
+        
         viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions);
         viewContainer.addWidget(systemModelFileNavigator, this.projectsNavigatorWidgetOptions);
         viewContainer.addWidget(rtlModelFileNavigator, this.projectsNavigatorWidgetOptions);

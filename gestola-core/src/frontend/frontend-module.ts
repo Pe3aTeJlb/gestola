@@ -5,6 +5,7 @@ import { ProjectManager } from './project-manager/project-manager';
 import { ProjectExplorerViewContribution } from './gestola-project-explorer/project-explorer/project-explorer-contribution';
 import { GestolaProjectExplorerWidgetFactory } from './gestola-project-explorer/gestola-project-explorer-widget-factory';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
+import {} from "@theia/terminal/lib/browser/terminal-widget-impl"
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './gestola-project-explorer/file-explorer/file-navigator-widget';
 
 export default new ContainerModule((bind, _unbind) => {
@@ -36,11 +37,8 @@ export default new ContainerModule((bind, _unbind) => {
     bind(WidgetFactory).toDynamicValue(ctx => ({
         id: GESTOLA_FILE_NAVIGATOR_ID,
         createWidget: (options: GestolaFileNavigatorOptions) => {
-
             const child = createFileNavigatorContainer(ctx.container, options);
             child.bind(GestolaFileNavigatorOptions).toConstantValue(options);
-            child.bind('terminal-dom-id').toConstantValue(options.navigatorID);
-
             return child.get(GestolaFileNavigatorWidget);
         }
     }));

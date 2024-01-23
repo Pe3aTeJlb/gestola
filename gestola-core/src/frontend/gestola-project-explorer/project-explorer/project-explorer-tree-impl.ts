@@ -19,20 +19,6 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
       }
     }).map(i => this.makeTreeNode(i)));
 
-   /* if (FamilyRootNode.is(parent)) {
-      return Promise.resolve(
-        parent.family.members.map(m => this.makeMemberNode(m))
-      );
-    }
-
-    if (MemberNode.is(parent) && parent.children) {
-      return Promise.resolve(
-        parent.member.children?.map(m => this.makeMemberNode(m)) || []
-      );
-    }
-
-    return Promise.resolve(Array.from(parent.children));*/
-
   }
 
     makeTreeNode(proj: Project) {

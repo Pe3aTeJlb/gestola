@@ -23,7 +23,7 @@ export interface ProjectFavoriteStatusChangeEvent {
 
 @injectable()
 export class ProjectManager implements FrontendApplicationContribution {
-
+   
     @inject(WorkspaceService)
     private readonly workspaceService: WorkspaceService;
 
@@ -50,12 +50,11 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
     
         this.openedProjects = [];
+        await this.refreshProjectsList();
 
-        this.refreshProjectsList();
-        
-        this.openedProjects.length > 0 
-        ? this.currProj = this.openedProjects[0]
-        : this.currProj = undefined;
+        if(this.openedProjects.length > 1){
+            this.setProject(this.openedProjects[0]);
+        }
         
     }
 
@@ -121,10 +120,11 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     private async refreshProjectsList(){
         this.openedProjects = [];
-        for(let i = 0; i < this.workspaceService.tryGetRoots().length; i++){
-            if(await this.checkForGestolaProject(this.workspaceService.tryGetRoots()[i].resource)){
+        let roots = await this.workspaceService.roots;
+        for(let i = 0; i < roots.length; i++){
+            if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
-                this.openedProjects.push(new Project(this.fileService, this.workspaceService.tryGetRoots()[j]));
+                this.openedProjects.push(new Project(this.fileService, roots[j]));
             }
         }
         this.fireProjectsListChangeEvent();

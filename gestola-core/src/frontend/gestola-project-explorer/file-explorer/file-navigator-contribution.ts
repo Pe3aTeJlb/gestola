@@ -17,62 +17,63 @@
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
-    CommonCommands,
+    //CommonCommands,
     CompositeTreeNode,
     FrontendApplication,
     FrontendApplicationContribution,
-    KeybindingRegistry,
-    OpenerService,
-    PreferenceScope,
+    //KeybindingRegistry,
+    //OpenerService,
+    //PreferenceScope,
     PreferenceService,
     SelectableTreeNode,
     Widget,
     NavigatableWidget,
-    ApplicationShell,
-    TabBar,
-    Title,
+    //ApplicationShell,
+    //TabBar,
+    //Title,
     SHELL_TABBAR_CONTEXT_MENU
 } from '@theia/core/lib/browser';
-import { FileDownloadCommands } from '@theia/filesystem/lib/browser/download/file-download-command-contribution';
+//import { FileDownloadCommands } from '@theia/filesystem/lib/browser/download/file-download-command-contribution';
 import {
     CommandRegistry,
-    isOSX,
+   // isOSX,
     MenuModelRegistry,
     MenuPath,
-    Mutable,
+    //Mutable,
 } from '@theia/core/lib/common';
 import {
     DidCreateNewResourceEvent,
     WorkspaceCommandContribution,
-    WorkspaceCommands,
-    WorkspacePreferences,
-    WorkspaceService
+   // WorkspaceCommands,
+   // WorkspacePreferences,
+   // WorkspaceService
 } from '@theia/workspace/lib/browser';
-import { EXPLORER_VIEW_CONTAINER_ID } from '@theia/navigator/lib/browser/navigator-widget-factory';
 import { FILE_NAVIGATOR_ID, FileNavigatorWidget } from '@theia/navigator/lib/browser/navigator-widget';
-import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
-import { FileNavigatorFilter } from '@theia/navigator/lib/browser/navigator-filter';
+//import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
+//import { FileNavigatorFilter } from '@theia/navigator/lib/browser/navigator-filter';
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
 import {
-    TabBarToolbarContribution,
-    TabBarToolbarItem,
+   // TabBarToolbarContribution,
+    //TabBarToolbarItem,
     TabBarToolbarRegistry
 } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { FileSystemCommands } from '@theia/filesystem/lib/browser/filesystem-frontend-contribution';
-import { NavigatorDiff, NavigatorDiffCommands } from '@theia/navigator/lib/browser/navigator-diff';
+//import { FileSystemCommands } from '@theia/filesystem/lib/browser/filesystem-frontend-contribution';
+import { NavigatorDiff } from '@theia/navigator/lib/browser/navigator-diff';
 import { DirNode, FileNode } from '@theia/filesystem/lib/browser';
 import { FileNavigatorModel } from '@theia/navigator/lib/browser/navigator-model';
 import { ClipboardService } from '@theia/core/lib/browser/clipboard-service';
 import { SelectionService } from '@theia/core/lib/common/selection-service';
 import { OpenEditorsWidget } from '@theia/navigator/lib/browser/open-editors-widget/navigator-open-editors-widget';
-import { OpenEditorsContextMenu } from '@theia/navigator/lib/browser/open-editors-widget/navigator-open-editors-menus';
-import { OpenEditorsCommands } from '@theia/navigator/lib/browser/open-editors-widget/navigator-open-editors-commands';
-import { nls } from '@theia/core/lib/common/nls';
+//import { OpenEditorsContextMenu } from '@theia/navigator/lib/browser/open-editors-widget/navigator-open-editors-menus';
+//import { OpenEditorsCommands } from '@theia/navigator/lib/browser/open-editors-widget/navigator-open-editors-commands';
+//import { nls } from '@theia/core/lib/common/nls';
 import URI from '@theia/core/lib/common/uri';
-import { UriAwareCommandHandler } from '@theia/core/lib/common/uri-command-handler';
+//import { UriAwareCommandHandler } from '@theia/core/lib/common/uri-command-handler';
 import { FileNavigatorCommands } from '@theia/navigator/lib/browser/file-navigator-commands';
-import { GESTOLA_FILE_NAVIGATOR_ID } from './file-navigator-widget';
+//import { GESTOLA_FILE_NAVIGATOR_ID } from './file-navigator-widget';
+//import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from '../gestola-project-explorer-widget-factory';
+import { ProjectManager } from '../../project-manager/project-manager';
 export { FileNavigatorCommands };
 
 /* Navigator `More Actions...` toolbar item groups.
@@ -119,7 +120,7 @@ export namespace NavigatorContextMenu {
 export const GESTOLA_FILE_NAVIGATOR_TOGGLE_COMMAND_ID = 'gestola-fileNavigator:toggle';
 
 @injectable()
-export class FileNavigatorContribution extends AbstractViewContribution<FileNavigatorWidget> implements FrontendApplicationContribution, TabBarToolbarContribution {
+export class FileNavigatorContribution extends AbstractViewContribution<FileNavigatorWidget> implements FrontendApplicationContribution {
 
    @inject(ClipboardService)
    protected readonly clipboardService: ClipboardService;
@@ -148,32 +149,16 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
    @inject(WorkspaceCommandContribution)
    protected readonly workspaceCommandContribution: WorkspaceCommandContribution;
 
-   constructor(
-       @inject(FileNavigatorPreferences) protected readonly fileNavigatorPreferences: FileNavigatorPreferences,
-       @inject(OpenerService) protected readonly openerService: OpenerService,
-       @inject(FileNavigatorFilter) protected readonly fileNavigatorFilter: FileNavigatorFilter,
-       @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService,
-       @inject(WorkspacePreferences) protected readonly workspacePreferences: WorkspacePreferences
-   ) {
-       super({
-           viewContainerId: EXPLORER_VIEW_CONTAINER_ID,
-           widgetId: GESTOLA_FILE_NAVIGATOR_ID,
-           widgetName: "WIDGET NAME",
-           defaultWidgetOptions: {
-               area: 'left',
-               rank: 100
-           },
-           toggleCommandId: GESTOLA_FILE_NAVIGATOR_TOGGLE_COMMAND_ID,
-       });
-   }
+   @inject(ProjectManager)
+   protected readonly projManager: ProjectManager;
 
+   
    @postConstruct()
    protected init(): void {
        this.doInit();
    }
 
    protected async doInit(): Promise<void> {
-       await this.fileNavigatorPreferences.ready;
        this.shell.onDidChangeCurrentWidget(() => this.onCurrentWidgetChangedHandler());
 
        const updateFocusContextKeys = () => {
@@ -185,6 +170,7 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
        this.shell.onDidChangeActiveWidget(updateFocusContextKeys);
        this.workspaceCommandContribution.onDidCreateNewFile(async event => this.onDidCreateNewResource(event));
        this.workspaceCommandContribution.onDidCreateNewFolder(async event => this.onDidCreateNewResource(event));
+       this.projManager.onDidChangeProject(async () => this.refreshWorkspace());
    }
 
    private async onDidCreateNewResource(event: DidCreateNewResourceEvent): Promise<void> {
@@ -209,7 +195,7 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
    async initializeLayout(app: FrontendApplication): Promise<void> {
        await this.openView();
    }
-
+/*
    override registerCommands(registry: CommandRegistry): void {
        super.registerCommands(registry);
        registry.registerCommand(FileNavigatorCommands.FOCUS, {
@@ -331,7 +317,7 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
            isVisible: widget => this.withWidget(widget, () => this.workspaceService.opened)
        });
    }
-
+*/
    protected get editorWidgets(): NavigatableWidget[] {
        const openEditorsWidget = this.widgetManager.tryGetWidget<OpenEditorsWidget>(OpenEditorsWidget.ID);
        return openEditorsWidget?.editorWidgets ?? [];
@@ -354,7 +340,7 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
        }
        return false;
    }
-
+/*
    override registerMenus(registry: MenuModelRegistry): void {
        super.registerMenus(registry);
        registry.registerMenuAction(SHELL_TABBAR_CONTEXT_REVEAL, {
@@ -575,10 +561,11 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
            priority: 1,
        });
    }
-
+*/
    /**
     * Register commands to the `More Actions...` navigator toolbar item.
     */
+   /*
    public registerMoreToolbarItem = (item: Mutable<TabBarToolbarItem>) => {
        const commandId = item.command;
        const id = 'navigator.tabbar.toolbar.' + commandId;
@@ -596,7 +583,7 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
        item.command = id;
        this.tabbarToolbarRegistry.registerItem(item);
    };
-
+*/
    /**
     * Reveals and selects node in the file navigator to which given widget is related.
     * Does nothing if given widget undefined or doesn't have related resource.
@@ -620,9 +607,9 @@ export class FileNavigatorContribution extends AbstractViewContribution<FileNavi
    }
 
    protected onCurrentWidgetChangedHandler(): void {
-       if (this.fileNavigatorPreferences['explorer.autoReveal']) {
+       /*if (this.fileNavigatorPreferences['explorer.autoReveal']) {
            this.selectWidgetFileNode(this.shell.currentWidget);
-       }
+       }*/
    }
 
    /**

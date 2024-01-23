@@ -8,6 +8,7 @@ import { FrontendApplicationStateService } from '@theia/core/lib/browser/fronten
 import { ProgressService } from '@theia/core/lib/common/progress-service';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Disposable } from '@theia/core/lib/common/disposable';
+import { ProjectManager } from '../../project-manager/project-manager';
 
 @injectable()
 export class GestolaFileNavigatorModel extends FileTreeModel {
@@ -16,6 +17,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     @inject(FileNavigatorTree) protected override readonly tree: FileNavigatorTree;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
     @inject(FrontendApplicationStateService) protected readonly applicationState: FrontendApplicationStateService;
+    @inject(ProjectManager) protected projManager: ProjectManager;
 
     @inject(ProgressService)
     protected readonly progressService: ProgressService;
@@ -73,6 +75,9 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         }
         this.toDispose.push(this.workspaceService.onWorkspaceChanged(() => this.updateRoot()));
         this.toDispose.push(this.workspaceService.onWorkspaceLocationChanged(() => this.updateRoot()));
+        this.toDispose.push(this.projManager.onDidChangeProjectList(() => this.updateRoot()));
+        this.toDispose.push(this.projManager.onDidChangeProject(() => this.updateRoot()));
+
         if (this.selectedNodes.length) {
             return;
         }
@@ -120,21 +125,44 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     }
 
     protected async createRoot(): Promise<TreeNode | undefined> {
-        console.log("lolxdxd", this.navigatorId);
+
+        console.log("lolxdxd", this.rootId, this.projManager.currProj);
+        if(this.projManager.currProj){
+
+            const node = WorkspaceNode.createRoot();
+
+            console.log("for test", this.projManager.currProj.systemFolderFStat);
+
+            switch(this.rootId){        
+                case "file-navigator-system-model": console.log("ahaahhaahahah1"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.systemFolderFStat, node)); break;
+                case "file-navigator-rtl-mode": console.log("ahaahhaahahah2"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.rtlFolderFStat, node)); break;
+                case "file-navigator-topology-mode": console.log("ahaahhaahaha3"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.topologyFolderFStat, node)); break;
+                case "file-navigator-otherFiles":console.log("ahaahhaahahah4"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.otherFolderFStat, node)); break;
+            }
+
+            return node;
+
+        }
+/*
         if (this.workspaceService.opened) {
+
             const stat = this.workspaceService.workspace;
+
             const isMulti = (stat) ? !stat.isDirectory : false;
+
             const workspaceNode = isMulti
                 ? this.createMultipleRootNode()
                 : WorkspaceNode.createRoot();
             const roots = await this.workspaceService.roots;
+
             for (const root of roots) {
                 workspaceNode.children.push(
                     await this.tree.createWorkspaceRoot(root, workspaceNode)
                 );
             }
             return workspaceNode;
-        }
+        }*/
+
     }
 
     /**

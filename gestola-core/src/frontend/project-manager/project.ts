@@ -18,10 +18,10 @@ export class Project {
     topologyFolderUri: URI;
     otherFolderUri: URI;
 
-    systemFolderPath: Path;
-    rtlFolderPath: Path;
-    topologyFolderPath: Path;
-    otherFolderPath: Path;
+    systemFolderFStat: FileStat;
+    rtlFolderFStat: FileStat;
+    topologyFolderFStat: FileStat;
+    otherFolderFStat: FileStat;
 
     isFavorite: boolean;    
 
@@ -48,15 +48,10 @@ export class Project {
             dirs.filter( i => i[0].match(new RegExp('topology', "i"))).length === 1 &&
             dirs.filter( i => i[0].match(new RegExp('other', "i"))).length    === 1 
 
-            this.systemFolderPath = this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[0]))[0]);
-            this.rtlFolderPath = this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[1]))[0]);
-            this.topologyFolderPath = this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[2]))[0]);
-            this.otherFolderPath = this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[3]))[0]);        
-
-            this.systemFolderUri = URI.fromFilePath(this.systemFolderPath.fsPath());
-            this.rtlFolderUri = URI.fromFilePath(this.rtlFolderPath.fsPath());
-            this.topologyFolderUri = URI.fromFilePath(this.topologyFolderPath.fsPath());
-            this.otherFolderUri = URI.fromFilePath(this.otherFolderPath.fsPath());
+            this.systemFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[0]))[0]).fsPath()));
+            this.rtlFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[1]))[0]).fsPath()));
+            this.topologyFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[2]))[0]).fsPath()));
+            this.otherFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[3]))[0]).fsPath()));
 
         });
         

@@ -17,6 +17,7 @@ import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GestolaFileNavigatorModel } from './file-navigator-model';
 
+
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-core:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
 export const CLASS = 'theia-Files';
@@ -48,9 +49,10 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         @inject(GestolaFileNavigatorOptions) opt: GestolaFileNavigatorOptions,
     ) {
         super(props, model, contextMenuRenderer);
-        this.id = GESTOLA_FILE_NAVIGATOR_ID;
+        this.id = opt.navigatorID;
         this.addClass(CLASS);
         this.model.navigatorId = opt.navigatorID;
+
     }
 
     @postConstruct()
@@ -216,10 +218,19 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     }
 
 }
-
+/*
+export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
+    ...defaultTreeProps,
+    virtualized: false,
+    multiSelect: false,
+    search: false,
+    leftPadding: 22
+};
+*/
 export function createFileNavigatorContainer(parent: interfaces.Container, opt: GestolaFileNavigatorOptions): Container {
 
-    const child = createFileTreeContainer(parent, {
+    
+    const widget = createFileTreeContainer(parent, {
         tree: FileNavigatorTree,
         model: GestolaFileNavigatorModel,
         widget: GestolaFileNavigatorWidget,
@@ -230,9 +241,35 @@ export function createFileNavigatorContainer(parent: interfaces.Container, opt: 
         },
     });
 
-    return child;
+/*
+    const widget = createTreeContainer(parent);
+
+    widget.unbind(TreeImpl);
+    widget.bind(FileNavigatorTree).toSelf();
+    widget.rebind(Tree).toService(FileNavigatorTree);
+
+    widget.unbind(TreeModelImpl);
+    widget.bind(GestolaFileNavigatorModel).toSelf();
+    widget.rebind(TreeModel).toService(GestolaFileNavigatorModel);
+
+    //widget.unbind(TreeWidget);
+    widget.bind(GestolaFileNavigatorWidget).toSelf();
+    widget.rebind(TreeWidget).toService(GestolaFileNavigatorWidget);
+
+    widget.unbind(NoopTreeDecoratorService);
+    widget.bind(NavigatorDecoratorService).toSelf();
+    widget.rebind(TreeDecoratorService).toService(NavigatorDecoratorService);
+
+    widget.bind(CompressionToggle).toConstantValue({ compress: false });
+    widget.bind(TreeCompressionService).toSelf();
+
+    widget.rebind(TreeProps).toConstantValue(PROJECT_EXPLORER_WIDGET_TREE_PROPS);
+*/
+    return widget;
+
 }
 
 export function createFileNavigatorWidget(parent: interfaces.Container, opt: GestolaFileNavigatorOptions): GestolaFileNavigatorWidget {
     return createFileNavigatorContainer(parent, opt).get(GestolaFileNavigatorWidget);
 }
+
