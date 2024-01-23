@@ -9,14 +9,13 @@ import { isOSX, environment } from '@theia/core';
 import * as React from '@theia/core/shared/react';
 import { nls } from '@theia/core/lib/common/nls';
 import { AbstractNavigatorTreeWidget } from "@theia/navigator/lib/browser/abstract-navigator-tree-widget";
-import { FileNavigatorModel } from "@theia/navigator/lib/browser/navigator-model";
 import { NavigatorContextKeyService } from "@theia/navigator/lib/browser/navigator-context-key-service";
 import { WorkspaceNode, WorkspaceRootNode } from '@theia/navigator/lib/browser/navigator-tree';
 import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-contribution';
 import { createFileTreeContainer } from '@theia/filesystem/lib/browser';
 import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
-//import { GestolaFileNavigatorModel } from './file-navigator-model';
+import { GestolaFileNavigatorModel } from './file-navigator-model';
 
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-core:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
@@ -32,7 +31,7 @@ export const GESTOLA_FILE_NAVIGATOR_PROPS: TreeProps = {
 
 export const GestolaFileNavigatorOptions = Symbol('GestolaFileNavigatorOptions');
 export interface GestolaFileNavigatorOptions {
-    readonly id: string;
+    readonly navigatorID: string;
 }
 
 @injectable()
@@ -44,12 +43,14 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
     constructor(
         @inject(TreeProps) props: TreeProps,
-        @inject(FileNavigatorModel) override readonly model: FileNavigatorModel,
+        @inject(GestolaFileNavigatorModel) override readonly model: GestolaFileNavigatorModel,
         @inject(ContextMenuRenderer) contextMenuRenderer: ContextMenuRenderer,
+        @inject(GestolaFileNavigatorOptions) opt: GestolaFileNavigatorOptions,
     ) {
         super(props, model, contextMenuRenderer);
         this.id = GESTOLA_FILE_NAVIGATOR_ID;
         this.addClass(CLASS);
+        this.model.navigatorId = opt.navigatorID;
     }
 
     @postConstruct()
@@ -216,19 +217,22 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
 }
 
-export function createFileNavigatorContainer(parent: interfaces.Container): Container {
+export function createFileNavigatorContainer(parent: interfaces.Container, opt: GestolaFileNavigatorOptions): Container {
+
     const child = createFileTreeContainer(parent, {
         tree: FileNavigatorTree,
-        //model: GestolaFileNavigatorModel,
-        model: FileNavigatorModel,
+        model: GestolaFileNavigatorModel,
         widget: GestolaFileNavigatorWidget,
         decoratorService: NavigatorDecoratorService,
-        props: GESTOLA_FILE_NAVIGATOR_PROPS,
+        props: {
+            ...GESTOLA_FILE_NAVIGATOR_PROPS,
+            ...opt 
+        },
     });
 
     return child;
 }
 
-export function createFileNavigatorWidget(parent: interfaces.Container): GestolaFileNavigatorWidget {
-    return createFileNavigatorContainer(parent).get(GestolaFileNavigatorWidget);
+export function createFileNavigatorWidget(parent: interfaces.Container, opt: GestolaFileNavigatorOptions): GestolaFileNavigatorWidget {
+    return createFileNavigatorContainer(parent, opt).get(GestolaFileNavigatorWidget);
 }

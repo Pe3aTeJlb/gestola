@@ -20,6 +20,16 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     @inject(ProgressService)
     protected readonly progressService: ProgressService;
 
+    protected rootId: string | undefined;
+
+    get navigatorId(): string | undefined {
+        return this.rootId;
+    }
+
+    set navigatorId(id: string | undefined) {
+        this.rootId = id;
+    }
+
     @postConstruct()
     protected override init(): void {
         super.init();
@@ -110,6 +120,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     }
 
     protected async createRoot(): Promise<TreeNode | undefined> {
+        console.log("lolxdxd", this.navigatorId);
         if (this.workspaceService.opened) {
             const stat = this.workspaceService.workspace;
             const isMulti = (stat) ? !stat.isDirectory : false;

@@ -37,10 +37,9 @@ export default new ContainerModule((bind, _unbind) => {
         id: GESTOLA_FILE_NAVIGATOR_ID,
         createWidget: (options: GestolaFileNavigatorOptions) => {
 
-            console.log(options.id);
-            const child = createFileNavigatorContainer(ctx.container);
+            const child = createFileNavigatorContainer(ctx.container, options);
             child.bind(GestolaFileNavigatorOptions).toConstantValue(options);
-            child.bind('terminal-dom-id').toConstantValue(options.id);
+            child.bind('terminal-dom-id').toConstantValue(options.navigatorID);
 
             return child.get(GestolaFileNavigatorWidget);
         }
