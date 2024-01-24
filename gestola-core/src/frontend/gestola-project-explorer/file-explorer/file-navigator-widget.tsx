@@ -10,7 +10,7 @@ import * as React from '@theia/core/shared/react';
 import { nls } from '@theia/core/lib/common/nls';
 import { AbstractNavigatorTreeWidget } from "@theia/navigator/lib/browser/abstract-navigator-tree-widget";
 import { NavigatorContextKeyService } from "@theia/navigator/lib/browser/navigator-context-key-service";
-import { WorkspaceNode, WorkspaceRootNode } from '@theia/navigator/lib/browser/navigator-tree';
+import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
 import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-contribution';
 import { createFileTreeContainer } from '@theia/filesystem/lib/browser';
 import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
@@ -81,6 +81,14 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
     protected override doUpdateRows(): void {
         super.doUpdateRows();
+
+        switch(this.model.navigatorId){        
+            case "file-navigator-system-model": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-systemLvl", "System Model");  break;
+            case "file-navigator-rtl-model":   this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-rtlLvl", "RTL Model"); break;
+            case "file-navigator-topology-model": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-topologyLvl", "Topology Model");  break;
+            case "file-navigator-otherFiles": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-otherFiles", "Other Files");  break;
+        }
+/*
         this.title.label = LABEL;
         if (WorkspaceNode.is(this.model.root)) {
             if (this.model.root.name === WorkspaceNode.name) {
@@ -95,7 +103,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             }
         } else {
             this.title.caption = this.title.label;
-        }
+        }*/
     }
 
     override getContainerTreeNode(): TreeNode | undefined {
@@ -110,9 +118,6 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     }
 
     protected override renderTree(model: TreeModel): React.ReactNode {
-        if (this.model.root && this.isEmptyMultiRootWorkspace(model)) {
-            return this.renderEmptyMultiRootWorkspace();
-        }
         return super.renderTree(model);
     }
 
@@ -175,23 +180,6 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         }
     };
 
-    /**
-     * When a multi-root workspace is opened, a user can remove all the folders from it.
-     * Instead of displaying an empty navigator tree, this will show a button to add more folders.
-     */
-    protected renderEmptyMultiRootWorkspace(): React.ReactNode {
-        return <div className='theia-navigator-container'>
-            <div className='center'>{nls.localizeByDefault('You have not yet added a folder to the workspace.\n{0}', '')}</div>
-            <div className='open-workspace-button-container'>
-                <button className='theia-button open-workspace-button' title={nls.localizeByDefault('Add Folder to Workspace')}
-                    onClick={this.addFolder}
-                    onKeyUp={this.keyUpHandler}>
-                    {nls.localizeByDefault('Open Folder')}
-                </button>
-            </div>
-        </div>;
-    }
-
     protected isEmptyMultiRootWorkspace(model: TreeModel): boolean {
         return WorkspaceNode.is(model.root) && model.root.children.length === 0;
     }
@@ -218,15 +206,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     }
 
 }
-/*
-export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
-    ...defaultTreeProps,
-    virtualized: false,
-    multiSelect: false,
-    search: false,
-    leftPadding: 22
-};
-*/
+
 export function createFileNavigatorContainer(parent: interfaces.Container, opt: GestolaFileNavigatorOptions): Container {
 
     
@@ -241,30 +221,6 @@ export function createFileNavigatorContainer(parent: interfaces.Container, opt: 
         },
     });
 
-/*
-    const widget = createTreeContainer(parent);
-
-    widget.unbind(TreeImpl);
-    widget.bind(FileNavigatorTree).toSelf();
-    widget.rebind(Tree).toService(FileNavigatorTree);
-
-    widget.unbind(TreeModelImpl);
-    widget.bind(GestolaFileNavigatorModel).toSelf();
-    widget.rebind(TreeModel).toService(GestolaFileNavigatorModel);
-
-    //widget.unbind(TreeWidget);
-    widget.bind(GestolaFileNavigatorWidget).toSelf();
-    widget.rebind(TreeWidget).toService(GestolaFileNavigatorWidget);
-
-    widget.unbind(NoopTreeDecoratorService);
-    widget.bind(NavigatorDecoratorService).toSelf();
-    widget.rebind(TreeDecoratorService).toService(NavigatorDecoratorService);
-
-    widget.bind(CompressionToggle).toConstantValue({ compress: false });
-    widget.bind(TreeCompressionService).toSelf();
-
-    widget.rebind(TreeProps).toConstantValue(PROJECT_EXPLORER_WIDGET_TREE_PROPS);
-*/
     return widget;
 
 }

@@ -126,19 +126,34 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async createRoot(): Promise<TreeNode | undefined> {
 
-        console.log("lolxdxd", this.rootId, this.projManager.currProj);
         if(this.projManager.currProj){
 
-            const node = WorkspaceNode.createRoot();
+            const node = WorkspaceNode.createRoot(this.rootId);
 
-            console.log("for test", this.projManager.currProj.systemFolderFStat);
-
+            let root;
             switch(this.rootId){        
-                case "file-navigator-system-model": console.log("ahaahhaahahah1"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.systemFolderFStat, node)); break;
-                case "file-navigator-rtl-mode": console.log("ahaahhaahahah2"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.rtlFolderFStat, node)); break;
-                case "file-navigator-topology-mode": console.log("ahaahhaahaha3"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.topologyFolderFStat, node)); break;
-                case "file-navigator-otherFiles":console.log("ahaahhaahahah4"); node.children.push(await this.tree.createWorkspaceRoot(this.projManager.currProj.otherFolderFStat, node)); break;
+                case "file-navigator-system-model":
+                    root = this.projManager.currProj.systemFolderFStat;
+                    break;
+                case "file-navigator-rtl-model":
+                    root = this.projManager.currProj.rtlFolderFStat;
+                    break;
+                case "file-navigator-topology-model": 
+                    root = this.projManager.currProj.topologyFolderFStat;
+                    break;
+                case "file-navigator-otherFiles": 
+                    root = this.projManager.currProj.otherFolderFStat;
+                    break;
+                default:
+                    root = this.projManager.currProj.systemFolderFStat;
+                    break;
             }
+
+            let subNode = await this.tree.createWorkspaceRoot(root, node);
+            Object.assign(subNode, {
+                visible: false,
+            });
+            node.children.push(subNode); 
 
             return node;
 
@@ -161,8 +176,8 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 );
             }
             return workspaceNode;
-        }*/
-
+        }
+*/
     }
 
     /**

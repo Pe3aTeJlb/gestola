@@ -1,6 +1,5 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import * as utils from '../utils';
 import { Path } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
@@ -8,15 +7,11 @@ export const defProjStruct = ['system', 'rtl', 'topology', 'other'];
 
 export class Project {
 
+    rootFStat: FileStat;
     rootUri: URI;
     rootPath: Path;
 
     projName: string;
-
-    systemFolderUri: URI;
-    rtlFolderUri: URI;
-    topologyFolderUri: URI;
-    otherFolderUri: URI;
 
     systemFolderFStat: FileStat;
     rtlFolderFStat: FileStat;
@@ -34,27 +29,19 @@ export class Project {
     
     constructor(fileService: FileService, workspaceRoot: FileStat){
 
+        this.rootFStat = workspaceRoot;
         this.rootUri = workspaceRoot.resource;
         this.rootPath = workspaceRoot.resource.path;
         
         this.projName = workspaceRoot.name;
 
-        utils.FSProvider.getSubDirList(fileService, this.rootUri).then(res => {
-        
-            let dirs = Array.from(res.flatMap(i => i[0][0]));
+        if(this.rootFStat.children){
+            fileService.resolve(this.rootFStat.children[0].resource.normalizePath()).then(res => this.systemFolderFStat = res);
+            fileService.resolve(this.rootFStat.children[1].resource.normalizePath()).then(res => this.rtlFolderFStat = res);
+            fileService.resolve(this.rootFStat.children[2].resource.normalizePath()).then(res => this.topologyFolderFStat = res);
+            fileService.resolve(this.rootFStat.children[3].resource.normalizePath()).then(res => this.otherFolderFStat = res);
+        }
 
-            dirs.filter( i => i[0].match(new RegExp('system', "i"))).length   === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('rtl', "i"))).length      === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('topology', "i"))).length === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('other', "i"))).length    === 1 
-
-            this.systemFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[0]))[0]).fsPath()));
-            this.rtlFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[1]))[0]).fsPath()));
-            this.topologyFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[2]))[0]).fsPath()));
-            this.otherFolderFStat = FileStat.dir(URI.fromFilePath(this.rootPath.join(dirs.filter( i => i[0].match(Project.regexp[3]))[0]).fsPath()));
-
-        });
-        
         this.isFavorite = false;
 
     }
