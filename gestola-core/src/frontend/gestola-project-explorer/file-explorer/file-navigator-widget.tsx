@@ -83,10 +83,18 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         super.doUpdateRows();
 
         switch(this.model.navigatorId){        
-            case "file-navigator-system-model": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-systemLvl", "System Model");  break;
-            case "file-navigator-rtl-model":   this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-rtlLvl", "RTL Model"); break;
-            case "file-navigator-topology-model": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-topologyLvl", "Topology Model");  break;
-            case "file-navigator-otherFiles": this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-otherFiles", "Other Files");  break;
+            case "file-navigator-system-model": 
+                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-systemLvl", "System Model");  
+                break;
+            case "file-navigator-rtl-model":   
+                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-rtlLvl", "RTL Model"); 
+                break;
+            case "file-navigator-topology-model": 
+                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-topologyLvl", "Topology Model"); 
+                break;
+            case "file-navigator-otherFiles": 
+                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-otherFiles", "Other Files"); 
+                break;
         }
 /*
         this.title.label = LABEL;
