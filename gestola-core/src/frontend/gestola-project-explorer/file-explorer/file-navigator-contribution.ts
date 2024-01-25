@@ -44,6 +44,7 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
 
+    
 
     registerCommands(registry: CommandRegistry): void {
        
@@ -53,9 +54,7 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
             isVisible: widget => this.withWidget(widget, () => this.projManager.currProj !== undefined)
         });
         registry.registerCommand(REFRESH_NAVIGATOR, {
-            execute: widget => {
-                this.withWidget(widget, (widget) => this.refreshWorkspace(widget));
-            },
+            execute: widget => this.withWidget(widget, (widget) => this.refreshWorkspace(widget)),
             isEnabled: widget => this.withWidget(widget, () => this.projManager.currProj !== undefined),
             isVisible: widget => this.withWidget(widget, () => this.projManager.currProj !== undefined)
         });
@@ -96,13 +95,13 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
         registry.registerKeybinding({
             command: WorkspaceCommands.FILE_DELETE.id,
             keybinding: isOSX ? 'cmd+backspace' : 'del',
-            when: 'gestolaFileNavigatorFocus && focusedView == gestolaFileNavigatorId'
+            when: 'gestolaFileNavigatorFocus'
         });
 
         registry.registerKeybinding({
             command: WorkspaceCommands.FILE_RENAME.id,
             keybinding: 'f2',
-            when: 'gestolaFileNavigatorFocus && focusedView == "gestole-project-explorer-view-container--file-navigator-system-model"'
+            when: 'gestolaFileNavigatorFocus'
         });
     }
 
@@ -159,8 +158,7 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
     }
 
     async refreshWorkspace(widget: GestolaFileNavigatorWidget): Promise<void> {
-        const { model } = widget;
-        await model.refresh();
+        widget.model.refresh(widget.model.root as CompositeTreeNode);
     }
 
 

@@ -47,14 +47,11 @@ export class ProjectExplorerViewContribution extends AbstractViewContribution<Pr
 
     protected async doInit(): Promise<void> {
         const updateFocusContextKeys = () => {
-            console.log("test test test tes", this.context.focusedView.get(), this.context.view.get());
             const hasFocus = this.shell.activeWidget instanceof GestolaFileNavigatorWidget;
             this.contextKeyService.explorerViewletFocus.set(hasFocus);
             this.contextKeyService.filesNavigatorFocus.set(hasFocus);
             if(hasFocus){
-                this.contextKeyService.fileNavigatorId.set(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID+"--"+(<GestolaFileNavigatorWidget>this.shell.activeWidget).model.navigatorId);
-            } else {
-                this.contextKeyService.fileNavigatorId.set("");
+                (<GestolaFileNavigatorWidget>this.shell.activeWidget).model.applySelection();
             }
         };
         updateFocusContextKeys();

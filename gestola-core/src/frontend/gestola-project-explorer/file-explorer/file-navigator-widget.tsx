@@ -17,7 +17,6 @@ import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigato
 import { GestolaFileNavigatorModel } from './file-navigator-model';
 import { GestolaExplorerContextKeyService } from '../gestola-explorer-context-key-service';
 
-
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-core:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
 export const CLASS = 'theia-Files';

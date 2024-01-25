@@ -9,6 +9,8 @@ import { ProgressService } from '@theia/core/lib/common/progress-service';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Disposable } from '@theia/core/lib/common/disposable';
 import { ProjectManager } from '../../project-manager/project-manager';
+import { SelectionService } from '@theia/core';
+import { WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
 
 @injectable()
 export class GestolaFileNavigatorModel extends FileTreeModel {
@@ -18,27 +20,28 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
     @inject(FrontendApplicationStateService) protected readonly applicationState: FrontendApplicationStateService;
     @inject(ProjectManager) protected projManager: ProjectManager;
-
+    @inject(SelectionService) protected selService: SelectionService;
+    
     @inject(ProgressService)
     protected readonly progressService: ProgressService;
 
-    protected rootId: string | undefined;
+    @inject(WorkspaceCommandContribution)
+    protected readonly workspaceCommandContribution: WorkspaceCommandContribution;
 
+    protected rootId: string | undefined;
     get navigatorId(): string | undefined {
         return this.rootId;
     }
-
     set navigatorId(id: string | undefined) {
         this.rootId = id;
     }
 
     protected rootUri: URI | undefined;
-
     get rootURI(): URI | undefined {
         return this.rootUri;
     }
 
-
+    
     @postConstruct()
     protected override init(): void {
         super.init();
@@ -80,6 +83,15 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         if (this.toDispose.disposed) {
             return;
         }
+        this.toDispose.push(this.workspaceCommandContribution.onDidCreateNewFolder(() => {
+            this.updateRoot(); 
+            this.refresh();
+        }));
+        this.toDispose.push(this.workspaceCommandContribution.onDidCreateNewFile(() => {
+            this.updateRoot(); 
+            this.refresh();
+        }));
+       
         this.toDispose.push(this.workspaceService.onWorkspaceChanged(() => {
             this.updateRoot(); 
             this.refresh();
@@ -97,6 +109,10 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             this.refresh()
         }));
 
+        this.selectionService.onSelectionChanged(() => {
+            this.applySelection();
+        });
+
         if (this.selectedNodes.length) {
             return;
         }
@@ -107,6 +123,14 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 this.selectNode(child);
                 this.expandNode(child);
             }
+        }
+    }
+
+    applySelection(): void {
+        if(this.selectedNodes.length > 0){
+            this.selService.selection = this.selectedNodes;
+        } else if(this.rootURI) {
+            this.selService.selection = [this.root as SelectableTreeNode];
         }
     }
 
@@ -148,7 +172,6 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         if(this.projManager.currProj){
 
             const treeRoot = WorkspaceNode.createRoot(this.rootId);
-            //const treeRoot = WorkspaceNode.createRoot();
 
             let rootFolder;
             switch(this.rootId){        
@@ -167,12 +190,6 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             }
 
             if(rootFolder && rootFolder.children){
-   /*
-                treeRoot.children.push(
-                    await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
-                );
-               
-*/
                 this.rootUri = rootFolder.resource;
                 for (const subRoot of rootFolder.children) {
                     treeRoot.children.push(
