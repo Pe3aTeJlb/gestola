@@ -36,10 +36,10 @@ export class Project {
         this.projName = workspaceRoot.name;
 
         if(this.rootFStat.children){
-            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[0]))[0].resource.normalizePath()).then(res => {console.log("zopa",res); this.systemFolderFStat = res});
-            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[1]))[0].resource.normalizePath()).then(res => {console.log("zopa",res); this.rtlFolderFStat = res});
-            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[2]))[0].resource.normalizePath()).then(res => {console.log("zopa",res); this.topologyFolderFStat = res});
-            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[3]))[0].resource.normalizePath()).then(res => {console.log("zopa",res); this.otherFolderFStat = res});
+            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[0]))[0].resource.normalizePath()).then(res => this.systemFolderFStat = res);
+            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[1]))[0].resource.normalizePath()).then(res => this.rtlFolderFStat = res);
+            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[2]))[0].resource.normalizePath()).then(res => this.topologyFolderFStat = res);
+            fileService.resolve(this.rootFStat.children.filter(i => i.name.match(Project.regexp[3]))[0].resource.normalizePath()).then(res => this.otherFolderFStat = res);
         }
 
         this.isFavorite = false;

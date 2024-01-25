@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { ProjectExplorerWidget } from './project-explorer-widget';
@@ -8,6 +8,9 @@ import { CommonMenus, FrontendApplicationContribution, Widget } from '@theia/cor
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { ProjectManagerCommands } from '../../project-manager/project-manager-commands';
 import { ProjectManager } from '../../project-manager/project-manager';
+import { GestolaExplorerContextKeyService } from '../gestola-explorer-context-key-service';
+import { GestolaFileNavigatorWidget } from '../file-explorer/file-navigator-widget';
+import { ViewContextKeyService } from '@theia/plugin-ext/lib/main/browser/view/view-context-key-service';
 
 export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
     id: "project-explorer:toggle",
@@ -16,6 +19,12 @@ export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
 
 @injectable()
 export class ProjectExplorerViewContribution extends AbstractViewContribution<ProjectExplorerWidget> implements FrontendApplicationContribution, TabBarToolbarContribution, CommandContribution, MenuContribution {
+
+    @inject(GestolaExplorerContextKeyService)
+    protected readonly contextKeyService: GestolaExplorerContextKeyService;
+
+    @inject(ViewContextKeyService)
+    protected readonly context: ViewContextKeyService;
 
     constructor(@inject(ProjectManager) private readonly projManager: ProjectManager) {
         super({
@@ -29,6 +38,27 @@ export class ProjectExplorerViewContribution extends AbstractViewContribution<Pr
 
     async initializeLayout(app: FrontendApplication): Promise<void> {
         await this.openView();
+    }
+
+    @postConstruct()
+    protected init(): void {
+        this.doInit();
+    }
+
+    protected async doInit(): Promise<void> {
+        const updateFocusContextKeys = () => {
+            console.log("test test test tes", this.context.focusedView.get(), this.context.view.get());
+            const hasFocus = this.shell.activeWidget instanceof GestolaFileNavigatorWidget;
+            this.contextKeyService.explorerViewletFocus.set(hasFocus);
+            this.contextKeyService.filesNavigatorFocus.set(hasFocus);
+            if(hasFocus){
+                this.contextKeyService.fileNavigatorId.set(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID+"--"+(<GestolaFileNavigatorWidget>this.shell.activeWidget).model.navigatorId);
+            } else {
+                this.contextKeyService.fileNavigatorId.set("");
+            }
+        };
+        updateFocusContextKeys();
+        this.shell.onDidChangeActiveWidget(updateFocusContextKeys);
     }
 
     protected withWidget(

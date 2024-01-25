@@ -20,8 +20,7 @@
     "rebuild": "yarn run clean && yarn run build",
     "clean": "rimraf lib",
     "build": "tsc",
-    "watch": "tsc -w",
-    "localize": "mkdir ./lib/backend/data && cp -r ./src/backend/data/i18n ./lib/backend/data/i18n"
+    "watch": "tsc -w"
   },
   "theiaExtensions": [
     {

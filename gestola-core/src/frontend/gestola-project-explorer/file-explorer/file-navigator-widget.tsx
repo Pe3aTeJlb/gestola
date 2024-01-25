@@ -9,13 +9,13 @@ import { isOSX, environment } from '@theia/core';
 import * as React from '@theia/core/shared/react';
 import { nls } from '@theia/core/lib/common/nls';
 import { AbstractNavigatorTreeWidget } from "@theia/navigator/lib/browser/abstract-navigator-tree-widget";
-import { NavigatorContextKeyService } from "@theia/navigator/lib/browser/navigator-context-key-service";
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
-import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-contribution';
+import { NAVIGATOR_CONTEXT_MENU } from './trash';
 import { createFileTreeContainer } from '@theia/filesystem/lib/browser';
 import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GestolaFileNavigatorModel } from './file-navigator-model';
+import { GestolaExplorerContextKeyService } from '../gestola-explorer-context-key-service';
 
 
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-core:file-navigator';
@@ -39,7 +39,7 @@ export interface GestolaFileNavigatorOptions {
 export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
     @inject(CommandService) protected readonly commandService: CommandService;
-    @inject(NavigatorContextKeyService) protected readonly contextKeyService: NavigatorContextKeyService;
+    @inject(GestolaExplorerContextKeyService) protected readonly contextKeyService: GestolaExplorerContextKeyService;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
 
     constructor(
@@ -49,9 +49,12 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         @inject(GestolaFileNavigatorOptions) opt: GestolaFileNavigatorOptions,
     ) {
         super(props, model, contextMenuRenderer);
-        this.id = opt.navigatorID;
+        if(opt){
+            this.id = opt.navigatorID;
+            this.model.navigatorId = opt.navigatorID;
+        }
         this.addClass(CLASS);
-        this.model.navigatorId = opt.navigatorID;
+        
 
     }
 
@@ -210,7 +213,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     }
 
     protected updateSelectionContextKeys(): void {
-        this.contextKeyService.explorerResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
+        this.contextKeyService.fileNavigatorResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
     }
 
 }

@@ -1,18 +1,20 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
-import { FrontendApplicationContribution,  WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
+import { FrontendApplicationContribution,  KeybindingContribution,  WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
 import { ProjectExplorerWidget } from './gestola-project-explorer/project-explorer/project-explorer-widget';
 import { ProjectManager } from './project-manager/project-manager';
 import { ProjectExplorerViewContribution } from './gestola-project-explorer/project-explorer/project-explorer-contribution';
 import { GestolaProjectExplorerWidgetFactory } from './gestola-project-explorer/gestola-project-explorer-widget-factory';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import {} from "@theia/terminal/lib/browser/terminal-widget-impl"
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './gestola-project-explorer/file-explorer/file-navigator-widget';
+import { CommandContribution } from '@theia/core';
+import { GestolaFileNavigatorContribution } from './gestola-project-explorer/file-explorer/file-navigator-contribution';
+import { GestolaExplorerContextKeyService } from './gestola-project-explorer/gestola-explorer-context-key-service';
 
 export default new ContainerModule((bind, _unbind) => {
 
     //Project Manager
     bind(FrontendApplicationContribution).toService(ProjectManager);
-    bind(ProjectManager).toSelf().inSingletonScope();;
+    bind(ProjectManager).toSelf().inSingletonScope();
 
     /*
     *   GESTOLA PROJECT EXPLORER
@@ -34,6 +36,11 @@ export default new ContainerModule((bind, _unbind) => {
 
   
     //File Navigator
+    bind(GestolaExplorerContextKeyService).toSelf().inSingletonScope();
+    bind(GestolaFileNavigatorContribution).toSelf();
+    bind(KeybindingContribution).toService(GestolaFileNavigatorContribution);
+    bind(CommandContribution).toService(GestolaFileNavigatorContribution);
+    bind(TabBarToolbarContribution).toService(GestolaFileNavigatorContribution);
     bind(WidgetFactory).toDynamicValue(ctx => ({
         id: GESTOLA_FILE_NAVIGATOR_ID,
         createWidget: (options: GestolaFileNavigatorOptions) => {

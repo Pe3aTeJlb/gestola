@@ -32,6 +32,13 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         this.rootId = id;
     }
 
+    protected rootUri: URI | undefined;
+
+    get rootURI(): URI | undefined {
+        return this.rootUri;
+    }
+
+
     @postConstruct()
     protected override init(): void {
         super.init();
@@ -73,10 +80,22 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         if (this.toDispose.disposed) {
             return;
         }
-        this.toDispose.push(this.workspaceService.onWorkspaceChanged(() => this.updateRoot()));
-        this.toDispose.push(this.workspaceService.onWorkspaceLocationChanged(() => this.updateRoot()));
-        this.toDispose.push(this.projManager.onDidChangeProjectList(() => {this.updateRoot(); this.refresh()}));
-        this.toDispose.push(this.projManager.onDidChangeProject(() => {this.updateRoot(); this.refresh()}));
+        this.toDispose.push(this.workspaceService.onWorkspaceChanged(() => {
+            this.updateRoot(); 
+            this.refresh();
+        }));
+        this.toDispose.push(this.workspaceService.onWorkspaceLocationChanged(() => {
+            this.updateRoot();
+            this.refresh()
+        }));
+        this.toDispose.push(this.projManager.onDidChangeProjectList(() => {
+            this.updateRoot(); 
+            this.refresh()
+        }));
+        this.toDispose.push(this.projManager.onDidChangeProject(() => {
+            this.updateRoot(); 
+            this.refresh()
+        }));
 
         if (this.selectedNodes.length) {
             return;
@@ -148,15 +167,14 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             }
 
             if(rootFolder && rootFolder.children){
-                /*console.log("Aazazaza root", rootFolder);
+   /*
                 treeRoot.children.push(
                     await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
                 );
-                console.log("trreee", treeRoot.children);
+               
 */
-                console.log("Aazazaza root", rootFolder);
+                this.rootUri = rootFolder.resource;
                 for (const subRoot of rootFolder.children) {
-                    console.log("lolxd", subRoot);
                     treeRoot.children.push(
                         await this.tree.createWorkspaceRoot(subRoot, treeRoot)
                     );
@@ -166,37 +184,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             return treeRoot;
 
         }
-/*
-        if (this.workspaceService.opened) {
 
-
-            console.log("debug shit");
-
-            const stat = this.workspaceService.workspace;
-
-            const isMulti = (stat) ? !stat.isDirectory : false;
-
-            console.log("stat",stat);
-            console.log("isMulti?", isMulti);
-
-            const workspaceNode = isMulti
-                ? this.createMultipleRootNode()
-                : WorkspaceNode.createRoot();
-            const roots = await this.workspaceService.roots;
-
-            console.log("roots",roots);
-
-            if(roots[0].children){
-            for (const root of roots[0].children) {
-                console.log("loop", root);
-                workspaceNode.children.push(
-                    await this.tree.createWorkspaceRoot(root, workspaceNode)
-                );
-            }
-        }
-            return workspaceNode;
-        }
-*/
     }
 
     /**
