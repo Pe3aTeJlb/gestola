@@ -8,6 +8,7 @@ import * as utils from '../utils';
 import { defProjStruct, Project } from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
+import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -36,16 +37,31 @@ export class ProjectManager implements FrontendApplicationContribution {
     @inject(FileService)
     protected readonly fileService: FileService;
 
+    @inject(FrontendApplicationStateService)
+    protected readonly stateService: FrontendApplicationStateService;
+
     projRoot: FileStat | undefined;
 
     openedProjects: Project[];
     currProj: Project | undefined;
+
+    async onStart(): Promise<void> {
+        this.stateService.reachedState('ready').then(
+            () => {
+                if(this.openedProjects.length > 1){
+                    this.setProject(this.openedProjects[0]);
+                }
+            }
+        );
+    }
 
     configure(): void {
         this.doInit();
     }
 
     protected async doInit(): Promise<void> {
+
+        console.log("proj man state",this.stateService.state);
 
         this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
     
