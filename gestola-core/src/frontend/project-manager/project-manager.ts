@@ -61,8 +61,6 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     protected async doInit(): Promise<void> {
 
-        console.log("proj man state",this.stateService.state);
-
         this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
     
         this.openedProjects = [];
