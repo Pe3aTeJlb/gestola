@@ -44,8 +44,6 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
 
-    
-
     registerCommands(registry: CommandRegistry): void {
        
         registry.registerCommand(COLLAPSE_ALL, {
@@ -158,7 +156,7 @@ export class GestolaFileNavigatorContribution implements CommandContribution, Ta
     }
 
     async refreshWorkspace(widget: GestolaFileNavigatorWidget): Promise<void> {
-        widget.model.refresh(widget.model.root as CompositeTreeNode);
+        widget.model.refresh();
     }
 
 

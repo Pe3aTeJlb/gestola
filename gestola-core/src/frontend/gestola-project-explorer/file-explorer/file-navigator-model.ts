@@ -84,20 +84,16 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             return;
         }
         this.toDispose.push(this.workspaceCommandContribution.onDidCreateNewFolder(() => {
-            this.updateRoot(); 
             this.refresh();
         }));
         this.toDispose.push(this.workspaceCommandContribution.onDidCreateNewFile(() => {
-            this.updateRoot(); 
             this.refresh();
         }));
        
         this.toDispose.push(this.workspaceService.onWorkspaceChanged(() => {
-            this.updateRoot(); 
             this.refresh();
         }));
         this.toDispose.push(this.workspaceService.onWorkspaceLocationChanged(() => {
-            this.updateRoot();
             this.refresh()
         }));
         this.toDispose.push(this.projManager.onDidChangeProjectList(() => {
@@ -165,13 +161,20 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async updateRoot(): Promise<void> {
         this.root = await this.createRoot();
+        if (CompositeTreeNode.is(this.root) && this.root.children.length === 1) {
+            const child = this.root.children[0];
+            if (SelectableTreeNode.is(child) && !child.selected && ExpandableTreeNode.is(child)) {
+                this.selectNode(child);
+                this.expandNode(child);
+            }
+        }
     }
 
     protected async createRoot(): Promise<TreeNode | undefined> {
 
         if(this.projManager.currProj){
 
-            const treeRoot = WorkspaceNode.createRoot(this.rootId);
+            const treeRoot = WorkspaceNode.createRoot();
 
             let rootFolder;
             switch(this.rootId){        
@@ -191,11 +194,9 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
             if(rootFolder && rootFolder.children){
                 this.rootUri = rootFolder.resource;
-                for (const subRoot of rootFolder.children) {
-                    treeRoot.children.push(
-                        await this.tree.createWorkspaceRoot(subRoot, treeRoot)
-                    );
-                }
+                treeRoot.children.push(
+                    await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                );
             }
 
             return treeRoot;
