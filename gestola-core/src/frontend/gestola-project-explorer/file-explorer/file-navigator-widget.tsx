@@ -10,12 +10,12 @@ import * as React from '@theia/core/shared/react';
 import { nls } from '@theia/core/lib/common/nls';
 import { AbstractNavigatorTreeWidget } from "@theia/navigator/lib/browser/abstract-navigator-tree-widget";
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
-import { NAVIGATOR_CONTEXT_MENU } from './trash';
 import { createFileTreeContainer } from '@theia/filesystem/lib/browser';
 import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GestolaFileNavigatorModel } from './file-navigator-model';
 import { GestolaExplorerContextKeyService } from '../gestola-explorer-context-key-service';
+import { NAVIGATOR_CONTEXT_MENU } from '../gestola-project-explorer-contribution';
 
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-core:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
@@ -53,7 +53,6 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             this.model.navigatorId = opt.navigatorID;
         }
         this.addClass(CLASS);
-        
 
     }
 

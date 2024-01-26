@@ -41,7 +41,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     openedProjects: Project[];
     currProj: Project | undefined;
 
-    initialize(): void {
+    configure(): void {
         this.doInit();
     }
 
