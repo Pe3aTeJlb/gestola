@@ -110,7 +110,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
 
     protected override renderTailDecorations(node: ProjectTreeNode, props: NodeProps): React.ReactNode {
-        return  <div className='buffer'>
+        return  <div className='result-node-buttons-prebuffer'>
                     {this.renderSetFavoriteButton(node)}
                     {this.renderRemoveButton(node)}
                     {this.renderCurrentProjectPointer(node)}

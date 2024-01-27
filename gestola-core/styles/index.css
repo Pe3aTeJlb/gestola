@@ -1,19 +1,19 @@
-.buffer {
+.result-node-buttons-prebuffer {
     display: flex;
 }
 
-.theia-TreeNode:hover .buffer .result-node-buttons2 {
+.theia-TreeNode:hover .result-node-buttons-prebuffer .result-node-buttons2 {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     align-self: center;
   }
 
-.buffer .result-node-buttons2 {
+.result-node-buttons-prebuffer .result-node-buttons2 {
     display: flex;
 }
 
-.buffer .result-node-buttons2 > span {
+.result-node-buttons-prebuffer .result-node-buttons2 > span {
     width: 16px;
     height: 16px;
     margin-left: 2.5px;
@@ -24,24 +24,24 @@
     border-radius: 5px;
   }
   
-  .buffer .result-node-buttons2 > span:hover {
+  .result-node-buttons-prebuffer .result-node-buttons2 > span:hover {
     background-color: var(--theia-toolbar-hoverBackground);
 }
 
 
 
-.theia-TreeNode:hover .buffer  .result-node-buttons1 {
+.theia-TreeNode:hover .result-node-buttons-prebuffer  .result-node-buttons1 {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     align-self: center;
   }
 
-  .buffer .result-node-buttons1 {
+  .result-node-buttons-prebuffer .result-node-buttons1 {
     display: none;
 }
 
-.buffer .result-node-buttons1 > span {
+.result-node-buttons-prebuffer .result-node-buttons1 > span {
     width: 16px;
     height: 16px;
     margin-left: 2.5px;
@@ -52,7 +52,7 @@
     border-radius: 5px;
   }
   
-  .buffer .result-node-buttons1 > span:hover {
+  .result-node-buttons-prebuffer .result-node-buttons1 > span:hover {
     background-color: var(--theia-toolbar-hoverBackground);
 }
 
