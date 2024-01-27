@@ -108,19 +108,33 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
         );
     }
 
+
     protected override renderTailDecorations(node: ProjectTreeNode, props: NodeProps): React.ReactNode {
-        return <div className='result-node-buttons'>
-            {this.renderSetFavoriteButton(node)}
-            {this.renderRemoveButton(node)}
-        </div>;
+        return  <div className='buffer'>
+                    {this.renderSetFavoriteButton(node)}
+                    {this.renderRemoveButton(node)}
+                    {this.renderCurrentProjectPointer(node)}
+                </div>;
     }
 
     protected renderSetFavoriteButton(node: ProjectTreeNode): React.ReactNode {
-        return <span className={codicon('star')} onClick={() => this.projManager.setFavorite(node.project)}></span>;
+        if(node.project.isFavorite){
+            return <span className={`result-node-buttons2 ${codicon('star-full')}`} onClick={() => this.projManager.setFavorite(node.project)}></span>
+        } else {
+            return <span className={`result-node-buttons1 ${codicon('star-add')}`} onClick={() => this.projManager.setFavorite(node.project)}></span>
+        }
     }
 
     protected renderRemoveButton(node: ProjectTreeNode): React.ReactNode {
-        return <span className={codicon('close')} onClick={() => this.projManager.removeProject([node.project])}></span>;
+        return <span className={`result-node-buttons1 ${codicon('close')}`} onClick={() => this.projManager.removeProject([node.project])}></span>;
+    }
+
+    protected renderCurrentProjectPointer(node: ProjectTreeNode): React.ReactNode {
+        if(this.projManager.currProj && this.projManager.currProj.rootUri === node.project.rootUri){
+            return <span className={`result-node-buttons2 ${codicon('arrow-left')}`}></span>;
+        } else {
+            return '';
+        }
     }
 
 }

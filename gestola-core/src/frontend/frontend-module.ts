@@ -1,3 +1,4 @@
+import "../../styles/index.css"
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution,  WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
 import { ProjectExplorerWidget } from './gestola-project-explorer/project-explorer/project-explorer-widget';
