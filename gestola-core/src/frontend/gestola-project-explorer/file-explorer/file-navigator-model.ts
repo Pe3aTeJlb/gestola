@@ -98,11 +98,11 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         }));
         this.toDispose.push(this.projManager.onDidChangeProjectList(() => {
             this.updateRoot(); 
-            this.refresh()
+            //this.refresh()
         }));
         this.toDispose.push(this.projManager.onDidChangeProject(() => {
             this.updateRoot(); 
-            this.refresh()
+            //this.refresh()
         }));
 
         this.selectionService.onSelectionChanged(() => {

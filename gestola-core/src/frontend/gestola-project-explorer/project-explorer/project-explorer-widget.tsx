@@ -50,6 +50,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 			} else {
 				this.title.label = ProjectExplorerWidget.VIEW_LABEL;
 			}
+            this.model.refresh();
 		});
 
     }
