@@ -18,8 +18,8 @@ export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
     static readonly ID = 'gestola-core:project-explorer';
-    static readonly MENU_LABEL = nls.localize("gestola-core/gestola-project-explorer/view-container-title", "Gestola: Projects Explorer")
-    static readonly VIEW_LABEL = nls.localize("gestola-core/gestola-project-explorer/project-explorer-view-title", "Project Explorer");
+    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer")
+    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Project Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
@@ -96,13 +96,13 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
             <div className='open-workspace-button-container'>
                 <button className='theia-button open-workspace-button'
                     onClick={() => this.projManager.createProject()}>
-                    {nls.localize("gestola-core/gestola-project-explorer/create-project", "Create Project")}
+                    {nls.localize("gestola/explorer/create-project", "Create Project")}
                 </button>
             </div>
             <div className='open-workspace-button-container'>
                 <button className='theia-button open-workspace-button'
                     onClick={() => this.projManager.openProject()}>
-                    {nls.localize("gestola-core/gestola-project-explorer/open-project", "Open Project")}
+                    {nls.localize("gestola/explorer/open-project", "Open Project")}
                 </button>
             </div>
         </div>

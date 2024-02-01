@@ -85,16 +85,16 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
         switch(this.model.navigatorId){        
             case "file-navigator-system-model": 
-                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-systemLvl", "System Model");  
+                this.title.label = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model");  
                 break;
             case "file-navigator-rtl-model":   
-                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-rtlLvl", "RTL Model"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
             case "file-navigator-topology-model": 
-                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-topologyLvl", "Topology Model"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology Model"); 
                 break;
             case "file-navigator-otherFiles": 
-                this.title.label = nls.localize("gestola-core/gestola-project-explorer/file-explorer-otherFiles", "Other Files"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
                 break;
         }
 /*

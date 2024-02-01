@@ -1,10 +1,13 @@
 {
-    "gestola-core": {
-        "project-manager": {
+
+    "gestola":{
+        
+        "core":{
             "open-gestola-project": "Open Gestola Project",
             "create-gestola-project": "Create Gestola Project"
         },
-        "gestola-project-explorer": {
+
+        "explorer":{
             "view-container-title": "Gestola: Project Explorer",
             "project-explorer-view-title": "Project Explorer",
             "file-explorer-systemLvl": "System Model", 
@@ -13,4 +16,5 @@
             "file-explorer-otherFiles": "Other Files"
         }
     }
+
 }

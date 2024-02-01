@@ -6,8 +6,7 @@ import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-ex
 import { Command, CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MenuPath, isOSX, nls } from "@theia/core";
 import { CommonCommands, CommonMenus, CompositeTreeNode, FrontendApplicationContribution, KeybindingContribution, KeybindingRegistry, SHELL_TABBAR_CONTEXT_MENU, SelectableTreeNode, Widget, codicon } from '@theia/core/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { ProjectManagerCommands } from '@gestola/core';
-import { ProjectManager } from '@gestola/core';
+import { ProjectManager, ProjectManagerCommands } from '@gestola/core';
 import { GestolaExplorerContextKeyService } from './gestola-explorer-context-key-service';
 import { GestolaFileNavigatorWidget } from './file-explorer/file-navigator-widget';
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
@@ -249,14 +248,14 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         registry.registerItem({
             id: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.id,
             command: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.id,
-            tooltip: nls.localize('gestola-core/project-manager/create-gestola-project', 'Create Gestola Project'),
+            tooltip: nls.localize('gestola/core/create-gestola-project', 'Create Gestola Project'),
             priority: 0,
         });
 
         registry.registerItem({
             id: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
             command: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
-            tooltip: nls.localize('gestola-core/project-manager/open-gestola-project', 'Open Gestola Project'),
+            tooltip: nls.localize('gestola/core/open-gestola-project', 'Open Gestola Project'),
             priority: 1,
         });
 

@@ -34,7 +34,7 @@
     "rebuild:core": "yarn --cwd packages/core rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
 
-    "debug": "yarn --cwd electron-app rebuild && yarn --cwd electron-app start"
+    "debug": "yarn rebuild:all && yarn --cwd electron-app rebuild && yarn --cwd electron-app start"
 
   },
   "workspaces": [

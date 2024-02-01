@@ -6,7 +6,7 @@ import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-e
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
-    label: nls.localize("gestola-core/gestola-project-explorer/view-container-title", "Gestola: Projects Explorer"),
+    label: nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer"),
     iconClass: codicon('files'),
     closeable: true
 };
