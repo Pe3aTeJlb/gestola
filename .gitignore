@@ -4,4 +4,7 @@ lib
 *.log
 *-app/*
 !*-app/package.json
+!*-app/tsconfig.json
+!*-app/.eslintrc.js
+packages/*/tsconfig.tsbuildinfo
 plugins

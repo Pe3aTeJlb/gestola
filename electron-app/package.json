@@ -17,13 +17,16 @@
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
     "@theia/vsx-registry": "latest",
-    "gestola-core": "0.0.0"
+    "@gestola/core": "0.0.0",
+    "@gestola/explorer": "0.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest",
     "electron": "^23.2.4"
   },
   "scripts": {
+    "build": "yarn compile && theia rebuild:electron && theia build --mode development",
+    "compile": "tsc -b",
     "bundle": "yarn rebuild && theia build --mode development",
     "rebuild": "theia rebuild:electron --cacheRoot ..",
     "start": "theia start",

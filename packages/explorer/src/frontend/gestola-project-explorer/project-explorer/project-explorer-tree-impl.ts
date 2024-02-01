@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "inversify";
-import { ProjectManager } from "../../project-manager/project-manager";
-import { Project } from "../../project-manager/project";
+import { ProjectManager } from "@gestola/core";
+import { Project } from "@gestola/core";
   
 @injectable()
 export class ProjectExplorerTreeImpl extends TreeImpl {
@@ -9,7 +9,7 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
   @inject(ProjectManager) 
   protected readonly projManager: ProjectManager;
 
-  protected resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
+  protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
     return Promise.resolve(this.projManager.openedProjects.sort((a, b) => {
       if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){

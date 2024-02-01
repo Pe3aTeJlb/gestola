@@ -1,0 +1,16 @@
+{
+    "extends": "./configs/base.tsconfig.json",
+    "include": [],
+    "compilerOptions": {
+        "composite": true,
+        "allowJs": true
+    },
+    "references": [
+        {
+          "path": "packages/core"
+        },
+        {
+          "path": "packages/explorer"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@gestola/core",
+  "keywords": [
+    "theia-extension"
+  ],
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "i18n",
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@theia/core": "latest"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "typescript": "~4.5.5"
+  },
+  "scripts": {
+    "rebuild": "yarn clean && yarn build",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "build": "tsc -b",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "backend": "lib/backend/backend-module",
+      "frontend": "lib/frontend/frontend-module"
+    }
+  ]
+  
+}

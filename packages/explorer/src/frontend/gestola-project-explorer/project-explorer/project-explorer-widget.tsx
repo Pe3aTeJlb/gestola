@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeViewWelcomeWidget, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { ProjectExplorerTreeImpl, ProjectTreeNode } from './project-explorer-tree-impl';
-import { ProjectManager } from '../../project-manager/project-manager';
+import { ProjectManager } from '@gestola/core';
 
 export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
@@ -22,8 +22,8 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     static readonly VIEW_LABEL = nls.localize("gestola-core/gestola-project-explorer/project-explorer-view-title", "Project Explorer");
 
     constructor(
-        @inject(TreeProps) readonly props: TreeProps,
-        @inject(TreeModel) readonly model: TreeModel,
+        @inject(TreeProps) override readonly props: TreeProps,
+        @inject(TreeModel) override readonly model: TreeModel,
         @inject(ContextMenuRenderer) contextMenuRenderer: ContextMenuRenderer,
         @inject(ProjectManager) readonly projManager: ProjectManager,
     ){

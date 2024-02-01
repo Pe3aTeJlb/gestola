@@ -2,7 +2,6 @@ import "../../styles/index.css"
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution,  WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
 import { ProjectExplorerWidget } from './gestola-project-explorer/project-explorer/project-explorer-widget';
-import { ProjectManager } from './project-manager/project-manager';
 import { GestolaProjectExplorerWidgetFactory } from './gestola-project-explorer/gestola-project-explorer-widget-factory';
 import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './gestola-project-explorer/file-explorer/file-navigator-widget';
@@ -10,10 +9,6 @@ import { GestolaExplorerContextKeyService } from './gestola-project-explorer/ges
 import { GestolaProjectExplorerViewContribution } from './gestola-project-explorer/gestola-project-explorer-contribution';
 
 export default new ContainerModule((bind, _unbind) => {
-
-    //Project Manager
-    bind(FrontendApplicationContribution).toService(ProjectManager);
-    bind(ProjectManager).toSelf().inSingletonScope();
 
     /*
     *   GESTOLA PROJECT EXPLORER

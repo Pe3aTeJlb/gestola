@@ -6,8 +6,8 @@ import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-ex
 import { Command, CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MenuPath, isOSX, nls } from "@theia/core";
 import { CommonCommands, CommonMenus, CompositeTreeNode, FrontendApplicationContribution, KeybindingContribution, KeybindingRegistry, SHELL_TABBAR_CONTEXT_MENU, SelectableTreeNode, Widget, codicon } from '@theia/core/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { ProjectManagerCommands } from '../project-manager/project-manager-commands';
-import { ProjectManager } from '../project-manager/project-manager';
+import { ProjectManagerCommands } from '@gestola/core';
+import { ProjectManager } from '@gestola/core';
 import { GestolaExplorerContextKeyService } from './gestola-explorer-context-key-service';
 import { GestolaFileNavigatorWidget } from './file-explorer/file-navigator-widget';
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
@@ -148,7 +148,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
     }
 
   
-    registerCommands(commands: CommandRegistry): void {
+    override registerCommands(commands: CommandRegistry): void {
 
         super.registerCommands(commands);
 
@@ -205,7 +205,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
       }
     
-    registerMenus(menus: MenuModelRegistry): void {
+    override  registerMenus(menus: MenuModelRegistry): void {
 
         super.registerMenus(menus);
 
@@ -221,7 +221,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
     }
 
-    registerKeybindings(registry: KeybindingRegistry): void {
+    override registerKeybindings(registry: KeybindingRegistry): void {
 
         super.registerKeybindings(registry);
 
