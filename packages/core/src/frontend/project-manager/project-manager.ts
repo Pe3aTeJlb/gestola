@@ -223,6 +223,10 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     private async checkForGestolaProject(path: URI){
 
+        if(! await this.fileService.exists(path)){
+            return;
+        }
+
         let dirs = Array.from((await utils.FSProvider.getSubDirList(this.fileService, path)).values());
         
         return (
