@@ -3,6 +3,9 @@
   "name": "electron-app",
   "version": "0.0.0",
   "main": "lib/backend/electron-main.js",
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "author": "Shchepukhin Denis <shepuhin@yandex.ru>",
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
   "dependencies": {
     "@theia/core": "latest",
     "@theia/editor": "latest",
@@ -22,9 +25,17 @@
   },
   "devDependencies": {
     "@theia/cli": "latest",
-    "electron": "^23.2.4"
+    "@types/yargs": "17.0.7",
+    "electron": "^23.2.4",
+    "electron-builder": "23.6.0",
+    "yargs": "17.2.1",
+    "app-builder-lib": "22.10.5"
   },
   "scripts": {
+
+    "package": "yarn build && electron-builder -c.mac.identity=null --publish never",
+    "package:fast": "electron-builder -c.mac.identity=null --publish never",
+
     "build": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development",
     "compile": "tsc -b",
     "bundle": "yarn rebuild && theia build --mode development",

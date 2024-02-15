@@ -2,9 +2,9 @@ node_modules
 .browser_modules
 lib
 *.log
-*-app/*
-!*-app/package.json
-!*-app/tsconfig.json
-!*-app/.eslintrc.js
+electron-app/webpack.config.js
+electron-app/src-gen
+electron-app/dist
+electron-app/gen-webpack*
 packages/*/tsconfig.tsbuildinfo
 plugins
