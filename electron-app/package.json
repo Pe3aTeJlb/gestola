@@ -25,11 +25,12 @@
     "electron": "^23.2.4"
   },
   "scripts": {
-    "build": "yarn compile && theia rebuild:electron && theia build --mode development",
+    "build": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development",
     "compile": "tsc -b",
     "bundle": "yarn rebuild && theia build --mode development",
     "rebuild": "theia rebuild:electron --cacheRoot ..",
     "start": "theia start",
+    "clean": "rimraf webpack.config.js && rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules",
     "watch": "yarn rebuild && theia build --watch --mode development"
   },
   "theia": {

@@ -11,9 +11,6 @@
 
   "scripts": {
 
-    "build:browser": "yarn --cwd browser-app bundle",
-    "build:electron": "yarn --cwd electron-app bundle",
-
     "prepare": "lerna run prepare && yarn -s compile && yarn --cwd electron-app build",
     "download:plugins": "theia download:plugins --ignore-errors",
     
@@ -21,15 +18,15 @@
     "compile:tsc": "tsc -b",
     
     "postinstall": "theia check:theia-version",
-    "start:browser": "yarn --cwd browser-app start",
     "start:electron": "yarn --cwd electron-app start",
-    "watch:browser": "lerna run --parallel watch --ignore electron-app",
-    "watch:electron": "lerna run --parallel watch --ignore browser-app",
+    "watch:electron": "lerna run --parallel watch --ignore electron-app",
 
+    "clean:electron": "yarn --cwd electron-app clean",
     "clean:all": "yarn clean:core && yarn clean:explorer",
     "clean:core": "yarn --cwd packages/core clean",
     "clean:explorer": "yarn --cwd packages/explorer clean",
     
+    "rebuild:electron": "yarn --cwd electron-app build",
     "rebuild:all": "yarn rebuild:core && yarn rebuild:explorer",
     "rebuild:core": "yarn --cwd packages/core rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
@@ -38,7 +35,7 @@
 
   },
   "workspaces": [
-    "packages/*", "browser-app", "electron-app"
+    "packages/*", "electron-app"
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
