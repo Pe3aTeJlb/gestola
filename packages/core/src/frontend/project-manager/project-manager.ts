@@ -1,14 +1,15 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { MessageService } from '@theia/core/lib/common';
+import { MessageService, QuickPickItem, QuickPickService, nls } from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
-import { defProjStruct, Project } from './project';
+import { Project } from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
+import { ProjectManagerBackendService } from '../../backend/project-manager-backend-service-protocol';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -40,10 +41,18 @@ export class ProjectManager implements FrontendApplicationContribution {
     @inject(FrontendApplicationStateService)
     protected readonly stateService: FrontendApplicationStateService;
 
+    @inject(QuickPickService)
+    protected readonly quickPickService: QuickPickService;
+
     projRoot: FileStat | undefined;
 
     openedProjects: Project[];
     currProj: Project | undefined;
+
+    constructor(
+        @inject(ProjectManagerBackendService)
+        protected readonly projManagerBackendService: ProjectManagerBackendService           
+    ){}
 
     async onStart(): Promise<void> {
         this.stateService.reachedState('ready').then(
@@ -74,11 +83,30 @@ export class ProjectManager implements FrontendApplicationContribution {
 
 
 
-    createProject() {
+    async createProject() {
+        console.log("lol", __filename, __dirname);
+        this.projManagerBackendService.test();
+        const items: QuickPickItem[] = [
+            {
+                type: "item",
+                id: "empty",
+                label: nls.localize("gestola/core/tasks/emptyItem", "Empty")
+            },
+            {
+                type: "item",
+                id: "default",
+                label: nls.localize("gestola/core/tasks/clangItem", "Clang"),
+            },
+        ];
+
+        let quickPickResult = await this.quickPickService.show(items);
+        if(!quickPickResult){
+            return;
+        }
 
         const options: OpenFileDialogProps = {
-            title: 'Create Gestola Project',
-            openLabel: 'Create',
+            title: nls.localize("gestola/core/create-gestola-project", "Create Gestola Project"),
+            openLabel: nls.localize("gestola/core/create", "Create"),
             canSelectMany: false,
             canSelectFiles: false,
             canSelectFolders: true
@@ -88,7 +116,9 @@ export class ProjectManager implements FrontendApplicationContribution {
 
             if (uri) {
                 if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
-                    utils.FSProvider.createDirStructure(this.fileService, uri, defProjStruct);
+                    if(quickPickResult?.id){
+                        await this.projManagerBackendService.createProjectFromTemplate(uri, quickPickResult?.id);
+                    }
                     this.addProject([uri]);
                 } else {
                     this.messageService.error("Selected directory is not empty");
@@ -102,8 +132,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     openProject(){
 
         const options: OpenFileDialogProps = {
-            title: 'Open Gestola Project',
-            openLabel: 'Open',
+            title: nls.localize("gestola/core/open-gestola-project", "Open Gestola Project"),
+            openLabel: nls.localize("gestola/core/open", "Open"),
             canSelectMany: false,
             canSelectFiles: false,
             canSelectFolders: true

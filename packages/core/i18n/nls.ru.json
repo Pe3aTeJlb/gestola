@@ -3,7 +3,15 @@
         
         "core":{
             "open-gestola-project": "Открыть проект Гестола",
-            "create-gestola-project": "Создать проект Гестола"
+            "create-gestola-project": "Создать проект Гестола",
+            "open": "Открыть",
+            "create": "Создать",
+
+            "tasks":{
+                "create-project": "Создать проект из шаблона",
+                "emptyItem": "Пустой проект",
+                "clangItem": "Проект на основе Clang"
+            }
         },
 
         "explorer":{
@@ -16,6 +24,7 @@
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-topologyLvl": "Топология", 
             "file-navigator-otherFiles": "Другие файлы"
+
         }
     }
    
