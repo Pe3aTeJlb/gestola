@@ -84,7 +84,6 @@ export class ProjectManager implements FrontendApplicationContribution {
 
 
     async createProject() {
-        console.log("lol", __filename, __dirname);
         this.projManagerBackendService.test();
         const items: QuickPickItem[] = [
             {

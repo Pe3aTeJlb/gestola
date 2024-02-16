@@ -25,6 +25,8 @@ files:
 extraResources:
   - from: ../plugins
     to: app/plugins
+  - from: ../packages/core/resources
+    to: app/resources
 
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaBluePrint.ico

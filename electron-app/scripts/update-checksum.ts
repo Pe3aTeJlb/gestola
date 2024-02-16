@@ -54,7 +54,7 @@ async function execute(): Promise<void> {
 
     const yamlContents: string = fs.readFileSync(yamlPath, { encoding: 'utf8' });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const latestYaml: any = jsyaml.safeLoad(yamlContents);
+    const latestYaml: any = jsyaml.safeLoad();
     latestYaml.sha512 = hash;
     latestYaml.path = updatedPath(latestYaml.path, latestYaml.version, platform);
     for (const file of latestYaml.files) {

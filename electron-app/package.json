@@ -2,7 +2,7 @@
   "private": true,
   "name": "electron-app",
   "version": "0.0.0",
-  "main": "lib/backend/electron-main.js",
+  "main": "scripts/theia-electron-main.js",
   "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
   "author": "Shchepukhin Denis <shepuhin@yandex.ru>",
   "homepage": "https://github.com/Pe3aTeJlb/gestola",
@@ -33,19 +33,43 @@
   },
   "scripts": {
 
-    "package": "yarn build && electron-builder -c.mac.identity=null --publish never",
-    "package:fast": "electron-builder -c.mac.identity=null --publish never",
+    "package:prod": "yarn build:prod && electron-builder -c.mac.identity=null --publish never",
+    "package:test": "yarn build:test && electron-builder -c.mac.identity=null --publish never",
+    "package:fast": "rimraf dist && electron-builder -c.mac.identity=null --publish never",
 
-    "build": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development",
+    "build:prod": "yarn clean && yarn compile && theia rebuild:electron && theia build",
+    "build:test": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development",
     "compile": "tsc -b",
     "bundle": "yarn rebuild && theia build --mode development",
     "rebuild": "theia rebuild:electron --cacheRoot ..",
-    "start": "theia start",
+    "start": "electron scripts/theia-electron-main.js --plugins=local-dir:../plugins",
     "clean": "rimraf webpack.config.js && rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules",
     "watch": "yarn rebuild && theia build --watch --mode development"
   },
   "theia": {
-    "target": "electron"
-  },
-  "theiaPluginsDir": "../plugins"
+    "target": "electron",
+    "frontend": {
+      "config": {
+        "applicationName": "Gestola",
+        "preferences": {
+          "toolbar.showToolbar": true,
+          "security.workspace.trust.enabled": false
+        },
+        "electron": {
+          "showWindowEarly": false
+        }
+      }
+    },
+    "backend": {
+      "config": {
+        "startupTimeout": -1,
+        "resolveSystemPlugins": false
+      }
+    },
+    "generator": {
+      "config": {
+        "preloadTemplate": "./resources/preload.html"
+      }
+    }
+  }
 }
