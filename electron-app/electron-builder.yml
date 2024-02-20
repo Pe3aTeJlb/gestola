@@ -20,6 +20,8 @@ files:
   - src-gen
   - lib
   - resources/icons/WindowIcon/512-512.png
+  - resources/templates/default
+  - resources/templates/empty
   - scripts
   - "!**node_modules/**"
 extraResources:

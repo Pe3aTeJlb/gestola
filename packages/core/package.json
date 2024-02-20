@@ -8,6 +8,7 @@
   "typings": "lib/index.d.ts",
   "files": [
     "i18n",
+    "resources",
     "lib",
     "src"
   ],

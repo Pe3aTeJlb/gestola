@@ -2,7 +2,6 @@ node_modules
 .browser_modules
 lib
 *.log
-electron-app/webpack.config.js
 electron-app/src-gen
 electron-app/dist
 electron-app/gen-webpack*

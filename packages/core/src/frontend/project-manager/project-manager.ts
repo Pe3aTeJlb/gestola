@@ -1,15 +1,15 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { MessageService, QuickPickItem, QuickPickService, nls } from '@theia/core/lib/common';
+import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import * as utils from '../utils';
-import { Project } from './project';
+import { Project, defProjStruct } from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { ProjectManagerBackendService } from '../../backend/project-manager-backend-service-protocol';
+import { ProjectManagerBackendService, Template } from '../../common/protocol';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -84,20 +84,10 @@ export class ProjectManager implements FrontendApplicationContribution {
 
 
     async createProject() {
-        this.projManagerBackendService.test();
-        const items: QuickPickItem[] = [
-            {
-                type: "item",
-                id: "empty",
-                label: nls.localize("gestola/core/tasks/emptyItem", "Empty")
-            },
-            {
-                type: "item",
-                id: "default",
-                label: nls.localize("gestola/core/tasks/clangItem", "Clang"),
-            },
-        ];
 
+        const templates = await this.projManagerBackendService.getTemplates();
+        console.log("templates", templates);
+        const items: QuickPickValue<Template>[] = templates.map((e: Template) => <QuickPickValue<Template>>{ label: e.label, value: e });
         let quickPickResult = await this.quickPickService.show(items);
         if(!quickPickResult){
             return;
@@ -115,10 +105,11 @@ export class ProjectManager implements FrontendApplicationContribution {
 
             if (uri) {
                 if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
-                    if(quickPickResult?.id){
-                        await this.projManagerBackendService.createProjectFromTemplate(uri, quickPickResult?.id);
+                    if(quickPickResult?.value){
+                        await utils.FSProvider.createDirStructure(this.fileService, uri, defProjStruct);
+                        await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value, uri);
+                        this.addProject([uri]);
                     }
-                    this.addProject([uri]);
                 } else {
                     this.messageService.error("Selected directory is not empty");
                 }

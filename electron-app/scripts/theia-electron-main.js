@@ -11,7 +11,6 @@ process.env.THEIA_DEFAULT_PLUGINS = `local-dir:${path.resolve(__dirname, '../', 
 process.env.THEIA_PLUGINS = [
     process.env.THEIA_PLUGINS, `local-dir:${path.resolve(os.homedir(), '.theia-blueprint', 'plugins')}`,
 ].filter(Boolean).join(',');
-console.log("uuuuuuuuuuuuuuuuuu", __dirname, os.homedir());
 
 // Handover to the auto-generated electron application handler.
 require('../lib/backend/electron-main.js');

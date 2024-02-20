@@ -3,7 +3,7 @@ import { FileStat } from '@theia/filesystem/lib/common/files';
 import { Path } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
-export const defProjStruct = ['system', 'rtl', 'topology', 'other'];
+export const defProjStruct = ['system', 'rtl', 'topology', 'other', '.theia'];
 
 export class Project {
 
