@@ -22,6 +22,7 @@
             "open-project": "Открыть проект",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
+            "file-navigator-fpgaLvl": "FPGA",
             "file-navigator-topologyLvl": "Топология", 
             "file-navigator-otherFiles": "Другие файлы"
 

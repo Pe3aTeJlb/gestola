@@ -22,7 +22,6 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         const templateUri = new URI(resolvedTemplate.resourcesPath);
         const templatePath = FileUri.fsPath(templateUri);
         this.copyFiles(projectUri, templatePath);
-        console.log("backemd",resolvedTemplate);
 
         if (resolvedTemplate.tasks || resolvedTemplate.launches) {
             const configFolder = FileUri.fsPath(projectUri.resolve('.theia'));

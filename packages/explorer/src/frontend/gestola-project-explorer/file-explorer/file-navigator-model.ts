@@ -178,17 +178,20 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
             let rootFolder;
             switch(this.rootId){        
-                case "file-navigator-system-model":
-                    rootFolder = this.projManager.currProj.systemFolderFStat;
+                case "file-navigator-system":
+                    rootFolder = await this.projManager.currProj.systemFolderFStat();
                     break;
-                case "file-navigator-rtl-model":
-                    rootFolder = this.projManager.currProj.rtlFolderFStat;
+                case "file-navigator-rtl":
+                    rootFolder = await this.projManager.currProj.rtlFolderFStat();
                     break;
-                case "file-navigator-topology-model": 
-                    rootFolder = this.projManager.currProj.topologyFolderFStat;
+                case "file-navigator-fpga": 
+                    rootFolder = await this.projManager.currProj.topologyFolderFStat();
                     break;
-                case "file-navigator-otherFiles": 
-                    rootFolder = this.projManager.currProj.otherFolderFStat;
+                case "file-navigator-topology": 
+                    rootFolder = await this.projManager.currProj.topologyFolderFStat();
+                    break;
+                case "file-navigator-other": 
+                    rootFolder = await this.projManager.currProj.otherFolderFStat();
                     break;
             }
 

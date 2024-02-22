@@ -18,10 +18,17 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
 
     readonly id = GestolaProjectExplorerWidgetFactory.ID;
 
-    protected projectsNavigatorWidgetOptions: ViewContainer.Factory.WidgetOptions = {
+    protected projectsNavigatorWidgetOptions1: ViewContainer.Factory.WidgetOptions = {
         order: 1,
-        canHide: false,
+        canHide: true,
         initiallyCollapsed: false,
+        weight: 80,
+        disableDraggingToOtherContainers: true
+    };
+     protected projectsNavigatorWidgetOptions2: ViewContainer.Factory.WidgetOptions = {
+        order: 1,
+        canHide: true,
+        initiallyCollapsed: true,
         weight: 80,
         disableDraggingToOtherContainers: true
     };
@@ -41,16 +48,18 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.setTitleOptions(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS);
     
         const projectExplorerWidget = await this.widgetManager.getOrCreateWidget(ProjectExplorerWidget.ID);
-        const systemModelFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system-model"});
-        const rtlModelFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl-model"});
-        const topologyModelFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-topology-model"});
-        const otherFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-otherFiles"});
+        const systemFollderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system"});
+        const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl"});
+        const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga"});
+        const topologyFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-topology"});
+        const otherFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-other"});
         
-        viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions);
-        viewContainer.addWidget(systemModelFileNavigator, this.projectsNavigatorWidgetOptions);
-        viewContainer.addWidget(rtlModelFileNavigator, this.projectsNavigatorWidgetOptions);
-        viewContainer.addWidget(topologyModelFileNavigator, this.projectsNavigatorWidgetOptions);
-        viewContainer.addWidget(otherFileNavigator, this.projectsNavigatorWidgetOptions);
+        viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions1);
+        viewContainer.addWidget(systemFollderFileNavigator, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(rtlFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(fpgaFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(topologyFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(otherFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
 
         return viewContainer;
     }

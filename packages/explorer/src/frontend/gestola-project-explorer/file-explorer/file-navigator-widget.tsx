@@ -61,7 +61,24 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         super.init();
         // This ensures that the context menu command to hide this widget receives the label 'Folders'
         // regardless of the name of workspace. See ViewContainer.updateToolbarItems.
-        const dataset = { ...this.title.dataset, visibilityCommandLabel: nls.localizeByDefault('Folders') };
+        const dataset = { ...this.title.dataset };
+        switch(this.model.navigatorId){        
+            case "file-navigator-system": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model"); 
+                break;
+            case "file-navigator-rtl":   
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
+                break;
+            case "file-navigator-fpga": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
+                break;
+            case "file-navigator-topology": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology"); 
+                break;
+            case "file-navigator-other": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
+                break;
+        }
         this.title.dataset = dataset;
         this.updateSelectionContextKeys();
         this.toDispose.pushAll([
@@ -84,19 +101,23 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         super.doUpdateRows();
 
         switch(this.model.navigatorId){        
-            case "file-navigator-system-model": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model");  
+            case "file-navigator-system": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model"); 
                 break;
-            case "file-navigator-rtl-model":   
+            case "file-navigator-rtl":   
                 this.title.label = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
-            case "file-navigator-topology-model": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology Model"); 
+            case "file-navigator-fpga": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
                 break;
-            case "file-navigator-otherFiles": 
+            case "file-navigator-topology": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology"); 
+                break;
+            case "file-navigator-other": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
                 break;
         }
+        this.title.caption = this.title.label;
 /*
         this.title.label = LABEL;
         if (WorkspaceNode.is(this.model.root)) {

@@ -86,7 +86,6 @@ export class ProjectManager implements FrontendApplicationContribution {
     async createProject() {
 
         const templates = await this.projManagerBackendService.getTemplates();
-        console.log("templates", templates);
         const items: QuickPickValue<Template>[] = templates.map((e: Template) => <QuickPickValue<Template>>{ label: e.label, value: e });
         let quickPickResult = await this.quickPickService.show(items);
         if(!quickPickResult){
@@ -108,7 +107,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                     if(quickPickResult?.value){
                         await utils.FSProvider.createDirStructure(this.fileService, uri, defProjStruct);
                         await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value, uri);
-                        this.addProject([uri]);
+                        await this.addProject([uri]);
                     }
                 } else {
                     this.messageService.error("Selected directory is not empty");
@@ -119,7 +118,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         
     }
 
-    openProject(){
+    async openProject(){
 
         const options: OpenFileDialogProps = {
             title: nls.localize("gestola/core/open-gestola-project", "Open Gestola Project"),
@@ -140,7 +139,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                             this.setProject(this.openedProjects.filter(i => i.rootUri === uri)[0]);
                         } else {
                             this.messageService.info("Is Gestola project");
-                            this.addProject([uri]);
+                            await this.addProject([uri]);
                         }
                     } else {
                         this.messageService.error("Selected directory is not a Gestola project");
@@ -171,16 +170,16 @@ export class ProjectManager implements FrontendApplicationContribution {
         }
 
         if(await this.checkForGestolaProject(uri)){
-            this.addProject([uri]);
+            await this.addProject([uri]);
         } else {
             this.messageService.error("Selected directory is not a Gestola project");
         }
 
     }
 
-    addProject(uri: URI[]){
+    async addProject(uri: URI[]){
 
-        this.workspaceService.addRoot(uri);
+        await this.workspaceService.addRoot(uri);
         this.refreshProjectsList();
 
         //If project is only folder in workspace
