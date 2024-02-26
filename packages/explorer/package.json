@@ -1,16 +1,25 @@
 {
   "name": "@gestola/explorer",
   "keywords": [
-    "theia-extension"
+    "gestola", "gestola-extension"
   ],
-  "version": "0.0.0",
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pe3aTeJlb/gestola/issues"
+  },
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
+  "version": "1.0.0",
   "files": [
     "lib",
     "src"
   ],
   "dependencies": {
     "@theia/core": "latest",
-    "@gestola/core": "0.0.0"
+    "@gestola/core": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "latest",

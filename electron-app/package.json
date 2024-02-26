@@ -20,8 +20,9 @@
     "@theia/terminal": "latest",
     "@theia/workspace": "latest",
     "@theia/vsx-registry": "latest",
-    "@gestola/core": "0.0.0",
-    "@gestola/explorer": "0.0.0"
+    "@gestola/launcher": "1.0.0",
+    "@gestola/core": "1.0.0",
+    "@gestola/explorer": "1.0.0"
   },
   "devDependencies": {
     "@theia/cli": "latest",
@@ -43,7 +44,7 @@
     "bundle": "yarn rebuild && theia build --mode development",
     "rebuild": "theia rebuild:electron --cacheRoot ..",
     "start": "electron scripts/theia-electron-main.js --plugins=local-dir:../plugins",
-    "clean": "rimraf webpack.config.js && rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules",
+    "clean": "rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules",
     "watch": "yarn rebuild && theia build --watch --mode development"
   },
   "theia": {

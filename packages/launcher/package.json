@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/core",
+  "name": "@gestola/launcher",
   "keywords": [
     "gestola", "gestola-extension"
   ],
@@ -22,7 +22,12 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "latest"
+    "@theia/core": "latest",
+    "@theia/plugin-ext": "latest",
+    "body-parser": "^1.17.2",
+    "fs-extra": "^4.0.2",
+    "@vscode/sudo-prompt": "9.3.1",
+    "@gestola/core": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "latest",
@@ -36,8 +41,8 @@
   },
   "theiaExtensions": [
     {
-      "backend": "lib/backend/backend-module",
-      "frontend": "lib/frontend/frontend-module"
+      "frontendElectron": "lib/browser/create-launcher-frontend-module",
+      "backend": "lib/node/launcher-backend-module"
     }
   ]
   

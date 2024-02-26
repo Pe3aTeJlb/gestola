@@ -27,12 +27,13 @@
 
   "scripts": {
 
+    "prepare": "lerna run prepare",
+    "download:plugins": "rimraf ./plugins && -node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
+    "build": "yarn -s compile && yarn --cwd electron-app build:test",
+
     "package:prod": "yarn --cwd electron-app package:prod",
     "package:test": "yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app package:fast",
-
-    "prepare": "lerna run prepare && yarn -s compile && yarn --cwd electron-app build:test",
-    "download:plugins": "rimraf ./plugins && -node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
     
     "compile": "echo Compiling TypeScript sources... && yarn clean:all && yarn compile:tsc",
     "compile:tsc": "tsc -b",
@@ -42,12 +43,15 @@
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
 
     "clean:electron": "yarn --cwd electron-app clean",
-    "clean:all": "yarn clean:core && yarn clean:explorer",
+    "clean:all": "yarn clean:launcher && yarn clean:core && yarn clean:explorer",
+    "clean:launcher": "yarn --cwd packages/launcher clean",
     "clean:core": "yarn --cwd packages/core clean",
     "clean:explorer": "yarn --cwd packages/explorer clean",
     
+    
     "rebuild:electron": "yarn --cwd electron-app build",
-    "rebuild:all": "yarn rebuild:core && yarn rebuild:explorer",
+    "rebuild:all": "yarn rebuild:launcher && yarn rebuild:core && yarn rebuild:explorer",
+    "rebuild:launcher": "yarn --cwd packages/launcher rebuild",
     "rebuild:core": "yarn --cwd packages/core rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
 

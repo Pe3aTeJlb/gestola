@@ -2,7 +2,7 @@ import { inject, injectable, named } from '@theia/core/shared/inversify';
 import { ProjectManagerBackendService, Template, TemplateContribution } from '../common/protocol';
 import { ContributionProvider, URI } from '@theia/core';
 import * as fs from 'fs-extra';
-import { FileUri } from '@theia/core/lib/node/file-uri';
+import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
 
