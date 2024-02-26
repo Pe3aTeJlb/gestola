@@ -32,7 +32,7 @@
     "package:fast": "yarn --cwd electron-app package:fast",
 
     "prepare": "lerna run prepare && yarn -s compile && yarn --cwd electron-app build:test",
-    "download:plugins": "rimraf ./plugins && -node scripts/test.ts && theia download:plugins --ignore-errors",
+    "download:plugins": "rimraf ./plugins && -node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
     
     "compile": "echo Compiling TypeScript sources... && yarn clean:all && yarn compile:tsc",
     "compile:tsc": "tsc -b",
