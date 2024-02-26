@@ -31,6 +31,11 @@
             "file-navigator-topologyLvl": "Топология", 
             "file-navigator-otherFiles": "Другие файлы"
 
+        },
+
+        "branding":{
+            "report-issue": "Сообщить о проблеме",
+            "documentation": "Документация"
         }
     }
    
