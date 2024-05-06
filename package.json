@@ -28,7 +28,7 @@
   "scripts": {
 
     "prepare": "lerna run prepare",
-    "download:plugins": "rimraf ./plugins && -node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
+    "download:plugins": "rimraf ./plugins && ts-node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
     "build": "yarn -s compile && yarn --cwd electron-app build:test",
 
     "package:prod": "yarn --cwd electron-app package:prod",

@@ -11,6 +11,12 @@
         },
         {
           "path": "packages/explorer"
+        },
+        {
+          "path": "packages/branding"
+        },
+        {
+          "path": "packages/launcher"
         }
     ]
 }
