@@ -43,10 +43,11 @@
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
 
     "clean:electron": "yarn --cwd electron-app clean",
-    "clean:all": "yarn clean:launcher && yarn clean:core && yarn clean:explorer",
+    "clean:all": "yarn clean:launcher && yarn clean:core && yarn clean:explorer && yarn clean:branding",
     "clean:launcher": "yarn --cwd packages/launcher clean",
     "clean:core": "yarn --cwd packages/core clean",
     "clean:explorer": "yarn --cwd packages/explorer clean",
+    "clean:branding": "yarn --cwd packages/branding clean",
     
     
     "rebuild:electron": "yarn --cwd electron-app build",
