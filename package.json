@@ -63,13 +63,20 @@
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    
+
     "llvm-vs-code-extensions/vscode-clangd": "https://open-vsx.org/api/llvm-vs-code-extensions/vscode-clangd/0.1.26/file/llvm-vs-code-extensions.vscode-clangd-0.1.26.vsix",
     "eclipse-cdt/cdt-gdb-vscode": "https://open-vsx.org/api/eclipse-cdt/cdt-gdb-vscode/0.0.108/file/eclipse-cdt.cdt-gdb-vscode-0.0.108.vsix",
     "eclipse-cdt/cdtcloud-clangd-contexts": "https://github.com/eclipse-cdt-cloud/clangd-contexts/releases/download/v0.8.0/cdtcloud-clangd-contexts-ext-0.8.0.vsix",
     "ms-vscode/cmake-tools": "https://open-vsx.org/api/ms-vscode/cmake-tools/1.16.32/file/ms-vscode.cmake-tools-1.16.32.vsix",
     "vscode/cpp": "https://open-vsx.org/api/vscode/cpp/1.79.0/file/vscode.cpp-1.79.0.vsix",
   
+    "eclipse-theia.builtin-extension-pack": "https://open-vsx.org/api/eclipse-theia/builtin-extension-pack/1.88.1/file/eclipse-theia.builtin-extension-pack-1.88.1.vsix",
+    "EditorConfig.EditorConfig": "https://open-vsx.org/api/EditorConfig/EditorConfig/0.16.6/file/EditorConfig.EditorConfig-0.16.6.vsix",
+    "dbaeumer.vscode-eslint": "https://open-vsx.org/api/dbaeumer/vscode-eslint/2.4.2/file/dbaeumer.vscode-eslint-2.4.2.vsix",
+    "ms-vscode.js-debug": "https://open-vsx.org/api/ms-vscode/js-debug/1.83.1/file/ms-vscode.js-debug-1.83.1.vsix",
+    "ms-vscode.js-debug-companion": "https://open-vsx.org/api/ms-vscode/js-debug-companion/1.1.2/file/ms-vscode.js-debug-companion-1.1.2.vsix",
+
+
     "MS-CEINTL/vscode-language-pack-ru": "https://open-vsx.org/api/MS-CEINTL/vscode-language-pack-ru/1.83.0/file/MS-CEINTL.vscode-language-pack-ru-1.83.0.vsix"
   },
   "theiaPluginsExcludeIds": [

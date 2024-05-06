@@ -185,7 +185,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                     rootFolder = await this.projManager.currProj.rtlFolderFStat();
                     break;
                 case "file-navigator-fpga": 
-                    rootFolder = await this.projManager.currProj.topologyFolderFStat();
+                    rootFolder = await this.projManager.currProj.fpgaFolderFStat();
                     break;
                 case "file-navigator-topology": 
                     rootFolder = await this.projManager.currProj.topologyFolderFStat();
