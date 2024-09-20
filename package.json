@@ -27,11 +27,11 @@
 
   "scripts": {
 
-    "setup": "yarn && yarn update:dependencies && yarn update:plugins && yarn download:plugins && yarn build",
+    "setup": " yarn && yarn update:dependencies && yarn update:plugins && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
     "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.0 && lerna run update:next 1.53.0",
     "update:plugins": "ts-node scripts/plugin-update.ts",
-    "download:plugins": "rimraf ./plugins && theia download:plugins --ignore-errors",
+    "download:plugins": "rimraf ./plugins && theia download:plugins --rate-limit=15 --parallel=false --ignore-errors",
     "build": "yarn -s compile && yarn --cwd electron-app build:test",
     
     "compile": "echo Compiling TypeScript sources... && yarn clean:all && yarn compile:tsc",

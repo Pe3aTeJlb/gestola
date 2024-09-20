@@ -44,7 +44,7 @@ async function execute(): Promise<void> {
 function updateTheiaVersions(dependencies: PackageJson.Dependency, theiaVersion: string): void {
     for (const dependency in dependencies) {
         if (dependency.startsWith('@theia/')) {
-            console.log(`...setting ${dependency} from ${dependencies[dependency]} to next...`);
+            console.log(`...setting ${dependency} from ${dependencies[dependency]} to theiaVersion...`);
             dependencies[dependency] = theiaVersion;
         }
     }
