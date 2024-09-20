@@ -1,7 +1,8 @@
 {
   "name": "@gestola/explorer",
   "keywords": [
-    "gestola", "gestola-extension"
+    "gestola",
+    "gestola-extension"
   ],
   "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
   "repository": {
@@ -18,7 +19,7 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "latest",
+    "@theia/core": "1.53.0",
     "@gestola/core": "1.0.0"
   },
   "devDependencies": {
@@ -37,5 +38,4 @@
       "frontend": "lib/frontend/frontend-module"
     }
   ]
-  
 }

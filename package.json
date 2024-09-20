@@ -27,13 +27,9 @@
 
   "scripts": {
 
-    "setup": "yarn && yarn update:version && yarn update:plugins && yarn download:plugins && yarn build",
+    "setup": "yarn && yarn update:version && yarn update:dependencies && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
-    
-    "update:theia": "ts-node scripts/update-theia-version.ts",
-    "update:theia:children": "lerna run update:theia -- ",
-    "update:next": "ts-node scripts/update-theia-version.ts 1.53.0 && lerna run update:next",
-
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.0 && lerna run update:next 1.53.0",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins": "rimraf ./plugins && theia download:plugins --ignore-errors",
     "build": "yarn -s compile && yarn --cwd electron-app build:test",
