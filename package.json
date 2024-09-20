@@ -27,7 +27,7 @@
 
   "scripts": {
 
-    "setup": "yarn && yarn update:version && yarn update:dependencies && yarn download:plugins && yarn build",
+    "setup": "yarn && yarn update:dependencies && yarn update:plugins && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
     "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.0 && lerna run update:next 1.53.0",
     "update:plugins": "ts-node scripts/plugin-update.ts",
