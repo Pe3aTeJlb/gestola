@@ -27,13 +27,16 @@
 
   "scripts": {
 
+    "setup": "yarn && yarn update:version && yarn update:plugins && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
-    "download:plugins": "rimraf ./plugins && ts-node scripts/plugin-update.ts && theia download:plugins --ignore-errors",
-    "build": "yarn -s compile && yarn --cwd electron-app build:test",
+    
+    "update:theia": "ts-node scripts/update-theia-version.ts",
+    "update:theia:children": "lerna run update:theia -- ",
+    "update:next": "ts-node scripts/update-theia-version.ts 1.53.0 && lerna run update:next",
 
-    "package:prod": "yarn --cwd electron-app package:prod",
-    "package:test": "yarn --cwd electron-app package:test",
-    "package:fast": "yarn --cwd electron-app package:fast",
+    "update:plugins": "ts-node scripts/plugin-update.ts",
+    "download:plugins": "rimraf ./plugins && theia download:plugins --ignore-errors",
+    "build": "yarn -s compile && yarn --cwd electron-app build:test",
     
     "compile": "echo Compiling TypeScript sources... && yarn clean:all && yarn compile:tsc",
     "compile:tsc": "tsc -b",
@@ -42,6 +45,10 @@
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
 
+    "package:prod": "yarn --cwd electron-app package:prod",
+    "package:test": "yarn --cwd electron-app package:test",
+    "package:fast": "yarn --cwd electron-app package:fast",
+
     "clean:electron": "yarn --cwd electron-app clean",
     "clean:all": "yarn clean:launcher && yarn clean:core && yarn clean:explorer && yarn clean:branding",
     "clean:launcher": "yarn --cwd packages/launcher clean",
@@ -49,6 +56,7 @@
     "clean:explorer": "yarn --cwd packages/explorer clean",
     "clean:branding": "yarn --cwd packages/branding clean",
     
+    "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
     
     "rebuild:electron": "yarn --cwd electron-app rebuild",
     "rebuild:all": "yarn rebuild:launcher && yarn rebuild:core && yarn rebuild:explorer && yarn rebuild:branding",
@@ -58,7 +66,6 @@
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
 
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start"
-
   },
   "workspaces": [
     "packages/*", "electron-app"

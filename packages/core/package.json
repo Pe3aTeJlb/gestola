@@ -32,7 +32,8 @@
     "rebuild": "yarn clean && yarn build",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "build": "tsc -b",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "update:next": "ts-node ../../scripts/update-theia-version.ts"
   },
   "theiaExtensions": [
     {
