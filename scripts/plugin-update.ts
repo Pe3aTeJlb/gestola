@@ -43,7 +43,7 @@ async function updateTheiaVersions(theiaPlugins: Partial<Record<string, string>>
 
 async function getResponse(url: string): Promise<string | undefined> {
     try {
-        const response = await axios.get("https://open-vsx.org/api/"+url);
+        const response = await axios.get("https://open-vsx.org/api/"+url.replace('.', '/'));
         console.log('result is: ', response.data.downloads.universal);
         return response.data.downloads.universal;
       } catch (error) {
