@@ -11,7 +11,7 @@
       "path": "../packages/launcher"
     },
     {
-      "path": "../packages/core"
+      "path": "../packages/project-manager"
     },
     {
       "path": "../packages/explorer"

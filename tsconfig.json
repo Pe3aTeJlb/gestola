@@ -7,7 +7,7 @@
     },
     "references": [
         {
-          "path": "packages/core"
+          "path": "packages/project-manager"
         },
         {
           "path": "packages/explorer"

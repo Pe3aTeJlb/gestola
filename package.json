@@ -46,18 +46,18 @@
     "package:fast": "yarn --cwd electron-app package:fast",
 
     "clean:electron": "yarn --cwd electron-app clean",
-    "clean:all": "yarn clean:launcher && yarn clean:core && yarn clean:explorer && yarn clean:branding",
+    "clean:all": "yarn clean:launcher && yarn clean:project-manager && yarn clean:explorer && yarn clean:branding",
     "clean:launcher": "yarn --cwd packages/launcher clean",
-    "clean:core": "yarn --cwd packages/core clean",
+    "clean:project-manager": "yarn --cwd packages/project-manager clean",
     "clean:explorer": "yarn --cwd packages/explorer clean",
     "clean:branding": "yarn --cwd packages/branding clean",
     
     "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
     
     "rebuild:electron": "yarn --cwd electron-app rebuild",
-    "rebuild:all": "yarn rebuild:launcher && yarn rebuild:core && yarn rebuild:explorer && yarn rebuild:branding",
+    "rebuild:all": "yarn rebuild:launcher && yarn rebuild:project-manager && yarn rebuild:explorer && yarn rebuild:branding",
     "rebuild:launcher": "yarn --cwd packages/launcher rebuild",
-    "rebuild:core": "yarn --cwd packages/core rebuild",
+    "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
 

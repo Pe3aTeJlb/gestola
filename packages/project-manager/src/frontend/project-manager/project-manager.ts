@@ -93,8 +93,8 @@ export class ProjectManager implements FrontendApplicationContribution {
         }
 
         const options: OpenFileDialogProps = {
-            title: nls.localize("gestola/core/create-gestola-project", "Create Gestola Project"),
-            openLabel: nls.localize("gestola/core/create", "Create"),
+            title: nls.localize("gestola/project-manager/create-gestola-project", "Create Gestola Project"),
+            openLabel: nls.localize("gestola/project-manager/create", "Create"),
             canSelectMany: false,
             canSelectFiles: false,
             canSelectFolders: true
@@ -121,8 +121,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     async openProject(){
 
         const options: OpenFileDialogProps = {
-            title: nls.localize("gestola/core/open-gestola-project", "Open Gestola Project"),
-            openLabel: nls.localize("gestola/core/open", "Open"),
+            title: nls.localize("gestola/project-manager/open-gestola-project", "Open Gestola Project"),
+            openLabel: nls.localize("gestola/project-manager/open", "Open"),
             canSelectMany: false,
             canSelectFiles: false,
             canSelectFolders: true
@@ -224,7 +224,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 		return this.onDidChangeProjectListEmitter.event;
 	}
     private fireProjectsListChangeEvent(){
-        //vscode.commands.executeCommand('setContext', 'gestola-core.isProjOpened', this.openedProjects.length > 0);
+        //vscode.commands.executeCommand('setContext', 'gestola-project-manager.isProjOpened', this.openedProjects.length > 0);
         this.onDidChangeProjectListEmitter.fire({projects: this.openedProjects} as ProjectsListChangeEvent);
     }
 

@@ -2,7 +2,7 @@
 
     "gestola":{
         
-        "core":{
+        "project-manager":{
             "open-gestola-project": "Open Gestola Project",
             "create-gestola-project": "Create Gestola Project"
         },

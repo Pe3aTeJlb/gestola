@@ -3,6 +3,7 @@
     "compilerOptions": {
         "composite": true,
         "rootDir": "src",
+        "baseUrl": ".",
         "outDir": "lib"
     },
     "include": [
@@ -10,7 +11,7 @@
     ],
     "references": [
         {
-            "path": "../core"
+            "path": "../project-manager"
         }
     ]
 }

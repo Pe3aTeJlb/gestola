@@ -8,7 +8,7 @@ import { FrontendApplicationStateService } from '@theia/core/lib/browser/fronten
 import { ProgressService } from '@theia/core/lib/common/progress-service';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Disposable } from '@theia/core/lib/common/disposable';
-import { ProjectManager } from '@gestola/core';
+import { ProjectManager } from '@gestola/project-manager';
 import { SelectionService } from '@theia/core';
 import { WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
 

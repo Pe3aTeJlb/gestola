@@ -27,7 +27,7 @@ files:
 extraResources:
   - from: ../plugins
     to: app/plugins
-  - from: ../packages/core/resources
+  - from: ../packages/project-manager/resources
     to: app/resources
 
 win:

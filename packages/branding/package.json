@@ -27,7 +27,7 @@
     "@theia/getting-started": "1.53.0",
     "@theia/vsx-registry": "1.53.0",
     "@theia/workspace": "1.53.0",
-    "@gestola/core": "1.0.0"
+    "@gestola/project-manager": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "3.0.2",

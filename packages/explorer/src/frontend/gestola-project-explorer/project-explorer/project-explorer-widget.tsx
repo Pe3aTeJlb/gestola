@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeViewWelcomeWidget, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { ProjectExplorerTreeImpl, ProjectTreeNode } from './project-explorer-tree-impl';
-import { ProjectManager } from '@gestola/core';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
@@ -17,7 +17,7 @@ export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 @injectable()
 export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
-    static readonly ID = 'gestola-core:project-explorer';
+    static readonly ID = 'gestola-project-manager:project-explorer';
     static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer")
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Project Explorer");
 
@@ -92,7 +92,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     protected override renderViewWelcome(): React.ReactNode {
         return (
             <div className='theia-navigator-container'>
-            <div className='center'>{nls.localize("gestola-core/gestola-project-explorer/view-welcome", "You have not yet created project")}</div>
+            <div className='center'>{nls.localize("gestola-project-manager/gestola-project-explorer/view-welcome", "You have not yet created project")}</div>
             <div className='open-workspace-button-container'>
                 <button className='theia-button open-workspace-button'
                     onClick={() => this.projManager.createProject()}>

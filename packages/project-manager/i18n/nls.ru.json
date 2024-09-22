@@ -6,7 +6,7 @@
             "root-required": "Необходимы права администратора, для продолжения введите пароль."
         },
         
-        "core":{
+        "project-manager":{
             "open-gestola-project": "Открыть проект Гестола",
             "create-gestola-project": "Создать проект Гестола",
             "open": "Открыть",
