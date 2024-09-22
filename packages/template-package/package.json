@@ -1,0 +1,41 @@
+{
+  "name": "@gestola/template-package",
+  "keywords": [
+    "gestola",
+    "gestola-extension"
+  ],
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pe3aTeJlb/gestola/issues"
+  },
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "rimraf": "3.0.2",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "rebuild": "yarn clean && yarn build",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "build": "tsc -b",
+    "watch": "tsc -w",
+    "update:next": "ts-node ../../scripts/update-theia-version.ts"
+  },
+  "theiaExtensions": [
+    {
+      "backend": "lib/backend/backend-module",
+      "frontend": "lib/frontend/frontend-module"
+    }
+  ]
+}
