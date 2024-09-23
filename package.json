@@ -79,7 +79,8 @@
     "ms-vscode.js-debug": "https://open-vsx.org/api/ms-vscode/js-debug/1.93.0/file/ms-vscode.js-debug-1.93.0.vsix",
     "ms-vscode.js-debug-companion": "https://open-vsx.org/api/ms-vscode/js-debug-companion/1.1.3/file/ms-vscode.js-debug-companion-1.1.3.vsix",
     "ms-azuretools.vscode-docker": "https://open-vsx.org/api/ms-azuretools/vscode-docker/1.29.2/file/ms-azuretools.vscode-docker-1.29.2.vsix",
-    "MS-CEINTL.vscode-language-pack-ru": "https://open-vsx.org/api/MS-CEINTL/vscode-language-pack-ru/1.94.0/file/MS-CEINTL.vscode-language-pack-ru-1.94.0.vsix"
+    "MS-CEINTL.vscode-language-pack-ru": "https://open-vsx.org/api/MS-CEINTL/vscode-language-pack-ru/1.94.0/file/MS-CEINTL.vscode-language-pack-ru-1.94.0.vsix",
+    "qwtel.sqlite-viewer": "https://open-vsx.org/api/qwtel/sqlite-viewer/0.5.13/file/qwtel.sqlite-viewer-0.5.13.vsix"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",
