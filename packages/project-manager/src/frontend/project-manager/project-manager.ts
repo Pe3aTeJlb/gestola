@@ -4,8 +4,7 @@ import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/co
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import * as utils from '../utils';
-import { Project, defProjStruct } from './project';
+import { Project } from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
@@ -103,10 +102,9 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.fileDialogService.showOpenDialog(options).then(async uri => {
 
             if (uri) {
-                if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
+                if(await this.isDirEmpty(this.fileService, uri)){
                     if(quickPickResult?.value){
-                        await utils.FSProvider.createDirStructure(this.fileService, uri, defProjStruct);
-                        await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value, uri);
+                        await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value.id, uri);
                         await this.addProject([uri]);
                     }
                 } else {
@@ -131,7 +129,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.fileDialogService.showOpenDialog(options).then(async uri => {
 
             if (uri) {
-                if(await utils.FSProvider.isDirEmpty(this.fileService, uri)){
+                if(await this.isDirEmpty(this.fileService, uri)){
                     this.messageService.error("Selected directory is not a Gestola project");
                 } else {
                     if(await this.checkForGestolaProject(uri)){
@@ -246,14 +244,15 @@ export class ProjectManager implements FrontendApplicationContribution {
             return;
         }
 
-        let dirs = Array.from((await utils.FSProvider.getSubDirList(this.fileService, path)).values());
+        let dirs = Array.from((await this.getSubDirList(this.fileService, path)).values());
         
-        return (
-            dirs.filter( i => i[0].match(new RegExp('system', "i"))).length   === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('rtl', "i"))).length      === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('topology', "i"))).length === 1 &&
-            dirs.filter( i => i[0].match(new RegExp('other', "i"))).length    === 1 
-        );
+        let check = true;
+        
+        for (let regexp of Project.regexp) {
+            if (dirs.filter( i => i[0].match(regexp)).length !== 1) {check = false; break;}
+        }
+
+        return check;
 
     }
 
@@ -268,6 +267,16 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     onStop(): void {
         //throw new Error('Method not implemented.');
+    }
+
+    ///UTILS
+
+    private async isDirEmpty(fileService: FileService, path: URI): Promise<boolean> {
+        return (await (await fileService.activateProvider(path.scheme)).readdir(path)).length === 0;
+    }
+
+    private async getSubDirList(fileService: FileService, path: URI) {
+        return await (await fileService.activateProvider(path.scheme)).readdir(path);
     }
 
 }

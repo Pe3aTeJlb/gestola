@@ -6,7 +6,7 @@ export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
 export interface ProjectManagerBackendService {
     getTemplates(): Promise<Template[]>;
-    createProjectFromTemplate(template: Template, uri: URI): Promise<void>;
+    createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
 }
 
 export interface Template {

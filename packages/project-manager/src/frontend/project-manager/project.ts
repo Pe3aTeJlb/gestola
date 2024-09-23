@@ -3,8 +3,6 @@ import { FileStat } from '@theia/filesystem/lib/common/files';
 import { Path } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
-export const defProjStruct = ['system', 'rtl', 'topology', 'other', '.theia', 'fpga'];
-
 export class Project {
 
     fileService: FileService
@@ -23,7 +21,8 @@ export class Project {
                                 new RegExp('fpga', "i"), 
                                 new RegExp('topology', "i"), 
                                 new RegExp('other', "i"),
-
+                                new RegExp('db', "i"),
+                                new RegExp('\.theia', "i"),
                             ];
     
     constructor(fileService: FileService, workspaceRoot: FileStat){

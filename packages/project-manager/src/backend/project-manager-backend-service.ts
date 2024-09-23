@@ -1,7 +1,8 @@
 import { inject, injectable, named } from '@theia/core/shared/inversify';
 import { ProjectManagerBackendService, Template, TemplateContribution } from '../common/protocol';
 import { ContributionProvider, URI } from '@theia/core';
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
+import * as fsextra from 'fs-extra';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
@@ -17,24 +18,41 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         return contributions.flatMap(contribution => contribution.templates);
     }
 
-    async createProjectFromTemplate(template: Template, projectUri: URI): Promise<void> {
-        const resolvedTemplate = (await this.getTemplates()).find(e => e.id === template.id) ?? template;
-        const templateUri = new URI(resolvedTemplate.resourcesPath);
-        const templatePath = FileUri.fsPath(templateUri);
-        this.copyFiles(projectUri, templatePath);
+    async createProjectFromTemplate(templateId: string, projectUri: URI): Promise<void> {
+        
+        const defaultTemplate = (await this.getTemplates()).find(e => e.id === "gestola-empty-template");
+        console.log("def template", defaultTemplate);
+        console.log("def template", defaultTemplate !== undefined);
+        if(defaultTemplate !== undefined){
+            const templateUri = new URI(defaultTemplate.resourcesPath);
+            const templatePath = FileUri.fsPath(templateUri);
+            await this.copyFiles(FileUri.fsPath(projectUri), templatePath);
+        }
 
-        if (resolvedTemplate.tasks || resolvedTemplate.launches) {
-            const configFolder = FileUri.fsPath(projectUri.resolve('.theia'));
-            fs.ensureDirSync(configFolder);
-            this.createOrAmendTasksJson(resolvedTemplate, projectUri);
-            this.createOrAmendLaunchJson(resolvedTemplate, projectUri);
+        if(templateId === "gestola-empty-template"){
+            return;
+        }
+
+        const resolvedTemplate = (await this.getTemplates()).find(e => e.id === templateId);
+        console.log("resolved template", resolvedTemplate);
+        if(resolvedTemplate !== undefined){
+            console.log("lolxd2");
+            const templateUri = new URI(resolvedTemplate.resourcesPath);
+            const templatePath = FileUri.fsPath(templateUri);
+            await this.copyFiles(FileUri.fsPath(projectUri), templatePath);
+
+            if (resolvedTemplate.tasks || resolvedTemplate.launches) {
+                const configFolder = FileUri.fsPath(projectUri.resolve('.theia'));
+                fsextra.ensureDirSync(configFolder);
+                this.createOrAmendTasksJson(resolvedTemplate, projectUri);
+                this.createOrAmendLaunchJson(resolvedTemplate, projectUri);
+            }
         }
 
     }
 
-    protected copyFiles(targetUri: URI, templatePath: string): void {
-        const targetPath = FileUri.fsPath(targetUri);
-        fs.copySync(templatePath, targetPath, { recursive: true, errorOnExist: true });
+    protected copyFiles(targetPath: string, templatePath: string): void {
+        fsextra.copySync(templatePath, targetPath, { recursive: true, errorOnExist: true });
     }
 
     protected createOrAmendTasksJson(template: Template, projectRoot: URI): void {

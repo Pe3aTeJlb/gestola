@@ -23,7 +23,10 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.53.0"
+    "@theia/core": "1.53.0",
+    "fs-extra": "11.2.0",
+    "sqlite": "5.1.1",
+    "nedb": "1.8.0"
   },
   "devDependencies": {
     "rimraf": "3.0.2",

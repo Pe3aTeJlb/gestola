@@ -7,3 +7,4 @@ electron-app/dist
 electron-app/gen-webpack*
 packages/*/tsconfig.tsbuildinfo
 plugins
+electron-app/resources/templates/*
