@@ -10,6 +10,7 @@ const RemovePlugin = require('remove-files-webpack-plugin')
 const path = require('path');
 const resolvePackagePath = require('resolve-package-path');
 
+
 /**
  * Expose bundled modules on window.theia.moduleName namespace, e.g.
  * window['theia']['@theia/core/lib/common/uri'].
@@ -47,7 +48,21 @@ const plugins = [
                 }
             ]
         }
-    })
+    }),
+    new RemovePlugin({
+        after: {
+            root: './resources/templates',
+            test: [
+                {
+                    folder: './empty',
+                    method: (absoluteItemPath) => {
+                        return new RegExp(/\.gitkeep/, 'm').test(absoluteItemPath);
+                    },
+                    recursive: true
+                }
+            ]
+        }
+    }),
 ]
 
 configs[0].plugins.push(...plugins);
