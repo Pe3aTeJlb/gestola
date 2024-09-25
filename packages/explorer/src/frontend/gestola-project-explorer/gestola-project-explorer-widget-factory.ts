@@ -3,6 +3,7 @@ import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, Widge
 import { nls } from '@theia/core/lib/common/nls';
 import { ProjectExplorerWidget } from './project-explorer/project-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-explorer/file-navigator-widget';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -13,6 +14,8 @@ export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContaine
 
 @injectable()
 export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
+
+    @inject(ProjectManager) protected readonly projectManager: ProjectManager;
 
     static ID = GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID;
 
@@ -61,6 +64,13 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.addWidget(topologyFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(otherFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
 
+        viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.openedProjects.length == 0));
+
+        this.projectManager.onDidChangeProjectList(() => {
+            viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.openedProjects.length == 0));
+        });
+
         return viewContainer;
     }
+
 }

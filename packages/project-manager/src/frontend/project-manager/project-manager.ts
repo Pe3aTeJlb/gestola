@@ -45,8 +45,9 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     projRoot: FileStat | undefined;
 
-    openedProjects: Project[];
-    currProj: Project | undefined;
+    openedProjects: Project[] = [];
+    currProj: Project | undefined = undefined;
+    protected projToSet: URI | undefined = undefined;
 
     constructor(
         @inject(ProjectManagerBackendService)
@@ -69,9 +70,20 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     protected async doInit(): Promise<void> {
 
-        this.workspaceService.onWorkspaceChanged(() => this.refreshProjectsList());
+        this.workspaceService.onWorkspaceChanged(async () => {
+          
+            await this.refreshProjectsList();
+
+            //If project is only folder in workspace
+            if(this.openedProjects.length === 1){
+                this.setProject(this.openedProjects[0]);
+            } else if(this.projToSet !== undefined){
+                this.setProject(this.openedProjects.filter(i => i.rootUri === this.projToSet)[0]);
+                this.projToSet = undefined;
+            }
+          
+        });
     
-        this.openedProjects = [];
         await this.refreshProjectsList();
 
         if(this.openedProjects.length > 1){
@@ -105,6 +117,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                 if(await this.isDirEmpty(this.fileService, uri)){
                     if(quickPickResult?.value){
                         await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value.id, uri);
+                        this.projToSet = uri;
                         await this.addProject([uri]);
                     }
                 } else {
@@ -127,7 +140,6 @@ export class ProjectManager implements FrontendApplicationContribution {
         };
 
         this.fileDialogService.showOpenDialog(options).then(async uri => {
-
             if (uri) {
                 if(await this.isDirEmpty(this.fileService, uri)){
                     this.messageService.error("Selected directory is not a Gestola project");
@@ -137,6 +149,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                             this.setProject(this.openedProjects.filter(i => i.rootUri === uri)[0]);
                         } else {
                             this.messageService.info("Is Gestola project");
+                            this.projToSet = uri;
                             await this.addProject([uri]);
                         }
                     } else {
@@ -176,23 +189,15 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     async addProject(uri: URI[]){
-
         await this.workspaceService.addRoot(uri);
-        this.refreshProjectsList();
-
-        //If project is only folder in workspace
-        if(this.openedProjects.length === 1){
-            this.setProject(this.openedProjects[0]);
-        }
-
     }
 
-    removeProject(proj: Project[]){
+    async removeProject(proj: Project[]){
         this.workspaceService.removeRoots(proj.map(i => i.rootUri));
-        this.refreshProjectsList();
-    }   
+    }
 
     setProject(proj: Project){
+        console.log("setting ", proj);
         this.currProj = proj;
         this.fireProjectChangeEvent();
     }
@@ -238,14 +243,13 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     //Utils
 
-    private async checkForGestolaProject(path: URI){
+    private async checkForGestolaProject(path: URI) {
 
         if(! await this.fileService.exists(path)){
             return;
         }
 
         let dirs = Array.from((await this.getSubDirList(this.fileService, path)).values());
-        
         let check = true;
         
         for (let regexp of Project.regexp) {

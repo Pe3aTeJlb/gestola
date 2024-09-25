@@ -45,6 +45,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
         this.projManager.onDidChangeProjectList(() => this.model.refresh());
 		this.projManager.onDidChangeProjectFavoriteStatus(() => this.model.refresh())
 		this.projManager.onDidChangeProject((event) => {
+            console.log("setting", event.proj.projName);
 			if(event.proj){
 				this.title.label = ProjectExplorerWidget.VIEW_LABEL + ": " + event.proj.projName;
 			} else {
