@@ -92,7 +92,7 @@ export class TheiaBlueprintGettingStartedWidget extends GettingStartedWidget {
         return <div className='gs-container'>
             <div className='flex-grid'>
                 <div className='col'>
-                    {this.renderStart()}
+                    {this.renderOpen()}
                 </div>
             </div>
             <div className='flex-grid'>

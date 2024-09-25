@@ -20,11 +20,9 @@
     "lib",
     "src"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "rimraf": "3.0.2",
-    "typescript": "latest"
+    "rimraf": "3.0.2"
   },
   "scripts": {
     "rebuild": "yarn clean && yarn build",

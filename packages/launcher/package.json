@@ -21,16 +21,15 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.53.0",
-    "@theia/plugin-ext": "1.53.0",
+    "@theia/core": "1.46.1",
+    "@theia/plugin-ext": "1.46.1",
     "body-parser": "^1.17.2",
     "fs-extra": "^4.0.2",
     "@vscode/sudo-prompt": "9.3.1",
     "@gestola/project-manager": "1.0.0"
   },
   "devDependencies": {
-    "rimraf": "3.0.2",
-    "typescript": "latest"
+    "rimraf": "3.0.2"
   },
   "scripts": {
     "rebuild": "yarn clean && yarn build",

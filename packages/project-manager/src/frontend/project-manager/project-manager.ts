@@ -71,17 +71,22 @@ export class ProjectManager implements FrontendApplicationContribution {
     protected async doInit(): Promise<void> {
 
         this.workspaceService.onWorkspaceChanged(async () => {
-          
+            console.log("workspace changed 1");
             await this.refreshProjectsList();
 
             //If project is only folder in workspace
             if(this.openedProjects.length === 1){
+                console.log("adding project3");
+                //console.log("pr pr 3", this.openedProjects.length, this.openedProjects.slice());
                 this.setProject(this.openedProjects[0]);
             } else if(this.projToSet !== undefined){
+                console.log("pr pr 3", this.openedProjects.length, this.openedProjects.slice());
                 this.setProject(this.openedProjects.filter(i => i.rootUri === this.projToSet)[0]);
                 this.projToSet = undefined;
+                console.log("proj change finished");
             }
-          
+
+            console.log("workspace changed 2", this.openedProjects.length);
         });
     
         await this.refreshProjectsList();
