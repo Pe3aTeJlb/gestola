@@ -21,8 +21,6 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
     async createProjectFromTemplate(templateId: string, projectUri: URI): Promise<void> {
         
         const defaultTemplate = (await this.getTemplates()).find(e => e.id === "gestola-empty-template");
-        console.log("def template", defaultTemplate);
-        console.log("def template", defaultTemplate !== undefined);
         if(defaultTemplate !== undefined){
             const templateUri = new URI(defaultTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
@@ -34,12 +32,11 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         }
 
         const resolvedTemplate = (await this.getTemplates()).find(e => e.id === templateId);
-        console.log("resolved template", resolvedTemplate);
         if(resolvedTemplate !== undefined){
-            console.log("lolxd2");
+
             const templateUri = new URI(resolvedTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
-            await this.copyFiles(FileUri.fsPath(projectUri), templatePath);
+            this.copyFiles(FileUri.fsPath(projectUri), templatePath);
 
             if (resolvedTemplate.tasks || resolvedTemplate.launches) {
                 const configFolder = FileUri.fsPath(projectUri.resolve('.theia'));

@@ -45,8 +45,8 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     projRoot: FileStat | undefined;
 
-    openedProjects: Project[] = [];
-    currProj: Project | undefined = undefined;
+    protected openedProjects: Project[] = [];
+    protected currProj: Project | undefined = undefined;
     protected projToSet: URI | undefined = undefined;
 
     constructor(
@@ -71,22 +71,17 @@ export class ProjectManager implements FrontendApplicationContribution {
     protected async doInit(): Promise<void> {
 
         this.workspaceService.onWorkspaceChanged(async () => {
-            console.log("workspace changed 1");
+
             await this.refreshProjectsList();
 
             //If project is only folder in workspace
-            if(this.openedProjects.length === 1){
-                console.log("adding project3");
-                //console.log("pr pr 3", this.openedProjects.length, this.openedProjects.slice());
-                this.setProject(this.openedProjects[0]);
+            if(this.getProjectsCount() == 1){
+                this.setProject(this.getOpenedProjects()[0]);
             } else if(this.projToSet !== undefined){
-                console.log("pr pr 3", this.openedProjects.length, this.openedProjects.slice());
-                this.setProject(this.openedProjects.filter(i => i.rootUri === this.projToSet)[0]);
+                this.setProject(this.getOpenedProjects().filter(i => i.rootUri.path.fsPath() == this.projToSet?.path.fsPath())[0]);
                 this.projToSet = undefined;
-                console.log("proj change finished");
             }
 
-            console.log("workspace changed 2", this.openedProjects.length);
         });
     
         await this.refreshProjectsList();
@@ -168,7 +163,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     private async refreshProjectsList(){
-        this.openedProjects = [];
+        this.openedProjects.length = 0;
         let roots = await this.workspaceService.roots;
         for(let i = 0; i < roots.length; i++){
             if(await this.checkForGestolaProject(roots[i].resource)){
@@ -176,6 +171,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                 this.openedProjects.push(new Project(this.fileService, roots[j]));
             }
         }
+        console.log("init", this.openedProjects);
         this.fireProjectsListChangeEvent();
     }
 
@@ -194,7 +190,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     async addProject(uri: URI[]){
-        await this.workspaceService.addRoot(uri);
+        this.workspaceService.addRoot(uri);
     }
 
     async removeProject(proj: Project[]){
@@ -232,8 +228,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 		return this.onDidChangeProjectListEmitter.event;
 	}
     private fireProjectsListChangeEvent(){
-        //vscode.commands.executeCommand('setContext', 'gestola-project-manager.isProjOpened', this.openedProjects.length > 0);
-        this.onDidChangeProjectListEmitter.fire({projects: this.openedProjects} as ProjectsListChangeEvent);
+        this.onDidChangeProjectListEmitter.fire({projects: this.getOpenedProjects()} as ProjectsListChangeEvent);
     }
 
     protected readonly onDidChangeFavoriteStatusEmitter = new Emitter<ProjectFavoriteStatusChangeEvent>();
@@ -265,6 +260,18 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     }
 
+    private async isDirEmpty(fileService: FileService, path: URI): Promise<boolean> {
+        return (await (await fileService.activateProvider(path.scheme)).readdir(path)).length === 0;
+    }
+
+    private async getSubDirList(fileService: FileService, path: URI) {
+        return await (await fileService.activateProvider(path.scheme)).readdir(path);
+    }
+
+    public getOpenedProjects(): Project[]{
+        return this.openedProjects.slice();
+    }
+
     public getOpenedProject(uri: URI) : Project[] {
         return this.openedProjects.filter(i => i.rootUri.path.fsPath() === uri.path.fsPath());
     }
@@ -273,19 +280,17 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.openedProjects.filter(i => i.rootUri.path.fsPath() === uri.path.fsPath()).length > 0;
     }
 
+    public getProjectsCount(): number {
+        return this.openedProjects.length;
+    }
+
+    public getCurrProject(): Project | undefined {
+        return this.currProj;
+    }
+
 
     onStop(): void {
         //throw new Error('Method not implemented.');
-    }
-
-    ///UTILS
-
-    private async isDirEmpty(fileService: FileService, path: URI): Promise<boolean> {
-        return (await (await fileService.activateProvider(path.scheme)).readdir(path)).length === 0;
-    }
-
-    private async getSubDirList(fileService: FileService, path: URI) {
-        return await (await fileService.activateProvider(path.scheme)).readdir(path);
     }
 
 }

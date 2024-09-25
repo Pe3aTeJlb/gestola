@@ -167,12 +167,12 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
         commands.registerCommand(COLLAPSE_ALL, {
             execute: widget => this.withFileNavigatorWidget(widget, (widget) => this.collapseFileNavigatorTree(widget)),
-            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.currProj),
+            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withFileNavigatorWidget(widget, () => true)
         });
         commands.registerCommand(REFRESH_NAVIGATOR, {
             execute: widget => this.withFileNavigatorWidget(widget, (widget) => this.refreshWorkspace(widget)),
-            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.currProj),
+            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withFileNavigatorWidget(widget, () => true)
         });
         commands.registerCommand(NEW_FILE_TOOLBAR, {
@@ -185,7 +185,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
                     }   
                 }
             },
-            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.currProj),
+            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withFileNavigatorWidget(widget, () => true)
         });
         commands.registerCommand(NEW_FOLDER_TOOLBAR, {
@@ -198,7 +198,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
                     }   
                 }
             },
-            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.currProj),
+            isEnabled: widget => this.withFileNavigatorWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: (widget => this.withFileNavigatorWidget(widget, () => true))
         });
 

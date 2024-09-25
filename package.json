@@ -27,7 +27,7 @@
   "scripts": {
     "setup": "yarn install --ignore-workspace-root-check && yarn update:dependencies && yarn update:plugins && yarn && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
-    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.46.1 && lerna run update:next 1.46.1",
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.2 && lerna run update:next 1.53.2",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins": "rimraf ./plugins && theia download:plugins",
     "build": "yarn -s compile && yarn --cwd electron-app build:test",
@@ -52,7 +52,8 @@
     "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
-    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start"
+    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "test": "clear"
   },
   "workspaces": [
     "packages/*",

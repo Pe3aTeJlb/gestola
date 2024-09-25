@@ -21,10 +21,10 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.46.1",
-    "@theia/getting-started": "1.46.1",
-    "@theia/vsx-registry": "1.46.1",
-    "@theia/workspace": "1.46.1",
+    "@theia/core": "1.53.2",
+    "@theia/getting-started": "1.53.2",
+    "@theia/vsx-registry": "1.53.2",
+    "@theia/workspace": "1.53.2",
     "@gestola/project-manager": "1.0.0"
   },
   "devDependencies": {

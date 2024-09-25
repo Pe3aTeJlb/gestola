@@ -171,27 +171,27 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
     }
 
     protected async createRoot(): Promise<TreeNode | undefined> {
-
-        if(this.projManager.currProj){
+        let proj = this.projManager.getCurrProject();
+        if(proj){
 
             const treeRoot = WorkspaceNode.createRoot();
 
             let rootFolder;
             switch(this.rootId){        
                 case "file-navigator-system":
-                    rootFolder = await this.projManager.currProj.systemFolderFStat();
+                    rootFolder = await proj.systemFolderFStat();
                     break;
                 case "file-navigator-rtl":
-                    rootFolder = await this.projManager.currProj.rtlFolderFStat();
+                    rootFolder = await proj.rtlFolderFStat();
                     break;
                 case "file-navigator-fpga": 
-                    rootFolder = await this.projManager.currProj.fpgaFolderFStat();
+                    rootFolder = await proj.fpgaFolderFStat();
                     break;
                 case "file-navigator-topology": 
-                    rootFolder = await this.projManager.currProj.topologyFolderFStat();
+                    rootFolder = await proj.topologyFolderFStat();
                     break;
                 case "file-navigator-other": 
-                    rootFolder = await this.projManager.currProj.otherFolderFStat();
+                    rootFolder = await proj.otherFolderFStat();
                     break;
             }
 

@@ -23,7 +23,7 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.46.1",
+    "@theia/core": "1.53.2",
     "fs-extra": "11.2.0",
     "sqlite": "5.1.1",
     "nedb": "1.8.0"

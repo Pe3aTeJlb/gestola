@@ -64,10 +64,10 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.addWidget(topologyFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(otherFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
 
-        viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.openedProjects.length == 0));
+        viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 
         this.projectManager.onDidChangeProjectList(() => {
-            viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.openedProjects.length == 0));
+            viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
         });
 
         return viewContainer;

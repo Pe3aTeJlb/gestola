@@ -84,7 +84,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     }
 
     protected override renderTree(model: TreeModel): React.ReactNode {
-        if (this.model.root && this.projManager.openedProjects.length === 0) {
+        if (this.model.root && this.projManager.getProjectsCount() === 0) {
             return this.renderViewWelcome();
         }
         return super.renderTree(model);
@@ -132,7 +132,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     }
 
     protected renderCurrentProjectPointer(node: ProjectTreeNode): React.ReactNode {
-        if(this.projManager.currProj && this.projManager.currProj.rootUri === node.project.rootUri){
+        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.rootUri === node.project.rootUri){
             return <span className={`result-node-buttons2 ${codicon('arrow-left')}`}></span>;
         } else {
             return '';

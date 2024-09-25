@@ -10,7 +10,7 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
 
   protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
-    return Promise.resolve(this.projManager.openedProjects.slice().sort((a, b) => {
+    return Promise.resolve(this.projManager.getOpenedProjects().sort((a, b) => {
       if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
         return a.projName.localeCompare(b.projName);	
       } else {
