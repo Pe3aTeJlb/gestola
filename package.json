@@ -60,7 +60,9 @@
     "electron-app"
   ],
   "theiaPluginsDir": "plugins",
-  "theiaPlugins": {},
+  "theiaPlugins": {
+    "qwtel.sqlite-viewer": "https://open-vsx.org/api/qwtel/sqlite-viewer/0.5.13/file/qwtel.sqlite-viewer-0.5.13.vsix"
+  },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",
     "VisualStudioExptTeam.vscodeintellicode",

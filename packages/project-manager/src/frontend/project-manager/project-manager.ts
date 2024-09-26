@@ -43,16 +43,14 @@ export class ProjectManager implements FrontendApplicationContribution {
     @inject(QuickPickService)
     protected readonly quickPickService: QuickPickService;
 
+    @inject(ProjectManagerBackendService)
+    protected readonly projManagerBackendService: ProjectManagerBackendService;
+
     projRoot: FileStat | undefined;
 
     protected openedProjects: Project[] = [];
     protected currProj: Project | undefined = undefined;
     protected projToSet: URI | undefined = undefined;
-
-    constructor(
-        @inject(ProjectManagerBackendService)
-        protected readonly projManagerBackendService: ProjectManagerBackendService           
-    ){}
 
     async onStart(): Promise<void> {
         this.stateService.reachedState('ready').then(

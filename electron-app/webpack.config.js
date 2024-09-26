@@ -69,5 +69,13 @@ configs[0].plugins.push(...plugins);
 
 module.exports = [
     ...configs,
-    nodeConfig.config
+    nodeConfig.config,
+    {
+        resolve: {
+            fallback: {
+               util: false,
+               fs: false
+            }
+        }
+    }
 ];
