@@ -13,37 +13,36 @@
   },
   "engines": {
     "yarn": ">=1.7.0 <2",
-    "node": ">=14.18.0"
+    "node": ">=20.11.1"
   },
   "dependencies": {
     "remove-files-webpack-plugin": "^1.5.0"
   },
   "devDependencies": {
+    "@types/decompress": "^4.2.7",
+    "@types/temp": "^0.9.4",
+    "@types/chalk": "2.2.0",
+    "axios": "1.6.7",
     "lerna": "2.4.0",
-    "typescript": "~5.4.5",
     "ts-node": "^10.0.0",
-    "axios": "1.6.7"
+    "typescript": "~5.4.5"
   },
   "scripts": {
-    
     "setup": "yarn install --ignore-workspace-root-check && yarn update:dependencies && yarn update:plugins && yarn && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
     "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.2 && lerna run update:next 1.53.2",
     "update:plugins": "ts-node scripts/plugin-update.ts",
-    "download:plugins": "rimraf ./plugins && theia download:plugins",
+    "download:plugins-old": "rimraf ./plugins && theia download:plugins",
+    "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts",
     "build": "yarn -s compile && yarn --cwd electron-app build:test",
-    
     "compile": "echo Compiling TypeScript sources... && yarn clean:all && yarn compile:tsc",
     "compile:tsc": "tsc -b",
     "postinstall": "theia check:theia-version",
-    
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
-    
     "package:prod": "yarn --cwd electron-app package:prod",
     "package:test": "yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app package:fast",
-    
     "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf yarn.lock && rimraf node_modules",
     "clean:all": "lerna run clean",
     "clean:electron": "yarn --cwd electron-app clean",
@@ -52,14 +51,12 @@
     "clean:explorer": "yarn --cwd packages/explorer clean",
     "clean:branding": "yarn --cwd packages/branding clean",
     "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
-    
     "rebuild:all": "lerna run rebuild",
     "rebuild:electron": "yarn --cwd electron-app rebuild",
     "rebuild:launcher": "yarn --cwd packages/launcher rebuild",
     "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
-    
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start"
   },
   "workspaces": [
@@ -68,7 +65,7 @@
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    "qwtel.sqlite-viewer": "https://open-vsx.org/api/qwtel/sqlite-viewer/0.5.13/file/qwtel.sqlite-viewer-0.5.13.vsix"
+    "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",
