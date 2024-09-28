@@ -8,7 +8,7 @@ import { Project } from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { ProjectManagerBackendService, Template } from '../../common/protocol';
+import { DatabaseBackendService, ProjectManagerBackendService, Template } from '../../common/protocol';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -35,16 +35,19 @@ export class ProjectManager implements FrontendApplicationContribution {
     private readonly messageService: MessageService;
 
     @inject(FileService)
-    protected readonly fileService: FileService;
+    private readonly fileService: FileService;
 
     @inject(FrontendApplicationStateService)
-    protected readonly stateService: FrontendApplicationStateService;
+    private readonly stateService: FrontendApplicationStateService;
 
     @inject(QuickPickService)
-    protected readonly quickPickService: QuickPickService;
+    private readonly quickPickService: QuickPickService;
 
     @inject(ProjectManagerBackendService)
-    protected readonly projManagerBackendService: ProjectManagerBackendService;
+    private readonly projManagerBackendService: ProjectManagerBackendService;
+
+    @inject(DatabaseBackendService)
+    private readonly databaseBackendService: DatabaseBackendService;
 
     projRoot: FileStat | undefined;
 
@@ -166,10 +169,9 @@ export class ProjectManager implements FrontendApplicationContribution {
         for(let i = 0; i < roots.length; i++){
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
-                this.openedProjects.push(new Project(this.fileService, roots[j]));
+                this.openedProjects.push(new Project(this, roots[j]));
             }
         }
-        console.log("init", this.openedProjects);
         this.fireProjectsListChangeEvent();
     }
 
@@ -196,7 +198,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     setProject(proj: Project){
-        console.log("setting ", proj);
+
         this.currProj = proj;
         this.fireProjectChangeEvent();
     }
@@ -286,6 +288,13 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.currProj;
     }
 
+    public getFileSerivce(): FileService {
+        return this.fileService;
+    }
+
+    public getDatabaseService(): DatabaseBackendService {
+        return this.databaseBackendService;
+    }
 
     onStop(): void {
         //throw new Error('Method not implemented.');

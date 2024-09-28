@@ -24,7 +24,7 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         if(defaultTemplate !== undefined){
             const templateUri = new URI(defaultTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
-            await this.copyFiles(FileUri.fsPath(projectUri), templatePath);
+            this.copyFiles(FileUri.fsPath(projectUri), templatePath);
         }
 
         if(templateId === "gestola-empty-template"){

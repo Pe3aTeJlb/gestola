@@ -1,6 +1,7 @@
 import { URI } from "@theia/core";
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskCustomization } from '@theia/task/lib/common/task-protocol';
+import { Database } from "sqlite";
 
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
@@ -28,4 +29,12 @@ export interface TemplateOptions {
 export const TemplateContribution = Symbol('TemplateContribution');
 export interface TemplateContribution {
     readonly templates: Template[];
+}
+
+
+
+export const DatabaseBackendService = Symbol('DatabaseBackendService');
+export const DATABASE_BACKEND_PATH = '/services/gestolaDatabaseBackend';
+export interface DatabaseBackendService {
+    createSQLiteConnection(uri: URI): Promise<Database>;
 }

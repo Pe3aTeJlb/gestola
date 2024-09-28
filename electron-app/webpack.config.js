@@ -38,19 +38,6 @@ const plugins = [
     }),
     new RemovePlugin({
         after: {
-            test: [
-                {
-                    folder: path.resolve(__dirname, 'resources'),
-                    method: (absoluteItemPath) => {
-                        return new RegExp(/^.*\.gz$/).test(absoluteItemPath);
-                    },
-                    recursive: true
-                }
-            ]
-        }
-    }),
-    new RemovePlugin({
-        after: {
             root: './resources/templates',
             test: [
                 {
@@ -63,6 +50,19 @@ const plugins = [
             ]
         }
     }),
+    new RemovePlugin({
+        after: {
+            test: [
+                {
+                    folder: path.resolve(__dirname, 'resources'),
+                    method: (absoluteItemPath) => {
+                        return new RegExp(/^.*\.gz$/).test(absoluteItemPath);
+                    },
+                    recursive: true
+                }
+            ]
+        }
+    })
 ]
 
 configs[0].plugins.push(...plugins);
@@ -70,12 +70,4 @@ configs[0].plugins.push(...plugins);
 module.exports = [
     ...configs,
     nodeConfig.config,
-    {
-        resolve: {
-            fallback: {
-               util: false,
-               fs: false
-            }
-        }
-    }
 ];

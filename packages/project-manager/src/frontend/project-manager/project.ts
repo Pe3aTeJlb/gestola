@@ -2,8 +2,8 @@ import { URI } from '@theia/core/lib/common/uri';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { Path } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import * as sqlite3 from "sqlite3";
-import { open, Database } from 'sqlite';
+import { Database } from 'sqlite';
+import { ProjectManager } from './project-manager';
 
 export class Project {
 
@@ -16,9 +16,9 @@ export class Project {
     projName: string;
 
     isFavorite: boolean;  
-    
-    sqlite: Database;
-    
+
+    SQLITE: Database;
+    NEDB: undefined;
 
     public static regexp =  [
                                 new RegExp('system', "i"), 
@@ -30,9 +30,9 @@ export class Project {
                                 new RegExp('\.theia', "i"),
                             ];
     
-    constructor(fileService: FileService, workspaceRoot: FileStat){
+    constructor(projManager: ProjectManager, workspaceRoot: FileStat){
 
-        this.fileService = fileService;
+        this.fileService = projManager.getFileSerivce();
 
         this.rootFStat = workspaceRoot;
         this.rootUri = workspaceRoot.resource;
@@ -42,16 +42,15 @@ export class Project {
 
         this.isFavorite = false;
 
-        (async () => {
-            let path = this.getRDBFile();
-            if(path){
-                this.sqlite = await open({
-                    filename: path.path.fsPath(),
-                    driver: sqlite3.cached.Database
-                });
-            }
-        })();
+        this.createDBConnections(projManager);
 
+    }
+
+    private async createDBConnections(projManager: ProjectManager){
+        let uri = this.getRDBFile();
+        if(uri){
+            this.SQLITE = await projManager.getDatabaseService().createSQLiteConnection(uri);
+        }
     }
 
     
@@ -82,14 +81,12 @@ export class Project {
     }
 
     public getRDBFile(): URI | undefined {
-        if(this.rootFStat.children){
-            return this.rootFStat.children.filter(i => i.name.match(Project.regexp[5]))[0].resource.normalizePath().resolve("sqlite.db");
-        }
+        return this.rootFStat.children?.filter(i => i.name.match(Project.regexp[5]))[0].resource.normalizePath().resolve("sqlite.db");
     }
 
     public getNRDBFile(): URI | undefined {
         if(this.rootFStat.children){
-            return this.rootFStat.children.filter(i => i.name.match(Project.regexp[5]))[0].resource.normalizePath().resolve("nedb.db");
+            return this.rootFStat.children?.filter(i => i.name.match(Project.regexp[5]))[0].resource.normalizePath().resolve("nedb.db");
         }
     }
 
