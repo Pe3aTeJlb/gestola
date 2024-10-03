@@ -5,6 +5,7 @@ lib
 electron-app/src-gen
 electron-app/dist
 electron-app/gen-webpack*
-packages/*/tsconfig.tsbuildinfo
+packages/**/tsconfig.tsbuildinfo
 plugins
 electron-app/resources/templates/*
+yarn.lock

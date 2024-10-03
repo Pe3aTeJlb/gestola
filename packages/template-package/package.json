@@ -26,10 +26,10 @@
     "rimraf": "3.0.2"
   },
   "scripts": {
-    "rebuild": "yarn clean && yarn build",
+    "rebuild": "yarn clean && yarn compile",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "clean:entire": "yarn clean && rimraf node_modules",
-    "build": "tsc -b",
+    "compile": "tsc -b",
     "watch": "tsc -w",
     "update:next": "ts-node ../../scripts/update-theia-version.ts"
   },
