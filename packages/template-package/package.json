@@ -1,5 +1,6 @@
 {
   "name": "@gestola/template-package",
+  "private": true,
   "keywords": [
     "gestola",
     "gestola-extension"

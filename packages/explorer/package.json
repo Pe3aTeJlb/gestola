@@ -1,5 +1,6 @@
 {
   "name": "@gestola/explorer",
+  "private": true,
   "keywords": [
     "gestola",
     "gestola-extension"
