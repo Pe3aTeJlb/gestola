@@ -23,7 +23,8 @@
     "@gestola/launcher": "1.0.0",
     "@gestola/branding": "1.0.0",
     "@gestola/project-manager": "1.0.0",
-    "@gestola/explorer": "1.0.0"
+    "@gestola/explorer": "1.0.0",
+    "design-flow-editor": "2.2.1"
   },
   "devDependencies": {
     "@theia/cli": "1.53.2",
