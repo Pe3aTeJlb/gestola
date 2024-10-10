@@ -43,7 +43,7 @@ import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
-    readonly diagramType = 'tasklist-diagram';
+    readonly diagramType = 'design-flow-diagram';
 
     protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {
         return TaskListDiagramConfiguration;

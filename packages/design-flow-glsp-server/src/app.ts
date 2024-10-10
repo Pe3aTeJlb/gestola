@@ -16,17 +16,31 @@
  ********************************************************************************/
 import 'reflect-metadata';
 
-import { createAppModule, createSocketCliParser, ServerModule, SocketServerLauncher } from '@eclipse-glsp/server/node';
+import { createAppModule, createSocketCliParser, Logger, ServerModule, SocketServerLauncher } from '@eclipse-glsp/server/node';
 import { Container } from 'inversify';
 import { TaskListDiagramModule } from './diagram/tasklist-diagram-module';
+import { configureELKLayoutModule } from '@eclipse-glsp/layout-elk';
+import { DesignFlowLayoutConfigurator } from './layout/design-flow-layout-configurator';
 
 export async function launch(argv?: string[]): Promise<void> {
     const options = createSocketCliParser().parse(argv);
     const appContainer = new Container();
     appContainer.load(createAppModule(options));
 
+    const logger = appContainer.get(Logger);
+
+    // Add fallback hooks to catch unhandled exceptions & promise rejections and prevent the node process from crashing
+    process.on('unhandledRejection', (reason, p) => {
+        logger.error('Unhandled Rejection:', p, reason);
+    });
+
+    process.on('uncaughtException', error => {
+        logger.error('Uncaught exception:', error);
+    });
+
     const launcher = appContainer.resolve(SocketServerLauncher);
-    const serverModule = new ServerModule().configureDiagramModule(new TaskListDiagramModule());
+    const elkLayoutModule = configureELKLayoutModule({ algorithms: ['layered'], layoutConfigurator: DesignFlowLayoutConfigurator });
+    const serverModule = new ServerModule().configureDiagramModule(new TaskListDiagramModule(), elkLayoutModule);
 
     launcher.configure(serverModule);
     launcher.start({ port: options.port, host: options.host });

@@ -9,3 +9,4 @@ packages/**/tsconfig.tsbuildinfo
 plugins
 electron-app/resources/templates/*
 yarn.lock
+workflow
