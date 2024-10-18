@@ -26,6 +26,9 @@
         },
         {
           "path": "packages/design-flow-glsp-client"
+        },
+        {
+          "path": "packages/node-red-integration"
         }
     ]
 }

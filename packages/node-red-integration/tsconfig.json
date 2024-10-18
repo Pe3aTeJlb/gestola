@@ -1,0 +1,18 @@
+{
+    "extends": "../../configs/base.tsconfig",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": "src",
+        "baseUrl": ".",
+        "outDir": "lib",
+        "strict": false
+    },
+    "include": [
+      "src" 
+, "src/app.ts"    ],
+    "references": [
+        {
+            "path": "../project-manager"
+        }
+    ]
+}

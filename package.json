@@ -16,7 +16,6 @@
     "node": ">=20.11.1"
   },
   "dependencies": {
-    "remove-files-webpack-plugin": "^1.5.0"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",
@@ -57,7 +56,10 @@
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     
-    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start"
+    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "debug2": "yarn --cwd packages/node-red-integration rebuild",
+    "tst": "node packages/node-red-integration/dist/node-red-integration.js"
   },
   "workspaces": [
     "packages/**/",
