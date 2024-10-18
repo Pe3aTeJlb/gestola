@@ -10,3 +10,4 @@ plugins
 electron-app/resources/templates/*
 yarn.lock
 workflow
+packages/**/dist

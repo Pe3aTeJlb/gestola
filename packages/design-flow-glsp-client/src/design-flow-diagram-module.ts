@@ -17,6 +17,7 @@
 import {
     bindAsService,
     bindOrRebind,
+    configureActionHandler,
     configureDefaultModelElements,
     configureModelElement,
     ConsoleLogger,
@@ -24,19 +25,23 @@ import {
     debugModule,
     DefaultTypes,
     editLabelFeature,
+    EnableDefaultToolsAction,
     GLabel,
     GLabelView,
     gridModule,
     helperLineModule,
     initializeDiagramContainer,
     LogLevel,
-    TYPES
+    SetModelAction,
+    TYPES,
+    UpdateModelAction
 } from '@eclipse-glsp/client';
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
 import { DesignFlowGridSnapper } from './grid-snapper';
 import { DesignFlowStartup } from './design-flow-startup';
+import { ExtendedToolPalette } from './extended-tool-palette';
 
 const DesignFlowDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
 
@@ -48,7 +53,13 @@ const DesignFlowDiagramModule = new ContainerModule((bind, unbind, isBound, rebi
     
     bindAsService(context, TYPES.IDiagramStartup, DesignFlowStartup);
     bindOrRebind(context, TYPES.ISnapper).to(DesignFlowGridSnapper);
-
+    
+    bindAsService(bind, TYPES.IUIExtension, ExtendedToolPalette);
+    rebind(TYPES.IDiagramStartup).toService(ExtendedToolPalette);
+    configureActionHandler({ bind, isBound }, EnableDefaultToolsAction.KIND, ExtendedToolPalette);
+    configureActionHandler({ bind, isBound }, UpdateModelAction.KIND, ExtendedToolPalette);
+    configureActionHandler({ bind, isBound }, SetModelAction.KIND, ExtendedToolPalette);
+    
 });
 
 export function initializeDesignFlowDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

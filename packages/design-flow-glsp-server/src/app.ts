@@ -42,6 +42,8 @@ export async function launch(argv?: string[]): Promise<void> {
     const elkLayoutModule = configureELKLayoutModule({ algorithms: ['layered'], layoutConfigurator: DesignFlowLayoutConfigurator });
     const serverModule = new ServerModule().configureDiagramModule(new TaskListDiagramModule(), elkLayoutModule);
 
+    console.log("Start glsp server on some port");
+
     launcher.configure(serverModule);
     launcher.start({ port: options.port, host: options.host });
 }
