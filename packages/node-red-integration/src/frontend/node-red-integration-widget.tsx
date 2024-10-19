@@ -8,7 +8,7 @@ import { Message } from '@theia/core/lib/browser';
 export class NodeRedIntegrationWidget extends ReactWidget {
 
     static readonly ID = 'node-red-integration:widget';
-    static readonly LABEL = 'NodeRedIntegration Widget';
+    static readonly LABEL = 'Design FLow Editor (Node-Red)';
 
     @inject(MessageService)
     protected readonly messageService!: MessageService;
@@ -30,12 +30,12 @@ export class NodeRedIntegrationWidget extends ReactWidget {
 
     render(): React.ReactElement {
         return <div id='widget-container'>
-            <iframe src="http://127.0.0.1:1880/red"> </iframe>
+            <iframe src="http://127.0.0.1:1880/red" id='frame'> </iframe>
         </div>
     }
 
     protected displayMessage(): void {
-        this.messageService.info('Congratulations: NodeRedIntegration Widget Successfully Created!');
+        this.messageService.info('Congratulations: Design Flow Editor Widget Successfully Created!');
     }
 
     protected override onActivateRequest(msg: Message): void {

@@ -24,7 +24,8 @@
     "axios": "1.6.7",
     "lerna": "2.4.0",
     "ts-node": "^10.0.0",
-    "typescript": "~5.4.5"
+    "typescript": "~5.4.5",
+    "replace-regex": "0.0.3"
   },
   "scripts": {
     
@@ -59,7 +60,8 @@
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug2": "yarn --cwd packages/node-red-integration rebuild",
-    "tst": "node packages/node-red-integration/dist/node-red-integration.js"
+    "tst": "yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js"
+
   },
   "workspaces": [
     "packages/**/",

@@ -34,9 +34,9 @@
     "express": "^4.14.0"
 },
   "scripts": {
-    "bundle": "webpack",
+    "bundle": "webpack && ts-node ../../scripts/string-replacer.ts",
     "rebuild": "yarn clean && yarn compile && yarn bundle",
-    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo && rimraf dist",
     "clean:entire": "yarn clean && rimraf node_modules",
     "compile": "tsc -b",
     "watch": "tsc -w",

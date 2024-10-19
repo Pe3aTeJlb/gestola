@@ -33,9 +33,6 @@ module.exports = {
     devtool: 'source-map',
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
-        fallback: {
-            'oauth2orize': path.resolve(__dirname, '../../node_modules/oauth2orize/index.js')
-        }
     },
     target: 'node',
     module: {
