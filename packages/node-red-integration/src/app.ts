@@ -1,7 +1,7 @@
 "use strict"
 
 import 'reflect-metadata';
-/*
+
 import { Container } from 'inversify';
 import { ContainerModule } from 'inversify';
 import { SocketServerLauncher } from './backend/socket-server-launcher';
@@ -26,8 +26,10 @@ export async function launch(argv?: string[]): Promise<void> {
 
 }
 
-launch(process.argv).catch(error => console.error('Error in node-red server launcher:', error));*/
+launch(process.argv).catch(error => console.error('Error in node-red server launcher:', error));
 
+/*
+var nrSettings = require("../settings.js");
 var http = require('http');
 var express = require("express");
 var RED = require("node-red");
@@ -41,24 +43,17 @@ app.use("/",express.static("public"));
 // Create a server
 var server = http.createServer(app);
 
-// Create the settings object - see default settings.js file for other options
-var settings = {
-    httpAdminRoot:"/red",
-    httpNodeRoot: "/api",
-    userDir:"//home/debian/.gestola/",
-    functionGlobalContext: { }    // enables global context
-};
-
 // Initialise the runtime with a server and settings
-RED.init(server,settings);
+RED.init(server,nrSettings);
 
 // Serve the editor UI from /red
-app.use(settings.httpAdminRoot,RED.httpAdmin);
+app.use(nrSettings.httpAdminRoot,RED.httpAdmin);
 
 // Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,RED.httpNode);
+app.use(nrSettings.httpNodeRoot,RED.httpNode);
 
 server.listen(1880);
 
 // Start the runtime
 RED.start();
+*/

@@ -8,8 +8,9 @@
         "strict": false
     },
     "include": [
-      "src" 
-, "src/app.ts"    ],
+      "src", 
+      "src/app.ts" 
+    ],
     "references": [
         {
             "path": "../project-manager"
