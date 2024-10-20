@@ -103,6 +103,9 @@ export abstract class NodeRedSocketServerContribution extends BaseNodeRedServerC
 
     async launch(): Promise<void> {
         try {
+
+            console.log('kek node-red 2', !this.options.executable, this.options.executable);
+
             if (!this.options.executable) {
                 throw new Error('Could not launch Node Red server. No executable path is provided via the contribution options');
             }
@@ -258,16 +261,19 @@ export function getWebSocketPath(argsKey: string, defaultPath?: string): string 
 
 
 
-
+const path = require('path');
 const DEFAULT_PORT = 1880;
 const PORT_ARG_KEY = 'NODERED';
-const MODULE_PATH = require.resolve('@gestola/node-red-integration');
+//const MODULE_PATH = require.resolve('@gestola/node-red-integration');
+const MODULE_PATH = path.resolve(__dirname, '../../resources/node-red/node-red-integration.js');
 
 @injectable()
 export class NodeRedServer extends NodeRedSocketServerContribution {
     readonly id = 'node-red';
 
     createContributionOptions(): Partial<NodeRedSocketServerContributionOptions> {
+        console.log("kek node", MODULE_PATH);
+        console.log(__dirname);
         return {
             executable: MODULE_PATH,
             socketConnectionOptions: { port: getPort(PORT_ARG_KEY, DEFAULT_PORT), host: '127.0.0.1' },

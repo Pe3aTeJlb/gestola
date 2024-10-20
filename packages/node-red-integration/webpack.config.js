@@ -17,7 +17,7 @@
 const path = require('path');
 const buildRoot = path.resolve(__dirname, 'lib');
 const appRoot = path.resolve(__dirname, 'dist');
-console.log(__dirname);
+
 /**@type {import('webpack').Configuration}*/
 module.exports = {
     context: path.resolve(__dirname, '../../electron-app/'),

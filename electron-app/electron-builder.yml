@@ -22,6 +22,7 @@ files:
   - resources/icons/WindowIcon/512-512.png
   - resources/templates/default
   - resources/templates/empty
+  - resources/node-red
   - scripts
   - "!**node_modules/**"
 extraResources:
@@ -29,6 +30,8 @@ extraResources:
     to: app/plugins
   - from: ../packages/project-manager/resources
     to: app/resources
+  - from: ../packages/node-red-integrationr/dist
+    to: app/resources/node-red
 
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaBluePrint.ico

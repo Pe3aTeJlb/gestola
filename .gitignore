@@ -8,6 +8,7 @@ electron-app/gen-webpack*
 packages/**/tsconfig.tsbuildinfo
 plugins
 electron-app/resources/templates/*
+electron-app/resources/node-red/*
 yarn.lock
 workflow
 packages/**/dist
