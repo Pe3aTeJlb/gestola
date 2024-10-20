@@ -42,7 +42,6 @@ module.exports = {
                 use: ['source-map-loader'],
                 enforce: 'pre',
             },
-            
             {
                 test: /\.sh$/,
                 use: "ignore-loader",

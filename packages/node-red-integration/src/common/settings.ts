@@ -25,6 +25,7 @@
 //			 Updated by Sebastian Barwe, April 2017 for 0.0.5
 
 var path = require("path"); // Node core library. path library for cross-platform file system specs
+const os = require('os');
 
 // Parameters not used in embedded mode: uiHost, uiPort, httpAdminAuth, httpNodeAuth, httpStatic, httpStaticAuth, https
 export var nrSettings: any = {
@@ -91,10 +92,10 @@ export var nrSettings: any = {
   // By default, these are served relative to '/'. The following property
   // can be used to specifiy a different root path. If set to false, this is
   // disabled.
-  httpNodeRoot: "/api",
+  httpNodeRoot: "/",
 
   // Change user folder to site within this project (default: $HOME/.node-red)
-  userDir: path.join(".", ".gestola"),
+  userDir: path.join(os.homedir(), ".gestola/node-red"),
 
   // Node-RED scans the `nodes` directory in the install directory to find nodes.
   // Adds extra locn, defaults are userDir/nodes & node-red/nodes
@@ -113,7 +114,7 @@ export var nrSettings: any = {
   // Note: once you set this property, do not change it - doing so will prevent
   // node-red from being able to decrypt your existing credentials and they will be
   // lost.
-  // credentialSecret: "",
+  credentialSecret: null,
 
   // The maximum length, in characters, of any message sent to the debug sidebar tab
   debugMaxLength: 1000,

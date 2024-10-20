@@ -3,14 +3,13 @@ import { injectable, postConstruct, inject } from '@theia/core/shared/inversify'
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { MessageService } from '@theia/core';
 import { Message } from '@theia/core/lib/browser';
-import { nrSettings } from '../common/settings';
 
 @injectable()
 export class NodeRedIntegrationWidget extends ReactWidget {
 
     static readonly ID = 'node-red-integration:widget';
     static readonly LABEL = 'Design FLow Editor';
-    private src = `http://${nrSettings.host}:${nrSettings.port}${nrSettings.httpAdminRoot}`;
+    private src = `http://127.0.0.1:1880/admin`;
 
     @inject(MessageService)
     protected readonly messageService!: MessageService;

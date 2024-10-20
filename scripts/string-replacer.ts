@@ -8,9 +8,14 @@ readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red
   }
 
   // 👇️ match string case-insensitively 👇️
-  const replaced = contents.replace(
+  var replaced = contents.replace(
   /version = __webpack_require__\("\.\.\/node_modules\/@node-red\/runtime\/lib sync recursive"\)\(path\.join\(__dirname,"\.\.","package\.json"\)\)\.version;/gi, 
-  'version = (path.join(__dirname,"..","package.json")).version;'
+  'version = "4.0.5";'
+  );
+
+  replaced = replaced.replace(
+    /var r = __webpack_require__\("\.\.\/node_modules\/@node-red\/registry\/lib sync recursive"\)\(node.file\);/g,
+    'var r = require(node.file);'
   );
 
   writeFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), replaced, 'utf-8', function (err) {
