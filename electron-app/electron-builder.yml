@@ -19,19 +19,22 @@ directories:
 files:
   - src-gen
   - lib
-  - resources/icons/WindowIcon/512-512.png
-  - resources/templates/default
-  - resources/templates/empty
-  - resources/node-red
+  - resources
   - scripts
   - "!**node_modules/**"
 extraResources:
   - from: ../plugins
     to: app/plugins
-  - from: ../packages/project-manager/resources
-    to: app/resources
-  - from: ../packages/node-red-integrationr/dist
-    to: app/resources/node-red
+  - from: ../node_modules/oauth2orize
+    to: app/resources/node_modules/oauth2orize
+    filter: [
+      "**/*"
+    ]
+  - from: ../node_modules/@node-red
+    to: app/resources/node_modules/@node-red
+    filter: [
+      "**/*"
+    ]
 
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaBluePrint.ico
@@ -52,11 +55,11 @@ mac:
     provider: generic
     url: "https://github.com/Pe3aTeJlb/gestola"
 linux:
-  icon: resources/icons/LinuxLauncherIcon/gestola1024x512.png
+  icon: resources/icons/LinuxLauncherIcon
   category: Development
   vendor: MIREA SCS Lab
   target:
-    - deb
+    #- deb
     - AppImage
   publish:
     provider: generic

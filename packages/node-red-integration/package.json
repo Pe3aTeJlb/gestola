@@ -34,8 +34,10 @@
     "express": "^4.14.0"
 },
   "scripts": {
-    "bundle": "webpack && ts-node ../../scripts/string-replacer.ts",
+    "bundle": "webpack --env mode='prod' && ts-node ../../scripts/string-replacer.ts prod",
+    "bundle:test": "webpack --env mode='test' && ts-node ../../scripts/string-replacer.ts test",
     "rebuild": "yarn clean && yarn compile && yarn bundle",
+    "rebuild:test": "yarn clean && yarn compile && yarn bundle:test",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo && rimraf dist",
     "clean:entire": "yarn clean && rimraf node_modules",
     "compile": "tsc -b",

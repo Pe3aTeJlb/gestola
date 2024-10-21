@@ -47,7 +47,7 @@
     "rebuild": "theia rebuild:electron --cacheRoot ..",
     "bundle": "theia build --mode development",
     "start": "electron scripts/theia-electron-main.js --plugins=local-dir:../plugins --trace-warnings",
-    "clean": "rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules",
+    "clean": "rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules && rimraf resources/templates && rimraf resources/node-red",
     "clean:entire": "yarn clean && rimraf node_modules",
     "watch": "yarn rebuild && theia build --watch --mode development",
     "update:next": "ts-node ../scripts/update-theia-version.ts"

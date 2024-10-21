@@ -42,9 +42,9 @@
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
     
-    "package:prod": "yarn --cwd electron-app package:prod",
-    "package:test": "yarn --cwd electron-app package:test",
-    "package:fast": "yarn --cwd electron-app package:fast",
+    "package:prod": "yarn rebuild:all && yarn --cwd electron-app package:prod",
+    "package:test": "yarn rebuild:all && yarn --cwd electron-app package:test",
+    "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
     
     "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf yarn.lock && rimraf node_modules",
     "clean:all": "lerna run clean",
@@ -59,9 +59,9 @@
     
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "debug2": "yarn --cwd packages/node-red-integration rebuild",
-    "tst": "yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js"
 
+    "debug:red": "yarn --cwd packages/node-red-integration rebuild:test  && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
+    "kek": "ts-node scripts/string-replacer.ts prod"
   },
   "workspaces": [
     "packages/**/",

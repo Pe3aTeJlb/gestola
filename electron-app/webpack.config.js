@@ -41,7 +41,7 @@ const plugins = [
             }
         ]
     }),
-    new RemovePlugin({
+    /*new RemovePlugin({
         after: {
             root: './resources/templates',
             test: [
@@ -54,7 +54,7 @@ const plugins = [
                 }
             ]
         }
-    }),
+    }),*/
     new RemovePlugin({
         after: {
             test: [

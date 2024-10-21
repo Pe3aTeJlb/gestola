@@ -19,38 +19,41 @@ const buildRoot = path.resolve(__dirname, 'lib');
 const appRoot = path.resolve(__dirname, 'dist');
 
 /**@type {import('webpack').Configuration}*/
-module.exports = {
-    context: path.resolve(__dirname, '../../electron-app/'),
-    entry: [path.resolve(buildRoot, 'app')],
-    output: {
-        filename: 'node-red-integration.js',
-        path: appRoot
-    },
-    node: {
-        __dirname: true,
-    },
-    mode: 'development',
-    devtool: 'source-map',
-    resolve: {
-        extensions: ['.ts', '.tsx', '.js'],
-    },
-    target: 'node',
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                use: ['source-map-loader'],
-                enforce: 'pre',
-            },
-            {
-                test: /\.sh$/,
-                use: "ignore-loader",
-            },
-            {
-                test: /\.node$/,
-                loader: "node-loader",
-            }
-        ]
-    },
-    ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/]
+module.exports = env => { 
+    return {
+        context: path.resolve(__dirname, '../../electron-app/'),
+        entry: [path.resolve(buildRoot, 'app')],
+        output: {
+            filename: 'node-red-integration.js',
+            path: appRoot
+        },
+        node: {
+            __dirname: env.mode === 'prod' ? false : true 
+        },
+        mode: 'development',
+        devtool: 'source-map',
+        resolve: {
+            extensions: ['.ts', '.tsx', '.js'],
+        },
+        target: 'node',
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    use: ['source-map-loader'],
+                    enforce: 'pre',
+                },
+                {
+                    test: /\.sh$/,
+                    use: "ignore-loader",
+                },
+                {
+                    test: /\.node$/,
+                    loader: "node-loader",
+                }
+            ]
+        },
+        ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/]
+    };
+
 };
