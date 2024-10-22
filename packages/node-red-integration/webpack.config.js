@@ -21,14 +21,14 @@ const appRoot = path.resolve(__dirname, 'dist');
 /**@type {import('webpack').Configuration}*/
 module.exports = env => { 
     return {
-        context: path.resolve(__dirname, '../../electron-app/'),
+        context: env.mode === 'prod' ? undefined : path.resolve(__dirname, '../../electron-app/'),
         entry: [path.resolve(buildRoot, 'app')],
         output: {
             filename: 'node-red-integration.js',
             path: appRoot
         },
         node: {
-            __dirname: env.mode === 'prod' ? false : true 
+            __dirname: env.mode === 'prod' ? true : true 
         },
         mode: 'development',
         devtool: 'source-map',

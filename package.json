@@ -56,12 +56,15 @@
     "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
+    "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
     
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
 
     "debug:red": "yarn --cwd packages/node-red-integration rebuild:test  && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
-    "kek": "ts-node scripts/string-replacer.ts prod"
+    "debug:r": "yarn --cwd packages/node-red-integration rebuild",
+    "debug:kek": "yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js"
+
   },
   "workspaces": [
     "packages/**/",
