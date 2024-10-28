@@ -42,8 +42,8 @@
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
     
-    "package:prod": "yarn rebuild:all && yarn --cwd electron-app package:prod",
-    "package:test": "yarn rebuild:all && yarn --cwd electron-app package:test",
+    "package:prod": "yarn rebuild:all && yarn rebuild:node-red:prod && yarn --cwd electron-app package:prod",
+    "package:test": "yarn rebuild:all && yarn rebuild:node-red:prod && yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
     
     "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf yarn.lock && rimraf node_modules",
@@ -57,13 +57,13 @@
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
+    "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",
     
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "debug:red": "yarn -rebuild:node-red && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
 
-    "debug:red": "yarn --cwd packages/node-red-integration rebuild:test  && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
-    "debug:r": "yarn --cwd packages/node-red-integration rebuild",
-    "debug:kek": "yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js"
+    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start"
+
 
   },
   "workspaces": [
