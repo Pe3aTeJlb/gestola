@@ -5,6 +5,8 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { Database } from 'sqlite';
 import { ProjectManager } from './project-manager';
 
+export const defProjStruct = ['.theia', 'database', 'system', 'rtl', 'fpga', 'topology', 'other'];
+
 export class Project {
 
     fileService: FileService

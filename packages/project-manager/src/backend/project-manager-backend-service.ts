@@ -6,6 +6,7 @@ import * as fsextra from 'fs-extra';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
+import { defProjStruct } from '../frontend/project-manager/project';
 
 @injectable()
 export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService {
@@ -19,6 +20,8 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
     }
 
     async createProjectFromTemplate(templateId: string, projectUri: URI): Promise<void> {
+
+        this.createDirStructure(projectUri, defProjStruct);
         
         const defaultTemplate = (await this.getTemplates()).find(e => e.id === "gestola-empty-template");
         if(defaultTemplate !== undefined){
@@ -46,6 +49,12 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
             }
         }
 
+    }
+
+    async createDirStructure(basePath: URI, struct: string[]){
+        for (let i = 0; i < struct.length; i++) {
+            fs.mkdir(basePath.path.join(struct[i]).fsPath(), (error) => {console.log(error)});
+        }
     }
 
     protected copyFiles(targetPath: string, templatePath: string): void {
