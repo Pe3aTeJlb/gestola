@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Disposable } from '@eclipse-glsp/protocol';
+import { Disposable } from '../../common/disposable';
 import { injectable } from 'inversify';
 import * as net from 'net';
 import * as http from "http";
@@ -21,10 +21,11 @@ import * as RED from "node-red";
 import * as express from "express";
 import * as jsonrpc from 'vscode-jsonrpc/node';
 import { JsonRpcNodeRedServerLauncher } from './jsonrpc-server-launcher';
-import { nrSettings } from '../common/settings';
+import { nrSettings } from '../../common/settings';
+import { NodeRedContribution } from '../../common/node-red-contribution';
 
 @injectable()
-export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSocketConnectOpts> {
+export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSocketConnectOpts> implements NodeRedContribution {
 
     protected netServer: http.Server;
 
@@ -82,6 +83,11 @@ export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSo
 
     protected createConnection(socket: net.Socket): jsonrpc.MessageConnection {
         return jsonrpc.createMessageConnection(new jsonrpc.SocketMessageReader(socket), new jsonrpc.SocketMessageWriter(socket), console);
+    }
+
+    openFile(): Promise<void> {
+        console.log('kekw kekl');
+        return Promise.resolve();
     }
 
 }

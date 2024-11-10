@@ -1,27 +1,30 @@
-import { bindAsService } from '@eclipse-glsp/protocol/lib/di';
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { MessagingService } from '@theia/core/lib/node/messaging/messaging-service';
-import { bindContributionProvider, ConnectionHandler, RpcConnectionHandler } from '@theia/core/lib/common';
+import { bindContributionProvider, ConnectionHandler, JsonRpcConnectionHandler } from '@theia/core/lib/common';
 import { NodeRedBackendContribution } from './node-red-backend-contribution';
 import { NodeRedContribution } from '../common/node-red-contribution';
-import { NodeRedServerContribution } from './node-red-server-contribution';
-import { ServerContainerFactory } from './server-container-factory';
-import { NodeRedServer } from './node-red-socket-server-contribution';
-
+import { NodeRedSocketServerContribution } from './node-red-server-contribution';
+import { NodeRedServerContribution } from './node-red-server-contribution'
 
 export default new ContainerModule(bind => {
 
-    bindAsService(bind, MessagingService.Contribution, NodeRedBackendContribution);
+    bind(NodeRedBackendContribution).toSelf().inSingletonScope();
+    bind(MessagingService.Contribution).toService(NodeRedBackendContribution);
+
     bind(NodeRedContribution.Service).toService(NodeRedBackendContribution);
     bindContributionProvider(bind, NodeRedServerContribution);
 
-    bind(ConnectionHandler)
+   /* bind(ConnectionHandler)
         .toDynamicValue(ctx => new RpcConnectionHandler(NodeRedContribution.servicePath, () => ctx.container.get(NodeRedContribution.Service)))
-        .inSingletonScope();
+        .inSingletonScope();*/
 
-    bind(ServerContainerFactory).toFactory(ctx => () => ctx.container.createChild());
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new JsonRpcConnectionHandler(NodeRedContribution.servicePath, () => {
+            return ctx.container.get<NodeRedContribution>(NodeRedContribution.Service);
+        })
+    ).inSingletonScope();
 
-    bind(NodeRedServer).toSelf().inSingletonScope();
-    bind(NodeRedServerContribution).toService(NodeRedServer);
+    bind(NodeRedSocketServerContribution).toSelf().inSingletonScope();
+    bind(NodeRedServerContribution).to(NodeRedSocketServerContribution);
 
 });

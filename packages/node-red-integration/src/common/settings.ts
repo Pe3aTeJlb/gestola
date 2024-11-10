@@ -199,7 +199,7 @@ export var nrSettings: any = {
       // scripts: "/absolute/path/to/custom/js/file"  // As of 0.17
     },
     header: {
-      title: "Design FLow Editor"
+      title: "Design Flow Editor"
       // image: "/absolute/path/to/header/image", // or null to remove image
       // url: "http://nodered.org" // optional url to make the header text/image a link to this url
     }

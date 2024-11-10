@@ -13,10 +13,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Disposable, DisposableCollection, MaybePromise } from '@eclipse-glsp/protocol';
-import { Container, ContainerModule, inject, injectable, optional } from 'inversify';
-import { ServerModule } from '@eclipse-glsp/server';
-import { InjectionContainer } from '@eclipse-glsp/server';
+import { Disposable, DisposableCollection } from '../../common/disposable';
+import { MaybePromise } from '../../common/type-util'
+import { Container, ContainerModule, injectable } from 'inversify';
 
 @injectable()
 export abstract class NodeRedServerLauncher<T> implements Disposable {
@@ -25,14 +24,8 @@ export abstract class NodeRedServerLauncher<T> implements Disposable {
     protected running: boolean;
     protected toDispose = new DisposableCollection();
 
-    @inject(InjectionContainer) @optional() protected parentContainer?: Container;
-
-    configure(serverModule: ServerModule, ...additionalModules: ContainerModule[]): void {
-        this._modules.push(serverModule, ...additionalModules);
-    }
-
     createContainer(...additionalModules: ContainerModule[]): Container {
-        const container = this.parentContainer ? this.parentContainer.createChild() : new Container();
+        const container = new Container();
         container.load(...this._modules, ...additionalModules);
         return container;
     }
