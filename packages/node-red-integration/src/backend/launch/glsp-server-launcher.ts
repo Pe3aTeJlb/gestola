@@ -13,19 +13,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Disposable, DisposableCollection } from '../../common/disposable';
-import { MaybePromise } from '../../common/type-util'
-import { Container, ContainerModule, injectable } from 'inversify';
+import { InjectionContainer } from '../../common/service-identifiers';
+import { Disposable, DisposableCollection } from '../../utils/disposable';
+import { MaybePromise } from '../../utils/type-util';
+import { Container, ContainerModule, injectable, inject, optional } from 'inversify';
 
 @injectable()
-export abstract class NodeRedServerLauncher<T> implements Disposable {
+export abstract class GLSPServerLauncher<T> implements Disposable {
 
     protected _modules: ContainerModule[] = [];
     protected running: boolean;
     protected toDispose = new DisposableCollection();
 
+    @inject(InjectionContainer) @optional() protected parentContainer?: Container;
+
+    configure(serverModule: ContainerModule, ...additionalModules: ContainerModule[]): void {
+        this._modules.push(serverModule, ...additionalModules);
+    }
+
     createContainer(...additionalModules: ContainerModule[]): Container {
-        const container = new Container();
+        const container = this.parentContainer ? this.parentContainer.createChild() : new Container();
         container.load(...this._modules, ...additionalModules);
         return container;
     }
@@ -35,16 +42,19 @@ export abstract class NodeRedServerLauncher<T> implements Disposable {
             this.running = true;
             return this.run(startParams);
         }
+        console.warn('Could not start launcher. Launcher is already running!');
     }
 
     protected abstract run(startParams: T): MaybePromise<void>;
 
     shutdown(): MaybePromise<void> {
         if (this.running) {
+            console.info('Shutdown GLSPServerLauncher');
             const result = this.stop();
             this.running = false;
             return result;
         }
+        console.warn('Could not stop launcher. Launcher is not running!');
     }
 
     protected stop(): MaybePromise<void> {

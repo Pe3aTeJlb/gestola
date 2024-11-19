@@ -60,7 +60,7 @@
     "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",
     
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "debug:red": "yarn -rebuild:node-red && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
+    "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
 
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start"
 

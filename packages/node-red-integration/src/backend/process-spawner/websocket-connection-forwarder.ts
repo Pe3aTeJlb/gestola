@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { WebSocketWrapper, createWebSocketConnection } from '../common/websocket-connection';
+import { WebSocketWrapper, createWebSocketConnection } from '../../utils/websocket-connection';
 import { Channel, Disposable, DisposableCollection } from '@theia/core';
 import { MessageConnection } from '@theia/core/shared/vscode-languageserver-protocol';
 import { WebSocket } from 'ws';

@@ -13,21 +13,16 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { Disposable } from '../../common/disposable';
 import { injectable } from 'inversify';
 import * as net from 'net';
-import * as http from "http";
-import * as RED from "node-red";
-import * as express from "express";
 import * as jsonrpc from 'vscode-jsonrpc/node';
-import { JsonRpcNodeRedServerLauncher } from './jsonrpc-server-launcher';
-import { nrSettings } from '../../common/settings';
-import { NodeRedContribution } from '../../common/node-red-contribution';
+import { JsonRpcGLSPServerLauncher } from './jsonrpc-server-launcher';
+import { Disposable } from '../../utils/disposable';
 
 @injectable()
-export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSocketConnectOpts> implements NodeRedContribution {
+export class SocketServerLauncher extends JsonRpcGLSPServerLauncher<net.TcpSocketConnectOpts> {
 
-    protected netServer: http.Server;
+    protected netServer: net.Server;
 
     constructor() {
         super();
@@ -39,42 +34,33 @@ export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSo
     }
 
     protected run(opts: net.TcpSocketConnectOpts): Promise<void> {
+        this.netServer = net.createServer(socket => {
+            const connection = this.createConnection(socket);
+            this.createServerInstance(connection);
+        });
 
-        var app = express();
-        this.netServer = http.createServer(app);
-    
-        // Initialise the runtime with a server and settings
-        RED.init(this.netServer, nrSettings);
-
-        // Serve the editor UI from /red
-        app.use(nrSettings.httpAdminRoot,RED.httpAdmin);
-
-        // Serve the http nodes UI from /api
-        app.use(nrSettings.httpNodeRoot,RED.httpNode);
-
-        this.netServer.listen(nrSettings.port, nrSettings.host);
+        this.netServer.listen(opts.port, opts.host);
+        this.netServer.on('connection', () => {
+            console.log('kek server');
+        });
         this.netServer.on('listening', () => {
             const addressInfo = this.netServer.address();
             if (!addressInfo) {
+                console.error('Could not resolve GLSP Server address info. Shutting down.');
                 this.shutdown();
                 return;
             } else if (typeof addressInfo === 'string') {
+                console.error(`GLSP Server is unexpectedly listening to pipe or domain socket "${addressInfo}". Shutting down.`);
                 this.shutdown();
                 return;
             }
             const currentPort = addressInfo.port;
+            console.info(`The GLSP server is ready to accept new client requests on port: ${currentPort}`);
             // Print a message to the output stream that indicates that the start is completed.
             // This indicates to the client that the server process is ready (in an embedded scenario).
             console.log(this.startupCompleteMessage.concat(currentPort.toString()));
         });
-
-
         this.netServer.on('error', () => this.shutdown());
-
-        RED.start().then(() =>{
-            console.info("------ Engine started! ------");
-          });
-
         return new Promise((resolve, reject) => {
             this.netServer.on('close', () => resolve(undefined));
             this.netServer.on('error', error => reject(error));
@@ -84,11 +70,4 @@ export class SocketServerLauncher extends JsonRpcNodeRedServerLauncher<net.TcpSo
     protected createConnection(socket: net.Socket): jsonrpc.MessageConnection {
         return jsonrpc.createMessageConnection(new jsonrpc.SocketMessageReader(socket), new jsonrpc.SocketMessageWriter(socket), console);
     }
-
-    openFile(): Promise<void> {
-        console.log('kekw kekl');
-        return Promise.resolve();
-    }
-
 }
-

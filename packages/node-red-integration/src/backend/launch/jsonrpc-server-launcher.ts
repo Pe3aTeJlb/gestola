@@ -14,17 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import {
-    Disposable,
-    GLSPClientProxy,
-    GLSPServer,
-    JsonrpcClientProxy,
-    JsonrpcGLSPClient,
-    configureClientConnection
-} from '@eclipse-glsp/protocol';
+import { configureClientConnection } from '../../common/glsp-jsonrpc-server';
+import { JsonrpcClientProxy } from '../../common/base-jsonrpc-glsp-client';
+import { JsonrpcGLSPClient } from '../../common/glsp-jsonrpc-client';
+import { GLSPServer, GLSPClientProxy } from '../../common/glsp-server';
+import { Disposable } from '../../utils/disposable';
 import { Container, ContainerModule, injectable } from 'inversify';
 import * as jsonrpc from 'vscode-jsonrpc';
-import { NodeRedServerLauncher } from './node-red-server-launcher';
+import { GLSPServerLauncher } from './glsp-server-launcher';
 
 export const START_UP_COMPLETE_MSG = '[GLSP-Server]:Startup completed. Accepting requests on port:';
 
@@ -35,8 +32,8 @@ export interface JsonRpcServerInstance {
 }
 
 @injectable()
-export abstract class JsonRpcNodeRedServerLauncher<T> extends NodeRedServerLauncher<T> {
- 
+export abstract class JsonRpcGLSPServerLauncher<T> extends GLSPServerLauncher<T> {
+
     protected serverInstances = new Map<jsonrpc.MessageConnection, JsonRpcServerInstance>();
     protected startupCompleteMessage = START_UP_COMPLETE_MSG;
 
@@ -81,6 +78,7 @@ export abstract class JsonRpcNodeRedServerLauncher<T> extends NodeRedServerLaunc
             this.disposeServerInstance(serverInstance)
         );
 
+        console.info('Starting GLSP server connection');
     }
 
     protected createClientProxy(serverInstance: JsonRpcServerInstance): GLSPClientProxy {

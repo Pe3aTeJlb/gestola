@@ -4,13 +4,18 @@ import 'reflect-metadata';
 
 import { Container } from 'inversify';
 import { ContainerModule } from 'inversify';
-import { SocketServerLauncher } from './backend/server-launcher/socket-server-launcher';
+import { SocketServerLauncher } from './backend/launch/socket-server-launcher';
+import { DefaultGLSPServer } from './backend/glsp-server';
+import { GLSPServer } from './common/glsp-server';
+import { InjectionContainer } from './common/service-identifiers';
 
 export async function launch(argv?: string[]): Promise<void> {
 
     const appContainer = new Container();
     appContainer.load(
-        new ContainerModule((bind) => {})
+        new ContainerModule((bind) => {
+            bind(InjectionContainer).toDynamicValue(dynamicContext => dynamicContext.container);
+        })
     );
 
     process.on('unhandledRejection', (reason, p) => {
@@ -22,7 +27,13 @@ export async function launch(argv?: string[]): Promise<void> {
     });
 
     const launcher = appContainer.resolve(SocketServerLauncher);
-    launcher.start({ port: 1880, host: "127.0.0.1" });
+    launcher.configure(new ContainerModule((bind) => {
+        
+        bind(DefaultGLSPServer).toSelf().inSingletonScope();
+        bind(GLSPServer).to(DefaultGLSPServer).inSingletonScope();
+    
+    }));
+    launcher.start({ port: 1881, host: "127.0.0.1" });
 
 }
 

@@ -1,14 +1,38 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
+import { GLSPCONTRIBUTION_PATH, GLSPContributionService } from '../common/glsp-contribution';
+import { ServiceConnectionProvider, } from '@theia/core/lib/browser/messaging/service-connection-provider';
+import { bindContributionProvider } from '@theia/core/lib/common';
+import { GLSPClientContribution } from './client/glsp-client-contribution';
+import { GLSPFrontendContribution } from './client/glsp-frontend-contribution';
+import {  FrontendApplicationContribution} from '@theia/core/lib/browser';
+import { NodeRedGLSPClientContribution } from './node-red-client';
 import { NodeRedIntegrationWidget } from './node-red-integration-widget';
 import { NodeRedIntegrationContribution } from './node-red-integration-contribution';
-import { bindViewContribution, FrontendApplicationContribution, WidgetFactory } from '@theia/core/lib/browser';
+import { bindViewContribution, WidgetFactory } from '@theia/core/lib/browser';
 import '../../src/frontend/style/index.css';
-import { NodeRedContribution } from '../common/node-red-contribution';
 import { OpenHandler } from '@theia/core/lib/browser';
 import { NodeRedFileOpener } from './node-red-file-opener';
-import { ServiceConnectionProvider } from '@theia/core/lib/browser/messaging/service-connection-provider';
 
 export default new ContainerModule(bind => {
+    
+    bindContributionProvider(bind, GLSPClientContribution);
+
+    bind(GLSPFrontendContribution).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(GLSPFrontendContribution);
+
+/*
+    bind(GLSPClientContribution).toDynamicValue(dynamicContext => {
+        return dynamicContext.container.resolve(NodeRedGLSPClientContribution);
+    });
+*/
+
+    bind(NodeRedGLSPClientContribution).toSelf().inSingletonScope();
+    bind(GLSPClientContribution).toService(NodeRedGLSPClientContribution);
+
+
+    bind(GLSPContributionService)
+    .toDynamicValue(({ container }) => ServiceConnectionProvider.createProxy(container, GLSPCONTRIBUTION_PATH))
+    .inSingletonScope();
 
     bindViewContribution(bind, NodeRedIntegrationContribution);
     bind(FrontendApplicationContribution).toService(NodeRedIntegrationContribution);
@@ -18,16 +42,6 @@ export default new ContainerModule(bind => {
         createWidget: () => ctx.container.get<NodeRedIntegrationWidget>(NodeRedIntegrationWidget)
     })).inSingletonScope();
 
-    bind(NodeRedContribution.Service)
-    .toDynamicValue(({ container }) => ServiceConnectionProvider.createProxy(container, NodeRedContribution.servicePath))
-    .inSingletonScope();
-
-/*
-    bind(NodeRedContribution.Service).toDynamicValue(ctx => {
-        const connection = ctx.container.get(WebSocketConnectionProvider);
-        return connection.createProxy<NodeRedContribution>(NodeRedContribution.servicePath);
-    }).inSingletonScope();
-*/
     bind(NodeRedFileOpener).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(NodeRedFileOpener);
     bind(OpenHandler).toService(NodeRedFileOpener);

@@ -154,6 +154,7 @@ export class WebSocketMessageWriter extends AbstractMessageWriter {
 export function createWebSocketConnection(socket: WebSocketWrapper, logger?: Logger): MessageConnection {
     const reader = new WebSocketMessageReader(socket);
     const writer = new WebSocketMessageWriter(socket);
+    console.log('cwsc111');
     return createMessageConnection(reader, writer, logger);
 }
 
@@ -170,11 +171,17 @@ export function listen(
     logger?: Logger
 ): Promise<MessageConnection> {
     return new Promise(resolve => {
+        console.log('cwsc011');
         webSocket.onopen = () => {
+            console.log('cwsc11');
             const socket = wrap(webSocket);
+            console.log('cwsc12');
             const connection = createWebSocketConnection(socket, logger);
+            console.log('cwsc13');
             onConnection?.(connection);
+            console.log('cwsc14');
             resolve(connection);
+            console.log('cwsc15');
         };
     });
 }

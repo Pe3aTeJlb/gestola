@@ -1,4 +1,3 @@
-import { codiconCSSString } from '@eclipse-glsp/client';
 import {
     ApplicationShell,
     OpenWithHandler,
@@ -10,10 +9,10 @@ import URI from '@theia/core/lib/common/uri';
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { EditorManager } from '@theia/editor/lib/browser';
 import { NodeRedIntegrationWidget } from './node-red-integration-widget';
-import { NodeRedContribution } from '../common/node-red-contribution';
+//import { NodeRedContribution } from '../common/node-red-contribution';
 
 @injectable()
-export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidget> implements OpenWithHandler {
+export abstract class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidget> implements OpenWithHandler {
     
     @inject(EditorManager)
     protected readonly editorManager: EditorManager;
@@ -21,10 +20,12 @@ export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidge
     @inject(OpenWithService)
     protected openWithService: OpenWithService;
 
-    @inject(NodeRedContribution.Service)
-    private readonly nodeRedContribution: NodeRedContribution;
+    /*@inject(NodeRedContribution.Service)
+    private readonly nodeRedContribution: NodeRedContribution;*/
 
     fileExtensions: string[] = ['.df'];
+
+    abstract get contributionId(): string;
 
     protected widgetCount = 0;
 
@@ -36,10 +37,6 @@ export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidge
         if (this.registerOpenWithHandler) {
             this.openWithService.registerHandler(this);
         }
-    }
-
-    protected override createWidgetOptions(uri: URI, options?: WidgetOpenerOptions | undefined): Object {
-        return {};
     }
 
     override async doOpen(widget: NodeRedIntegrationWidget, maybeOptions?: WidgetOpenerOptions): Promise<void> {
@@ -74,20 +71,13 @@ export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidge
     canHandle(uri: URI, _options?: WidgetOpenerOptions | undefined): number {
         for (const extension of this.fileExtensions) {
             if (uri.path.toString().endsWith(extension)) {
-                this.nodeRedContribution.openFile();
+                //this.nodeRedContribution.openFile();
                 return 1001;
             }
         }
         return 0;
     }
 
-    override get id(): string {
-        return NodeRedIntegrationWidget.ID;
-    }
-
-    get iconClass(): string {
-        return codiconCSSString('type-hierarchy-sub');
-    }
 
     get providerName(): string | undefined {
         return undefined;
