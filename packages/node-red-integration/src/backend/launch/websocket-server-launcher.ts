@@ -14,7 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { createWebSocketConnection, Disposable, MaybePromise, WebSocketWrapper } from '@eclipse-glsp/protocol';
+import { createWebSocketConnection } from '../../utils/websocket-connection';
+import { Disposable } from '../../utils/disposable';
+import { MaybePromise } from '../../utils/type-util';
+import { WebSocketWrapper } from '../../utils/websocket-connection';
 import * as http from 'http';
 import { injectable } from 'inversify';
 import * as net from 'net';

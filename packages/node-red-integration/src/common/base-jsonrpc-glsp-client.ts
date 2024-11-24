@@ -53,9 +53,7 @@ export class BaseJsonrpcGLSPClient implements GLSPClient {
 
     async initializeServer(params: InitializeParameters): Promise<InitializeResult> {
         if (!this._initializeResult) {
-            console.log("client init server 11", this.checkedConnection);
             this._initializeResult = await this.checkedConnection.sendRequest(JsonrpcGLSPClient.InitializeRequest, params);
-            console.log("client init server 22", this._initializeResult);
             this.onServerInitializedEmitter.fire(this._initializeResult);
         }
         return this._initializeResult;

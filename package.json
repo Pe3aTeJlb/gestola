@@ -46,7 +46,7 @@
     "package:test": "yarn rebuild:all && yarn rebuild:node-red:prod && yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
     
-    "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf yarn.lock && rimraf node_modules",
+    "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf node_modules",
     "clean:all": "lerna run clean",
     "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
     
@@ -62,6 +62,7 @@
     "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
 
+    "bundle": "yarn --cwd electron-app bundle",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start"
 
 

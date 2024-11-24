@@ -35,12 +35,8 @@ export class GLSPBackendContribution implements MessagingService.Contribution {
         for (const contribution of this.contributors.getContributions()) {
             const path = GLSPContribution.getPath(contribution);
             if (GLSPServerContributionOptions.shouldLaunchOnApplicationStart(contribution) && contribution.launch) {
-                console.log("launch server", contribution);
                 contribution.launch();
-                console.log("server launched");
                 this.forward(service, path, contribution);
-                console.log("server launched 1");
-                
             } else {
                 this.forward(service, path, contribution);
             }
@@ -48,10 +44,9 @@ export class GLSPBackendContribution implements MessagingService.Contribution {
     }
 
     protected forward(service: MessagingService, path: string, contribution: GLSPServerContribution): void {
-        console.log('forward forward');
+
         service.registerChannelHandler(path, async (_params, clientChannel) => {
             try {
-                console.log('create forwarder');
                 const toDispose = await contribution.connect(clientChannel);
                 clientChannel.onClose(() => toDispose.dispose());
             } catch (e) {

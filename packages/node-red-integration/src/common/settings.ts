@@ -26,12 +26,23 @@
 
 var path = require("path"); // Node core library. path library for cross-platform file system specs
 const os = require('os');
-
+import { LAUNCH_PATH } from "../backend/node-red-server-contribution";
+console.log("node red setting 1", LAUNCH_PATH);
+console.log("node red settings",__dirname);
+console.log("node red settings",path.resolve(__dirname));
+console.log("node red settings", path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")));
 // Parameters not used in embedded mode: uiHost, uiPort, httpAdminAuth, httpNodeAuth, httpStatic, httpStaticAuth, https
 export var nrSettings: any = {
   
   host: "127.0.0.1",
   port: 1880,
+
+  // Change user folder to site within this project (default: $HOME/.node-red)
+  userDir: path.join(os.homedir(), ".gestola/node-red"),
+
+  // Node-RED scans the `nodes` directory in the install directory to find nodes.
+  // Adds extra locn, defaults are userDir/nodes & node-red/nodes
+  nodesDir: path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")),
 
   // --- Admin Config --- //
 
@@ -93,13 +104,6 @@ export var nrSettings: any = {
   // can be used to specifiy a different root path. If set to false, this is
   // disabled.
   httpNodeRoot: "/",
-
-  // Change user folder to site within this project (default: $HOME/.node-red)
-  userDir: path.join(os.homedir(), ".gestola/node-red"),
-
-  // Node-RED scans the `nodes` directory in the install directory to find nodes.
-  // Adds extra locn, defaults are userDir/nodes & node-red/nodes
-  nodesDir: path.join(".", "nodes"),
 
   // The file containing the flows. If not set, it defaults to flows_<hostname>.json
   flowFile: "flows.json",

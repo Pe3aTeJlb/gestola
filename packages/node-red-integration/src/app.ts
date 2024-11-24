@@ -11,6 +11,7 @@ import { InjectionContainer } from './common/service-identifiers';
 
 export async function launch(argv?: string[]): Promise<void> {
 
+    console.log("App dirname", __dirname);
     const appContainer = new Container();
     appContainer.load(
         new ContainerModule((bind) => {

@@ -101,6 +101,8 @@ export class DefaultGLSPServer implements GLSPServer {
 
     protected initNodeRed(){
 
+        console.log("Node red server", __dirname);
+
         var app = express();
         var netServer = http.createServer(app);
     

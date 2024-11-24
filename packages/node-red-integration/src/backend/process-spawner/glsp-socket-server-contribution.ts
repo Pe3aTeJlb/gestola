@@ -91,7 +91,6 @@ export abstract class GLSPSocketServerContribution extends BaseGLSPServerContrib
 
     doConnect(clientChannel: Channel): MaybePromise<Disposable> {
         const webSocketAddress = getWebSocketAddress(this.options.socketConnectionOptions);
-        console.log('spawner', webSocketAddress);
         if (webSocketAddress) {
             if (!isValidWebSocketAddress(webSocketAddress)) {
                 throw new Error(`Could not connect to server. The given websocket address is not valid: ${webSocketAddress}`);
@@ -127,7 +126,6 @@ export abstract class GLSPSocketServerContribution extends BaseGLSPServerContrib
         } catch (error) {
             this.onReadyDeferred.reject(error);
         }
-        console.log('exit launch');
         return this.onReadyDeferred.promise;
     }
 

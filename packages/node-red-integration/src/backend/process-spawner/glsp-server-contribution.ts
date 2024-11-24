@@ -130,7 +130,6 @@ export abstract class BaseGLSPServerContribution implements GLSPServerContributi
     }
 
     async connect(clientChannel: Channel): Promise<Disposable> {
-        console.log("spawner connect", clientChannel);
         const clientDisposable = await this.doConnect(clientChannel);
         this.toDispose.push(clientDisposable);
         return clientDisposable;

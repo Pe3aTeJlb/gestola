@@ -25,12 +25,14 @@ const DEFAULT_PORT = 1881;
 const PORT_ARG_KEY = 'NODERED';
 //const MODULE_PATH = require.resolve('@gestola/node-red-integration');
 const MODULE_PATH = path.resolve(__dirname, '../../resources/node-red/node-red-integration.js');
+const kek = __dirname;
+export const LAUNCH_PATH = path.resolve(kek, '../../resources/node-red/nodes');
 
 @injectable()
 export class NodeRedServerContribution extends GLSPSocketServerContribution {
     readonly id = 'keklol';
-
     createContributionOptions(): Partial<GLSPSocketServerContributionOptions> {
+        console.log("Node red dir", __dirname, LAUNCH_PATH);
         return {
             executable: MODULE_PATH,
             socketConnectionOptions: { port: getPort(PORT_ARG_KEY, DEFAULT_PORT) },

@@ -40,9 +40,6 @@ export class SocketServerLauncher extends JsonRpcGLSPServerLauncher<net.TcpSocke
         });
 
         this.netServer.listen(opts.port, opts.host);
-        this.netServer.on('connection', () => {
-            console.log('kek server');
-        });
         this.netServer.on('listening', () => {
             const addressInfo = this.netServer.address();
             if (!addressInfo) {
