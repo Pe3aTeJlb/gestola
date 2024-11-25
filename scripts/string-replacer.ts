@@ -19,6 +19,11 @@ readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red
     'var r = require(node.file);'
   );
 
+  replaced = replaced.replace(
+    /const pkg = __webpack_require__\(".*"\)\(packagefile\)/g,
+    'const pkg = require(packagefile)'
+  );
+
   writeFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), replaced, 'utf-8', function (err) {
     console.log('replaces')
     console.log(err);

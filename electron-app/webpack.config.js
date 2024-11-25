@@ -38,11 +38,6 @@ const plugins = [
                 // copy examples to resource folder
                 from: path.join(resolvePackagePath('@gestola/node-red-integration', __dirname), '..', 'dist'),
                 to: path.resolve(__dirname, 'resources/node-red')
-            },
-            {
-                // copy examples to resource folder
-                from: path.join(resolvePackagePath('node-red-contrib-password-generator', __dirname), ".."),
-                to: path.resolve(__dirname, 'resources/node-red/nodes/node-red-contrib-password-generator')
             }
         ]
     }),
@@ -76,7 +71,17 @@ const plugins = [
 ]
 
 configs[0].plugins.push(...plugins);
-
+nodeConfig.config.module?.rules?.push(
+    {
+        test: /\.sh$/,
+        use: "ignore-loader",
+    },
+);
+nodeConfig.config.node =  {
+    global: false,
+    __filename: false,
+    __dirname: true
+},
 module.exports = [
     ...configs,
     nodeConfig.config,
