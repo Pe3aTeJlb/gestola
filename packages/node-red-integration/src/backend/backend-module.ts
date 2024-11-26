@@ -13,28 +13,22 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { ConnectionHandler, RpcConnectionHandler } from '@theia/core/lib/common';
+import { ConnectionHandler } from '@theia/core/lib/common';
 import { ContainerModule } from '@theia/core/shared/inversify';
-import {GLSPCONTRIBUTION_PATH, GLSPContributionService } from '../common/glsp-contribution';
-import { bindContributionProvider } from '@theia/core/lib/common';
-import { MessagingService } from '@theia/core/lib/node/messaging/messaging-service';
-import { GLSPBackendContribution } from './process-spawner/glsp-backend-contribution';
-import { GLSPServerContribution } from './process-spawner/glsp-server-contribution';
-import { NodeRedServerContribution } from './node-red-server-contribution';
+import { NODE_RED_BACKEND_PATH, NodeRedService } from '../common/protocol';
+import { NodeRedServer } from './node-red-server';
+import { BackendApplicationContribution } from '@theia/core/lib/node';
+import { JsonRpcConnectionHandler } from '@theia/core/lib/common/messaging';
 
 export default new ContainerModule(bind => {
 
-    bind(GLSPBackendContribution).toSelf().inSingletonScope();
-    bind(MessagingService.Contribution).toService(GLSPBackendContribution);
-    
-    bind(GLSPContributionService).toService(GLSPBackendContribution);
-    bindContributionProvider(bind, GLSPServerContribution);
-
-    bind(ConnectionHandler)
-    .toDynamicValue(ctx => new RpcConnectionHandler(GLSPCONTRIBUTION_PATH, () => ctx.container.get(GLSPContributionService)))
-    .inSingletonScope();
-
-    bind(NodeRedServerContribution).toSelf().inSingletonScope();
-    bind(GLSPServerContribution).toService(NodeRedServerContribution);
+    bind(NodeRedServer).toSelf().inSingletonScope();
+    bind(BackendApplicationContribution).toService(NodeRedServer);
+    bind(NodeRedService).to(NodeRedServer).inSingletonScope()
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new JsonRpcConnectionHandler(NODE_RED_BACKEND_PATH, () => {
+            return ctx.container.get<NodeRedService>(NodeRedService);
+        })
+    ).inSingletonScope();
 
 });

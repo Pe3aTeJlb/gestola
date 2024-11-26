@@ -28,6 +28,9 @@
           "path": "packages/design-flow-glsp-client"
         },
         {
+          "path": "packages/shitty-rpc"
+        },
+        {
           "path": "packages/node-red-integration"
         }
     ]

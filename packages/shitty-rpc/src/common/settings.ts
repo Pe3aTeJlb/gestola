@@ -26,6 +26,8 @@
 
 var path = require("path"); // Node core library. path library for cross-platform file system specs
 const os = require('os');
+import { LAUNCH_PATH } from "../backend/node-red-server-contribution";
+console.log("node red setting 1", LAUNCH_PATH);
 console.log("node red settings",__dirname);
 console.log("node red settings",path.resolve(__dirname));
 console.log("node red settings", path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")));

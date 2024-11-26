@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/node-red-integration",
+  "name": "@gestola/lower-case",
   "private": true,
   "keywords": [
     "gestola",
@@ -15,34 +15,28 @@
   },
   "homepage": "https://github.com/Pe3aTeJlb/gestola",
   "version": "1.0.0",
-  "main": "./dist/node-red-integration.js",
   "files": [
     "lib",
     "src"
   ],
+  "node-red" : {
+    "nodes": {
+        "lower-case": "lower-case.js"
+    }
+  },
+  "dependencies": {
+      "@gestola/project-manager": "1.0.0"
+  },
   "devDependencies": {
-    "@types/node-red": "1.3.5"
-},
-"dependencies": {
     "node-red": "4.0.5",
-    "express": "^4.14.0"
-},
+    "rimraf": "3.0.2"
+  },
   "scripts": {
-
     "rebuild": "yarn clean && yarn compile",
-    "bundle": "webpack --env mode='test' && ts-node ../../scripts/string-replacer.ts",
-    
-    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo && rimraf dist",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "clean:entire": "yarn clean && rimraf node_modules",
     "compile": "tsc -b",
     "watch": "tsc -w",
-    "update:next": "ts-node ../../scripts/update-theia-version.ts",
-    "start": "node ./dist/node-red-integration.js"
-  },
-  "theiaExtensions": [
-    {
-      "backend": "lib/backend/backend-module",
-      "frontend": "lib/frontend/frontend-module"
-    }
-  ]
+    "update:next": "ts-node ../../scripts/update-theia-version.ts"
+  }
 }

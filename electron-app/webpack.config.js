@@ -33,11 +33,6 @@ const plugins = [
                 // copy examples to resource folder
                 from: path.join(resolvePackagePath('@gestola/project-manager', __dirname), '..', 'resources'),
                 to: path.resolve(__dirname, 'resources')
-            },
-            {
-                // copy examples to resource folder
-                from: path.join(resolvePackagePath('@gestola/node-red-integration', __dirname), '..', 'dist'),
-                to: path.resolve(__dirname, 'resources/node-red')
             }
         ]
     }),
@@ -77,11 +72,12 @@ nodeConfig.config.module?.rules?.push(
         use: "ignore-loader",
     },
 );
+/*
 nodeConfig.config.node =  {
     global: false,
     __filename: false,
     __dirname: true
-},
+},*/
 module.exports = [
     ...configs,
     nodeConfig.config,

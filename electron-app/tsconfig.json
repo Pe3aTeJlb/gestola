@@ -20,15 +20,6 @@
       "path": "../packages/branding"
     },
     {
-      "path": "../packages/design-flow-editor"
-    },
-    {
-      "path": "../packages/design-flow-glsp-server"
-    },
-    {
-      "path": "../packages/design-flow-glsp-client"
-    },
-    {
       "path": "../packages/node-red-integration"
     }
   ]
