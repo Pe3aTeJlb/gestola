@@ -15,7 +15,8 @@
   },
   "homepage": "https://github.com/Pe3aTeJlb/gestola",
   "version": "1.0.0",
-  "main": "./dist/node-red-integration.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "src"
