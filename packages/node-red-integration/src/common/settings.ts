@@ -26,9 +26,7 @@
 
 var path = require("path"); // Node core library. path library for cross-platform file system specs
 const os = require('os');
-console.log("node red settings",__dirname);
-console.log("node red settings",path.resolve(__dirname));
-console.log("node red settings", path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")));
+
 // Parameters not used in embedded mode: uiHost, uiPort, httpAdminAuth, httpNodeAuth, httpStatic, httpStaticAuth, https
 export var nrSettings: any = {
   
@@ -40,7 +38,7 @@ export var nrSettings: any = {
 
   // Node-RED scans the `nodes` directory in the install directory to find nodes.
   // Adds extra locn, defaults are userDir/nodes & node-red/nodes
-  nodesDir: path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")),
+  //nodesDir: path.resolve(path.join(__dirname, "..", "..", "..", "..", "electron-app", "resources", "node-red", "nodes")),
 
   // --- Admin Config --- //
 
