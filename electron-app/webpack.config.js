@@ -72,12 +72,20 @@ nodeConfig.config.module?.rules?.push(
         use: "ignore-loader",
     },
 );
+nodeConfig.config.ignoreWarnings?.push(
+    {
+        module: /@node/
+    }
+);
+
+console.log(nodeConfig.config);
 /*
 nodeConfig.config.node =  {
     global: false,
     __filename: false,
     __dirname: true
 },*/
+
 module.exports = [
     ...configs,
     nodeConfig.config,
