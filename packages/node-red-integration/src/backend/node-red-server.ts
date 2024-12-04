@@ -48,7 +48,8 @@ export class NodeRedServer implements NodeRedService, BackendApplicationContribu
     }
 
     launch(): Promise<void> {
-        throw new Error('Method not implemented.');
+        console.log("Kek lol arbidol server");
+        return Promise.resolve();
     }
 
     openFile(uri: URI): Promise<void> {

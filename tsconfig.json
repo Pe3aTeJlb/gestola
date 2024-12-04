@@ -32,6 +32,9 @@
         },
         {
           "path": "packages/node-red-integration"
+        },
+        {
+          "path": "packages/gestola-nodes/lower-case"
         }
     ]
 }
