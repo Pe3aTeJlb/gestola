@@ -57,7 +57,7 @@
     "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     
-    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && ts-node scripts/string-replacer.ts && yarn --cwd electron-app start",
+    "debug": "yarn rebuild:all && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app node ../packages/node-red-integration/dist/node-red-integration.js",
 
     "bundle": "yarn --cwd electron-app bundle",
