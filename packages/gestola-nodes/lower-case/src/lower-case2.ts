@@ -1,5 +1,5 @@
 import * as nodered from "node-red";
-import { NodeRedServer } from "@gestola/node-red-integration";
+import { NodeRedServiceImpl } from "@gestola/node-red-integration";
 import { NodeDef } from "@node-red/registry";
 import { Container } from 'inversify';
 //import { ProjectManagerBackendServiceImpl } from "@gestola/project-manager/src/backend/project-manager-backend-service";
@@ -10,7 +10,7 @@ export = (RED: nodered.NodeAPI): void => {
         const appContainer = new Container();
 
         //var backend = appContainer.resolve(ProjectManagerBackendServiceImpl);
-        const lel = appContainer.resolve(NodeRedServer);
+        const lel = appContainer.resolve(NodeRedServiceImpl);
         console.log("kek lol arbidol 2",  lel.launch());
 
         var node = this;

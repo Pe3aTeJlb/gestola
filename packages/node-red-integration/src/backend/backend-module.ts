@@ -16,15 +16,15 @@
 import { ConnectionHandler } from '@theia/core/lib/common';
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { NODE_RED_BACKEND_PATH, NodeRedService } from '../common/protocol';
-import { NodeRedServer } from './node-red-server';
+import { NodeRedServiceImpl } from './node-red-service';
 import { BackendApplicationContribution } from '@theia/core/lib/node';
 import { JsonRpcConnectionHandler } from '@theia/core/lib/common/messaging';
 
 export default new ContainerModule(bind => {
 
-    bind(NodeRedServer).toSelf().inSingletonScope();
-    bind(BackendApplicationContribution).toService(NodeRedServer);
-    bind(NodeRedService).to(NodeRedServer).inSingletonScope()
+    bind(NodeRedServiceImpl).toSelf().inSingletonScope();
+    bind(BackendApplicationContribution).toService(NodeRedServiceImpl);
+    bind(NodeRedService).to(NodeRedServiceImpl).inSingletonScope()
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new JsonRpcConnectionHandler(NODE_RED_BACKEND_PATH, () => {
             return ctx.container.get<NodeRedService>(NodeRedService);

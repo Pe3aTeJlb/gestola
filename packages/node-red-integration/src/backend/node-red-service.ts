@@ -2,18 +2,24 @@ import { MaybePromise, URI } from '@theia/core';
 import { injectable } from '@theia/core/shared/inversify';
 import { NodeRedService } from '../common/protocol';
 import { BackendApplicationContribution } from '@theia/core/lib/node';
-import { Application } from 'express';
+import * as http from "http";
+import * as https from "https";
+/*
 import * as http from "http";
 import * as RED from "node-red";
 import { nrSettings } from '../common/settings';
-import * as express from "express";
+import * as express from "express";*/
+
+const nodeRedServer = require('../../dist/node-red-integration');
 
 @injectable()
-export class NodeRedServer implements NodeRedService, BackendApplicationContribution {
+export class NodeRedServiceImpl implements NodeRedService, BackendApplicationContribution {
     
-    configure(lol: Application): MaybePromise<void> {
+    onStart(server: http.Server | https.Server): MaybePromise<void> {
+console.log("Red onstart", __dirname);
+        nodeRedServer.launch();
         
-        console.log("Node red server", __dirname);
+        /*console.log("Node red server", __dirname);
 
         var app = express();
         var netServer = http.createServer(app);
@@ -43,7 +49,7 @@ export class NodeRedServer implements NodeRedService, BackendApplicationContribu
 
         RED.start().then(() =>{
             console.info("------ Engine started! ------");
-        });
+        });*/
 
     }
 

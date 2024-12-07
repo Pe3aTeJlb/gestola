@@ -19,21 +19,27 @@
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
-    "src"
+    "src",
+    "dist"
   ],
   "devDependencies": {
     "@types/node-red": "1.3.5"
-},
-"dependencies": {
-    "node-red": "4.0.5",
-    "express": "^4.14.0"
-},
+  },
+  "dependencies": {
+      "node-red": "4.0.5",
+      "@node-red/nodes": "4.0.5",
+      "express": "^4.14.0",
+      "@gestola/node-red-contrib-lower-case": "1.0.0"
+  },
   "scripts": {
 
-    "rebuild": "yarn clean && yarn compile",
+    "rebuild": "yarn clean && yarn compile && yarn bundle",
     "bundle": "webpack --env mode='test' && ts-node ../../scripts/string-replacer.ts",
+
+    "rebuild:prod": "yarn clean && yarn compile && yarn bundle:prod",
+    "bundle:prod": "webpack --env mode='prod' && ts-node ../../scripts/string-replacer.ts",
     
-    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo && rimraf dist",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "clean:entire": "yarn clean && rimraf node_modules",
     "compile": "tsc -b",
     "watch": "tsc -w",

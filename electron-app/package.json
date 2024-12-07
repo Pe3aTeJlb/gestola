@@ -25,6 +25,7 @@
     "@gestola/project-manager": "1.0.0",
     "@gestola/explorer": "1.0.0",
     "@gestola/node-red-integration": "1.0.0"
+    
   },
   "devDependencies": {
     "@theia/cli": "1.53.2",
@@ -41,11 +42,11 @@
     "package:prod": "yarn build:prod && electron-builder -c.mac.identity=null --publish never",
     "package:test": "yarn build:test && electron-builder -c.mac.identity=null --publish never",
     "package:fast": "rimraf dist && electron-builder -c.mac.identity=null --publish never",
-    "build:prod": "yarn clean && yarn compile && theia rebuild:electron && theia build",
-    "build:test": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development",
+    "build:prod": "yarn clean && yarn compile && theia rebuild:electron && theia build && ts-node ../scripts/string-replacer2.ts",
+    "build:test": "yarn clean && yarn compile && theia rebuild:electron && theia build --mode development && ts-node ../scripts/string-replacer2.ts",
     "compile": "tsc -b",
     "rebuild": "theia rebuild:electron --cacheRoot ..",
-    "bundle": "theia build --mode development",
+    "bundle": "theia build --mode development && ts-node ../scripts/string-replacer2.ts",
     "start": "electron scripts/theia-electron-main.js --plugins=local-dir:../plugins --trace-warnings",
     "clean": "rimraf gen-webpack.config.js && rimraf gen-webpack.node.config.js && rimraf src-gen && rimraf lib && rimraf dist && rimraf .browser_modules && rimraf resources/templates && rimraf resources/node-red",
     "clean:entire": "yarn clean && rimraf node_modules",

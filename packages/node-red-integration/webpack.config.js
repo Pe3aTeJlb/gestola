@@ -21,11 +21,16 @@ const appRoot = path.resolve(__dirname, 'dist');
 /**@type {import('webpack').Configuration}*/
 module.exports = env => { 
     return {
-        context: env.mode === 'prod' ? undefined : path.resolve(__dirname, '../../electron-app/'),
+        context: env.mode === 'prod' ? undefined : path.resolve(__dirname, '../../electron-app'),
         entry: [path.resolve(buildRoot, 'app')],
         output: {
             filename: 'node-red-integration.js',
-            path: appRoot
+            path: appRoot,
+            globalObject: 'this',
+            library: {
+              name: 'nodeRedServer',
+              type: 'umd',
+            },
         },
         node: {
             __dirname: env.mode === 'prod' ? true : true 
@@ -34,6 +39,7 @@ module.exports = env => {
         devtool: 'source-map',
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
+            modules: ['../node_modules', 'node_modules'],
         },
         target: 'node',
         module: {
@@ -50,10 +56,24 @@ module.exports = env => {
                 {
                     test: /\.node$/,
                     loader: "node-loader",
+                },
+                {
+                    test: /node_modules[\/](jsonc-parser)/,
+                    loader: 'umd-compat-loader'
                 }
             ]
         },
-        ignoreWarnings: [/Failed to parse source map/, /Can't resolve .* in '.*ws\/lib'/]
+        ignoreWarnings: [
+            // Some packages do not have source maps, that's ok
+            /Failed to parse source map/,
+            // Some packages use dynamic requires, we can safely ignore them (they are handled by the native webpack plugin)
+            /require function is used in a way in which dependencies cannot be statically extracted/,
+            /Can't resolve .* in '.*ws\/lib'/,
+            {
+                module: /@node/
+            }
+        ]
+        
     };
 
 };

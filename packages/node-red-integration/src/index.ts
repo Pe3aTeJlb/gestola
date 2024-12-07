@@ -1,1 +1,1 @@
-export * from './backend/node-red-server';
+export * from './backend/node-red-service'
