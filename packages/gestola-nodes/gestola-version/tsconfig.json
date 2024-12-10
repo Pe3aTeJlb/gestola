@@ -1,0 +1,18 @@
+{
+    "extends": "../../../configs/base.tsconfig",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": "src",
+        "baseUrl": ".",
+        "outDir": "lib",
+        "target": "ES6"
+    },
+    "include": [
+      "src" 
+    ],
+    "references": [
+      {
+        "path": "../base-node"
+      }
+    ]
+}

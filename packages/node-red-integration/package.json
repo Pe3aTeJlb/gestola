@@ -28,8 +28,7 @@
   "dependencies": {
       "node-red": "4.0.5",
       "@node-red/nodes": "4.0.5",
-      "express": "^4.14.0",
-      "@gestola/node-red-contrib-lower-case": "1.0.0"
+      "express": "^4.14.0"
   },
   "scripts": {
 
