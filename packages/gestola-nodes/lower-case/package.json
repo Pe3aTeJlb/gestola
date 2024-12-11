@@ -26,7 +26,6 @@
     }
   },
   "dependencies": {
-    "@gestola/project-manager": "1.0.0",
     "@gestola/node-red-integration": "1.0.0"
   },
   "devDependencies": {

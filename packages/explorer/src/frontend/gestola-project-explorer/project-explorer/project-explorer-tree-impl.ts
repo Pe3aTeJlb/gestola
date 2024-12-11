@@ -1,5 +1,5 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
-import { inject, injectable } from "inversify";
+import { inject, injectable } from "@theia/core/shared/inversify";
 import { ProjectManager, Project } from '@gestola/project-manager';
   
 @injectable()

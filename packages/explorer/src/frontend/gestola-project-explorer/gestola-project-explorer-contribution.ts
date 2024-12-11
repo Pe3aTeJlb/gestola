@@ -1,4 +1,4 @@
-import { injectable, inject, postConstruct } from 'inversify';
+import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { ProjectExplorerWidget } from './project-explorer/project-explorer-widget';
