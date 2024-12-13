@@ -24,6 +24,11 @@ readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red
     'const pkg = require(packagefile)'
   );
 
+  replaced = replaced.replace(
+    /log.warn\("["+nodeErrors[i].id+"] "+nodeErrors[i].err\);/g,
+    'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err + "  " + nodeErrors[i].err.details);'
+  );
+
   writeFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), replaced, 'utf-8', function (err) {
     console.log('replaces')
     console.log(err);

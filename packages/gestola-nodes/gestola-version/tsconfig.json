@@ -4,8 +4,7 @@
         "composite": true,
         "rootDir": "src",
         "baseUrl": ".",
-        "outDir": "lib",
-        "target": "ES6"
+        "outDir": "lib"
     },
     "include": [
       "src" 

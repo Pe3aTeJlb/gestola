@@ -4,11 +4,7 @@ import { NodeRedService } from '../common/protocol';
 import { BackendApplicationContribution } from '@theia/core/lib/node';
 import * as http from "http";
 import * as https from "https";
-/*
-import * as http from "http";
-import * as RED from "node-red";
-import { nrSettings } from '../common/settings';
-import * as express from "express";*/
+
 
 const nodeRedServer = require('../../dist/node-red-integration');
 

@@ -19,6 +19,11 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), 'utf-8'
     'const pkg = require(packagefile)'
   );
 
+  replaced = replaced.replace(
+    /const { container } = __webpack_require__\(".*"\)\(path.resolve\(__dirname, '..\/..\/src-gen\/backend\/server.js'\)\)/g,
+    "const { container } = require(path.resolve(__dirname, '../../src-gen/backend/server.js'))"
+  );
+
   writeFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), replaced, 'utf-8', function (err) {
     console.log('replaces')
     console.log(err);
