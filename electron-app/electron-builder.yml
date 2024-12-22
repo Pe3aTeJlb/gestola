@@ -21,20 +21,10 @@ files:
   - lib
   - resources
   - scripts
-  - "!**node_modules/**"
+  - node_modules
 extraResources:
   - from: ../plugins
     to: app/plugins
-  - from: ../node_modules/oauth2orize
-    to: app/resources/node_modules/oauth2orize
-    filter: [
-      "**/*"
-    ]
-  - from: ../node_modules/@node-red
-    to: app/resources/node_modules/@node-red
-    filter: [
-      "**/*"
-    ]
 
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaBluePrint.ico

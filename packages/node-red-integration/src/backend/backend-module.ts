@@ -22,6 +22,8 @@ import { JsonRpcConnectionHandler } from '@theia/core/lib/common/messaging';
 
 export default new ContainerModule(bind => {
 
+    console.log("dirname", __dirname);
+
     bind(NodeRedServiceImpl).toSelf().inSingletonScope();
     bind(BackendApplicationContribution).toService(NodeRedServiceImpl);
     bind(NodeRedService).to(NodeRedServiceImpl).inSingletonScope()

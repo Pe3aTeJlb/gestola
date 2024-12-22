@@ -6,10 +6,11 @@ import ES6Node from "@gestola/df-base-node";
 import getDecorators from "inversify-inject-decorators";
 
 const path = require('path');
-const { container } = require(path.resolve(__dirname, '../../../../electron-app/src-gen/backend/server.js'));
+const { container } = require("@gestola/electron-app/src-gen/backend/server");
 let { lazyInject } = getDecorators(container);
 
-console.log('lol what', path.resolve(__dirname, '../../../src-gen/backend/server.js'));
+console.log('lol what', path.resolve(__dirname, '../../../../electron-app/src-gen/backend/server.js'));
+console.log('lol what', __dirname);
 console.log("kek lol", container);
 
 @injectable()

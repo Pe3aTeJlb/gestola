@@ -33,10 +33,10 @@
   },
   "scripts": {
 
-    "rebuild": "yarn clean && yarn compile && yarn bundle",
+    "rebuild": "yarn clean && yarn compile",
     "bundle": "webpack --env mode='test' && ts-node ../../scripts/string-replacer.ts",
 
-    "rebuild:prod": "yarn clean && yarn compile && yarn bundle:prod",
+    "rebuild:prod": "yarn clean && yarn compile",
     "bundle:prod": "webpack --env mode='prod' && ts-node ../../scripts/string-replacer.ts",
     
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",

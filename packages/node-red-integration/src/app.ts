@@ -1,5 +1,5 @@
-"use strict"
-
+//"use strict"
+/*
 import 'reflect-metadata';
 import * as http from "http";
 import * as RED from "node-red";
@@ -41,5 +41,5 @@ export async function launch(argv?: string[]): Promise<void> {
     });
 
 }
-
+*/
 //launch(process.argv).catch(error => console.error('Error in node-red server launcher:', error));
