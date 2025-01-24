@@ -1,0 +1,47 @@
+{
+  "name": "@gestola/df-docker-f4pga",
+  "private": true,
+  "keywords": [
+    "gestola",
+    "gestola-extension"
+  ],
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pe3aTeJlb/gestola/issues"
+  },
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
+  "version": "1.0.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "node-red" : {
+    "nodes": {
+        "docker-f4pga": "lib/docker-f4pga.js"
+    }
+  },
+  "dependencies": {
+    "inversify-inject-decorators": "3.1.0",
+    "@gestola/df-base-node": "1.0.0",
+    "@gestola/electron-app": "1.0.0",
+    "docker-cli-js": "2.10.0"
+  },
+  "devDependencies": {
+    "@types/node-red": "1.3.5",
+    "rimraf": "3.0.2",
+    "copyfiles": "2.4.1"
+  },
+  "scripts": {
+    "rebuild:prod": "yarn rebuild",
+    "rebuild": "yarn clean && yarn compile && copyfiles -u 1 src/**/*.html lib",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "clean:entire": "yarn clean && rimraf node_modules",
+    "compile": "tsc -b",
+    "watch": "tsc -w",
+    "update:next": "ts-node ../scripts/update-theia-version.ts"
+  }
+}
