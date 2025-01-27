@@ -1,13 +1,18 @@
-import { injectable } from '@theia/core/shared/inversify';
+import { inject, injectable } from '@theia/core/shared/inversify';
 import { MenuModelRegistry } from '@theia/core';
 import { NodeRedIntegrationWidget } from './node-red-integration-widget';
 import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
+import { FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
+import { NodeRedFileOpener } from './node-red-file-opener';
 
 export const NodeRedIntegrationCommand: Command = { id: 'node-red-integration:command', label: 'Node RED' };
 
 @injectable()
-export class NodeRedIntegrationContribution extends AbstractViewContribution<NodeRedIntegrationWidget> {
+export class NodeRedIntegrationContribution extends AbstractViewContribution<NodeRedIntegrationWidget> implements FrontendApplicationContribution {
+
+    @inject(NodeRedFileOpener)
+    protected readonly nodeRedFileOpener: NodeRedFileOpener;
 
     /**
      * `AbstractViewContribution` handles the creation and registering
@@ -25,6 +30,21 @@ export class NodeRedIntegrationContribution extends AbstractViewContribution<Nod
             toggleCommandId: NodeRedIntegrationCommand.id
         });
     }
+    
+    onWillStop(app: FrontendApplication): boolean | undefined | OnWillStopAction<any>{
+        
+        return  {
+            action: async () => {
+                if(this.nodeRedFileOpener.all.length > 0){
+                    this.nodeRedFileOpener.all.forEach(i => i.close());
+                }
+                return true;
+            },
+            reason: 'Designe editor opened',
+            priority: 1000
+        };
+
+    };
 
     /**
      * Example command registration to open the widget from the menu, and quick-open.
@@ -46,7 +66,7 @@ export class NodeRedIntegrationContribution extends AbstractViewContribution<Nod
      */
     override registerCommands(commands: CommandRegistry): void {
         commands.registerCommand(NodeRedIntegrationCommand, {
-            execute: () => super.openView({ activate: false, reveal: true })
+            execute: () => super.openView({ activate: true})
         });
     }
 

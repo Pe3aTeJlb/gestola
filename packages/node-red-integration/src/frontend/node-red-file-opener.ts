@@ -1,86 +1,56 @@
 import {
-    ApplicationShell,
-    OpenWithHandler,
+    
     OpenWithService,
     WidgetOpenerOptions,
     WidgetOpenHandler
 } from '@theia/core/lib/browser';
 import URI from '@theia/core/lib/common/uri';
-import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
-import { EditorManager } from '@theia/editor/lib/browser';
+import { inject, injectable } from '@theia/core/shared/inversify';
 import { NodeRedIntegrationWidget } from './node-red-integration-widget';
-//import { NodeRedContribution } from '../common/node-red-contribution';
+import { NodeRedService } from '../common/protocol';
 
 @injectable()
-export abstract class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidget> implements OpenWithHandler {
-    
-    @inject(EditorManager)
-    protected readonly editorManager: EditorManager;
+export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidget> {
 
     @inject(OpenWithService)
     protected openWithService: OpenWithService;
 
-    /*@inject(NodeRedContribution.Service)
-    private readonly nodeRedContribution: NodeRedContribution;*/
+    @inject(NodeRedService)
+    private readonly nodeRedService: NodeRedService;
 
-    fileExtensions: string[] = ['.df'];
-
-    abstract get contributionId(): string;
-
-    protected widgetCount = 0;
+    fileExtensions: string[] = ['.df','.json'];
 
     protected registerOpenWithHandler = true;
 
-    @postConstruct()
-    protected override init(): void {
-        super.init();
-        if (this.registerOpenWithHandler) {
-            this.openWithService.registerHandler(this);
-        }
+    override get id(): string {
+        return NodeRedIntegrationWidget.ID;
     }
 
-    override async doOpen(widget: NodeRedIntegrationWidget, maybeOptions?: WidgetOpenerOptions): Promise<void> {
-        const options: WidgetOpenerOptions = {
-            mode: 'activate',
-            ...maybeOptions
-        };
-        if (!widget.isAttached) {
-            this.attachWidget(widget, options);
-        }
-        if (options.mode === 'activate') {
-            await this.shell.activateWidget(widget.id);
-        } else if (options.mode === 'reveal') {
-            await this.shell.revealWidget(widget.id);
-        }
+    protected override createWidgetOptions(uri: URI, options: WidgetOpenerOptions): WidgetOpenerOptions {
+        return options;
     }
 
-    protected attachWidget(widget: NodeRedIntegrationWidget, options?: WidgetOpenerOptions): void {
-        const currentEditor = this.editorManager.currentEditor;
-        const widgetOptions: ApplicationShell.WidgetOptions = {
-            area: 'main',
-            ...(options && options.widgetOptions ? options.widgetOptions : {})
-        };
-        if (!!currentEditor) {
-            widgetOptions.ref = currentEditor;
-            widgetOptions.mode =
-                options && options.widgetOptions && options.widgetOptions.mode ? options.widgetOptions.mode : 'open-to-right';
+    override async open(uri: URI, options?: WidgetOpenerOptions): Promise<NodeRedIntegrationWidget> {
+
+        let widget;
+        if(this.all.length > 0){
+            widget = this.all[0];
+        } else {
+            widget = await this.getOrCreateWidget(uri, options);
         }
-        this.shell.addWidget(widget, widgetOptions);
+        await this.doOpen(widget, options);
+        return widget;
     }
 
     canHandle(uri: URI, _options?: WidgetOpenerOptions | undefined): number {
         for (const extension of this.fileExtensions) {
             if (uri.path.toString().endsWith(extension)) {
-                //this.nodeRedContribution.openFile();
+                this.nodeRedService.openFile(uri);
                 return 1001;
             }
         }
         return 0;
     }
 
-
-    get providerName(): string | undefined {
-        return undefined;
-    }
 }
 
