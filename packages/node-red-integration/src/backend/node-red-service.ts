@@ -44,14 +44,13 @@ export class NodeRedServiceImpl implements NodeRedService, BackendApplicationCon
         netServer.on('error', () => netServer.off);
 
         RED.start().then(async () =>{
-            await RED.runtime.flows.setFlows({flows: {flows: [], credentials: {}}});
+            //await RED.runtime.flows.setFlows({flows: {flows: [], credentials: {}}});
             console.info("------ Engine started! ------");
         });
       
     }
 
     launch(): Promise<void> {
-        console.log("Kek lol arbidol server");
         return Promise.resolve();
     }
 
