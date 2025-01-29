@@ -2,7 +2,7 @@ import { URI } from '@theia/core/lib/common/uri';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { Path } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import { Database } from 'sqlite';
+//import { Database } from 'sqlite';
 import { ProjectManager } from './project-manager';
 
 export const defProjStruct = ['.theia', 'database', 'system', 'rtl', 'fpga', 'topology', 'other'];
@@ -17,9 +17,11 @@ export class Project {
 
     projName: string;
 
-    isFavorite: boolean;  
+    isFavorite: boolean;
 
-    SQLITE: Database;
+    target: string = 'zybo';
+
+//    SQLITE: Database;
     NEDB: undefined;
 
     public static regexp =  [
@@ -51,7 +53,7 @@ export class Project {
     private async createDBConnections(projManager: ProjectManager){
         let uri = this.getRDBFile();
         if(uri){
-            this.SQLITE = await projManager.getDatabaseService().createSQLiteConnection(uri);
+            //this.SQLITE = await projManager.getDatabaseService().createSQLiteConnection(uri);
         }
     }
 
@@ -94,6 +96,15 @@ export class Project {
 
     setFavorite() {
         this.isFavorite = !this.isFavorite;
+    }
+
+    public async getProjectConfigState(): Promise<Object>{
+        return {
+            name: this.projName,
+            root: this.rootUri,
+            rtl: (await this.rtlFolderFStat())?.resource.normalizePath()
+
+        };
     }
 
 }

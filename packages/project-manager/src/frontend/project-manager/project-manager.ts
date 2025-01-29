@@ -200,6 +200,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     setProject(proj: Project){
 
         this.currProj = proj;
+        //this.projManagerBackendService.updateCurrProject(proj);
         this.fireProjectChangeEvent();
     }
 
