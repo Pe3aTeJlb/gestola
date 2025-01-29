@@ -31,7 +31,7 @@ export class HelloWorldContainerStarter extends ES6Node {
             var docker = new Docker(options);
 
             var dt;
-            await docker.command('run hello-world:latest --rm').then(function (data) {
+            await docker.command('run --rm hello-world:latest').then(function (data) {
                 dt = data;
                 console.log('data = ', data);
             })
