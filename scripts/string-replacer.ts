@@ -26,7 +26,6 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
   );
 
 
-
   replaced = replaced.replace(
     /fs\.readdirSync\(__dirname \+ '\/grant'\)\.forEach\(function\(filename\) {/g,
     "fs.readdirSync(path.resolve(__dirname, '../../node_modules/oauth2orize/lib/grant')).forEach(function(filename) {"
@@ -47,7 +46,7 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
   
   replaced = replaced.replace(
     /var catalogPath = path\.resolve\(path\.join\(path\.dirname\(\/\*require\.resolve\*\/\(\/\*\! @node-red\/editor-client \*\/ "..\/node_modules\/@node-red\/editor-client\/index.js"\)\),"locales"\)\);/g,
-    'var catalogPath = path.resolve(path.join(path.dirname(path.resolve(__dirname, "../../node_modules/@node-red/editor-client/index.js")),"locales")); console.log("kek lol", catalogPath);'
+    'var catalogPath = path.resolve(path.join(path.dirname(path.resolve(__dirname, "../../node_modules/@node-red/editor-client/index.js")),"locales"));'
   );
 
   replaced = replaced.replace(
@@ -59,7 +58,7 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
 
   replaced = replaced.replace(
     /let coreNodesDir = settings\.coreNodesDir;/g,
-    'let coreNodesDir = path.resolve(__dirname, "..", settings.coreNodesDir); console.log("wow wow", settings.coreNodesDir)'
+    'let coreNodesDir = path.resolve(__dirname, "..", settings.coreNodesDir);'
   );
 
   replaced = replaced.replace(
@@ -78,8 +77,8 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
   );
 
   replaced = replaced.replace(
-    /log.warn\("["+nodeErrors[i].id+"] "+nodeErrors[i].err\);/g,
-    'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err + "  " + nodeErrors[i].err.details);'
+    /log\.warn\("\["\+nodeErrors\[i\]\.id\+"\] "\+nodeErrors\[i\]\.err\);/g,
+    'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err + " " + nodeErrors[i].err.details)'
   );
 
   writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), replaced, 'utf-8', function (err) {

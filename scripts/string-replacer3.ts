@@ -11,7 +11,7 @@ readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), '
   // 👇️ match string case-insensitively 👇️
   var replaced = contents.replace(
     /const container = new Container\(\);/g,
-    'const container = new Container(); exports.container = container; console.log("server server server")'
+    'const container = new Container(); exports.container = container;'
   );
 
   replaced = replaced.replace(

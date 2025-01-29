@@ -39,7 +39,7 @@ replaced = replaced.replace(
 
 replaced = replaced.replace(
   /const \{log,i18n,events,exec,util,hooks\} = __webpack_require__\(\/\*\! @node-red\/util \*\/ "..\/node_modules\/@node-red\/util\/index.js"\);/g,
-  'const {log,i18n,events,exec,util,hooks} = __webpack_require__(/*! @node-red/util */ "../node_modules/@node-red/util/index.js"); console.log("kek lol ",log)'
+  'const {log,i18n,events,exec,util,hooks} = __webpack_require__(/*! @node-red/util */ "../node_modules/@node-red/util/index.js");'
 );
 
   replaced = replaced.replace(
@@ -53,8 +53,8 @@ replaced = replaced.replace(
   );
 
   replaced = replaced.replace(
-    /log.warn\("["+nodeErrors[i].id+"] "+nodeErrors[i].err\);/g,
-    'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err + "  " + nodeErrors[i].err.details);'
+    /log\.warn\("\["\+nodeErrors\[i\]\.id\+"\] "\+nodeErrors\[i\]\.err\);/g,
+    'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err+" " + JSON.stringify(nodeErrors[i]));'
   );
 
   writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), replaced, 'utf-8', function (err) {
