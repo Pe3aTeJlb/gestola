@@ -5,11 +5,19 @@ import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
 import { FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
 import { NodeRedFileOpener } from './node-red-file-opener';
+import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
+import { NodeRedService } from '../common/protocol';
 
 export const NodeRedIntegrationCommand: Command = { id: 'node-red-integration:command', label: 'Node RED' };
 
 @injectable()
 export class NodeRedIntegrationContribution extends AbstractViewContribution<NodeRedIntegrationWidget> implements FrontendApplicationContribution {
+
+    @inject(FrontendApplicationStateService)
+    private readonly stateService: FrontendApplicationStateService;
+
+    @inject(NodeRedService)
+    private readonly nodeRedService: NodeRedService;
 
     @inject(NodeRedFileOpener)
     protected readonly nodeRedFileOpener: NodeRedFileOpener;
@@ -30,9 +38,15 @@ export class NodeRedIntegrationContribution extends AbstractViewContribution<Nod
             toggleCommandId: NodeRedIntegrationCommand.id
         });
     }
+
+    async onStart(): Promise<void> {
+        this.stateService.reachedState('ready').then(
+            () => this.nodeRedService.launch()
+        );
+    }
     
     onWillStop(app: FrontendApplication): boolean | undefined | OnWillStopAction<any>{
-        
+
         return  {
             action: async () => {
                 if(this.nodeRedFileOpener.all.length > 0){

@@ -28,6 +28,12 @@
   "dependencies": {
       "node-red": "4.0.5",
       "@node-red/nodes": "4.0.5",
+      "@gestola/df-base-node": "1.0.0",
+      "@gestola/df-version": "1.0.0",
+      "@gestola/df-pm-rtl-model": "1.0.0",
+      "@gestola/df-f4pga-data-preloader": "1.0.0",
+      "@gestola/df-f4pga-docker": "1.0.0",
+      "@gestola/df-docker-hello": "1.0.0",
       "express": "^4.14.0"
   },
   "scripts": {
