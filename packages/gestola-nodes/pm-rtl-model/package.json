@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/df-docker-f4pga",
+  "name": "@gestola/df-pm-rtl-model",
   "private": true,
   "keywords": [
     "gestola",
@@ -21,17 +21,17 @@
   ],
   "node-red" : {
     "nodes": {
-        "docker-f4pga": "lib/docker-f4pga.js"
+        "pm-rtl-model": "lib/pm-rtl-model.js"
     }
   },
   "dependencies": {
     "inversify-inject-decorators": "3.1.0",
     "@gestola/df-base-node": "1.0.0",
-    "@gestola/electron-app": "1.0.0",
-    "docker-cli-js": "2.10.0"
+    "@gestola/project-manager": "1.0.0"
   },
   "devDependencies": {
     "@types/node-red": "1.3.5",
+    "@types/tmp": "0.2.6",
     "rimraf": "3.0.2",
     "copyfiles": "2.4.1"
   },

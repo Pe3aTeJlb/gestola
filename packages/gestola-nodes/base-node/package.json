@@ -22,6 +22,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "dependencies": {
+    "@gestola/electron-app": "1.0.0"
   },
   "devDependencies": {
     "node-red": "4.0.5",

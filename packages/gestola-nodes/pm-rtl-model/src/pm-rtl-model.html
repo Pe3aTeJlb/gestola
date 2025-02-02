@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('pm-rtl-model',{
+        category: 'gestola',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "file.svg",
+        label: function() {
+            return this.name||"project rtl model";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="pm-rtl-model">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="pm-rtl-model">
+    <p>Node output ECAD version</p>
+</script>

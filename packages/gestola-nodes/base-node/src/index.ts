@@ -1,6 +1,8 @@
+import path = require('path');
 import { Node, NodeContext, NodeMessage, NodeMessageInFlow, NodeStatus } from "node-red";
 import { EditorRED } from "node-red"
-
+const { __webpack_require__ } = require("@gestola/electron-app/lib/backend/main");
+const { container } = require("@gestola/electron-app/lib/backend/main");
 /*
  * This is a hack on TypeScript that lets us "extend" a node object so that we
  * can use ES6 classes with all the proper type hinting instead of constructor
@@ -8,6 +10,30 @@ import { EditorRED } from "node-red"
  * can @ts-ignore all the warnings about missing implementations/assignment in the
  * constructor.
  */
+export const diContainer = container;
+
+export function getSymbol(file:string, name:string): SymbolConstructor {
+    let resolved = require.resolve(file);
+    let buff;
+    if (resolved.includes('packages')) {
+        buff = path.join('..', 'packages', resolved.split('packages')[1]);
+        console.log(buff);
+        let kek: SymbolConstructor = __webpack_require__.c[buff].exports[name];
+        console.log('qqq', kek, container.isBound(kek));
+        return kek;
+    }
+    else if (resolved.includes('node_modules')) {
+        buff = path.join('..', 'node_modules', resolved.split('node_modules')[1]);
+        console.log(buff);
+        let kek: SymbolConstructor = __webpack_require__.c[buff].exports[name];
+        console.log('qqq', kek, container.isBound(kek));
+        return kek;
+    }
+    else {
+        throw "___Cannot resolve___";
+    }
+}
+
 
 // The type of a "config" passed to RED.nodes.registerType in the browser
 export type EditorConfig = Parameters<EditorRED["nodes"]["registerType"]>[1];
@@ -92,7 +118,7 @@ export default class ES6Node implements Node {
     prependOnceListener(eventName: string | symbol, listener: (...args: any[]) => void): this;
     // @ts-ignore
     eventNames(): Array<string | symbol>;
-
+    
     constructor(node: Node) {
         Object.assign(this, node);
 
@@ -102,4 +128,5 @@ export default class ES6Node implements Node {
             super_.bind(this)(node);
         }
     }
+    
 };

@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/node-red-contrib-lower-case",
+  "name": "@gestola/df-f4pga-docker",
   "private": true,
   "keywords": [
     "gestola",
@@ -21,14 +21,17 @@
   ],
   "node-red" : {
     "nodes": {
-        "lower-case": "lib/lower-case.js",
-        "lower-case2": "lib/lower-case2.js"
+        "f4pga-docker": "lib/f4pga-docker.js"
     }
   },
   "dependencies": {
+    "inversify-inject-decorators": "3.1.0",
+    "@gestola/df-base-node": "1.0.0",
+    "docker-cli-js": "2.10.0"
   },
   "devDependencies": {
-    "node-red": "4.0.5",
+    "@types/node-red": "1.3.5",
+    "@types/tmp": "0.2.6",
     "rimraf": "3.0.2",
     "copyfiles": "2.4.1"
   },

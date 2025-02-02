@@ -27,7 +27,6 @@
   "dependencies": {
     "inversify-inject-decorators": "3.1.0",
     "@gestola/df-base-node": "1.0.0",
-    "@gestola/electron-app": "1.0.0",
     "docker-cli-js": "2.10.0"
   },
   "devDependencies": {

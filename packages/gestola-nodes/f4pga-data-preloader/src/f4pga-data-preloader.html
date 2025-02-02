@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('docker-f4pga',{
+    RED.nodes.registerType('f4pga-data-preloader',{
         category: 'gestola',
         color: '#a6bbcf',
         defaults: {
@@ -9,18 +9,18 @@
         outputs: 1,
         icon: "file.svg",
         label: function() {
-            return this.name||"docker-f4pga";
+            return this.name||"F4PGA Preloader";
         }
     });
 </script>
 
-<script type="text/html" data-template-name="docker-f4pga">
+<script type="text/html" data-template-name="f4pga-data-preloader">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
-<script type="text/html" data-help-name="docker-f4pga">
+<script type="text/html" data-help-name="f4pga-data-preloader">
     <p>Node output ECAD version</p>
 </script>
