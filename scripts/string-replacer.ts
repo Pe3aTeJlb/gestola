@@ -1,6 +1,7 @@
 import {readFile, writeFile} from 'fs';
 const path = require('path');
 
+/* Отвечает за правку упакованного node-red для standalone сборки*/
 
 //readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), 'utf-8', function (err, contents) {
 readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), 'utf-8', function (err, contents) {
@@ -28,12 +29,12 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
 
   replaced = replaced.replace(
     /fs\.readdirSync\(__dirname \+ '\/grant'\)\.forEach\(function\(filename\) {/g,
-    "fs.readdirSync(path.resolve(__dirname, '../../node_modules/oauth2orize/lib/grant')).forEach(function(filename) {"
+    "console.log('kek lol 1', __dirname);fs.readdirSync(path.resolve(__dirname, '../../node_modules/oauth2orize/lib/grant')).forEach(function(filename) {"
   );
 
   replaced = replaced.replace(
     /fs\.readdirSync\(__dirname \+ '\/exchange'\)\.forEach\(function\(filename\) {/g,
-    "fs.readdirSync(path.resolve(__dirname, '../../node_modules/oauth2orize/lib/exchange')).forEach(function(filename) {"
+    "console.log('kek lol 2', __dirname);fs.readdirSync(path.resolve(__dirname, '../../node_modules/oauth2orize/lib/exchange')).forEach(function(filename) {"
   );
 
   

@@ -61,13 +61,15 @@
     "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
     "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",
     
-    "debug": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "play": "yarn --cwd electron-app start",
+    "debug": "yarn rebuild && yarn --cwd electron-app start",
+    "debug:r": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+
     "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
 
     "bundle": "yarn --cwd electron-app bundle",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start"
-
 
   },
   "workspaces": [

@@ -1,6 +1,7 @@
 import {readFile, writeFile} from 'fs';
 const path = require('path');
 
+/* Отвечает за правку упакованного node-red */
 
 //readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), 'utf-8', function (err, contents) {
 readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), 'utf-8', function (err, contents) {

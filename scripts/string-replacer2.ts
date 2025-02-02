@@ -2,7 +2,7 @@ import {readFile, writeFile} from 'fs';
 const path = require('path');
 
 
-readFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), 'utf-8', function (err, contents) {
+readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), 'utf-8', function (err, contents) {
   if (err) {
     console.log(err);
     return;
@@ -10,21 +10,35 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), 'utf-8'
 
   // 👇️ match string case-insensitively 👇️
   var replaced = contents.replace(
-    /var r = __webpack_require__\(".*"\)\(node.file\);/g,
-    'var r = require(node.file);'
+    /const container = new Container\(\);/g,
+    'const container = new Container(); exports.container = container;'
   );
 
   replaced = replaced.replace(
-    /const pkg = __webpack_require__\(".*"\)\(packagefile\)/g,
-    'const pkg = require(packagefile)'
+    /module.exports = async \(port, host, argv\) => {/g,
+    "module.exports.serverModule = async (port, host, argv) => {"
   );
 
-  replaced = replaced.replace(
-    /const { container } = __webpack_require__\(".*"\)\(path.resolve\(__dirname, '..\/..\/src-gen\/backend\/server.js'\)\)/g,
-    "const { container } = require(path.resolve(__dirname, '../../src-gen/backend/server.js'))"
+  writeFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), replaced, 'utf-8', function (err) {
+    console.log('replaces')
+    console.log(err);
+  });
+  
+});
+
+readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), 'utf-8', function (err, contents) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+
+  // 👇️ match string case-insensitively 👇️
+  var replaced = contents.replace(
+    /const serverModule = require\('.\/server'\);/g,
+    'const { serverModule } = require("./server");'
   );
 
-  writeFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), replaced, 'utf-8', function (err) {
+  writeFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), replaced, 'utf-8', function (err) {
     console.log('replaces')
     console.log(err);
   });

@@ -2,7 +2,7 @@ import {readFile, writeFile} from 'fs';
 const path = require('path');
 
 
-readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), 'utf-8', function (err, contents) {
+readFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), 'utf-8', function (err, contents) {
   if (err) {
     console.log(err);
     return;
@@ -11,7 +11,7 @@ readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), '
   // 👇️ match string case-insensitively 👇️
   var replaced = contents.replace(
     /const container = new Container\(\);/g,
-    'const container = new Container(); exports.container = container;'
+    'const container = new Container(); exports.container = container; exports.__webpack_require__ = __webpack_require__'
   );
 
   replaced = replaced.replace(
@@ -19,26 +19,12 @@ readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), '
     "module.exports.serverModule = async (port, host, argv) => {"
   );
 
-  writeFile(path.resolve(__dirname, '../electron-app/src-gen/backend/server.js'), replaced, 'utf-8', function (err) {
-    console.log('replaces')
-    console.log(err);
-  });
-  
-});
-
-readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), 'utf-8', function (err, contents) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  // 👇️ match string case-insensitively 👇️
-  var replaced = contents.replace(
-    /const serverModule = require\('.\/server'\);/g,
-    'const { serverModule } = require("./server");'
+  var replaced = replaced.replace(
+    /const serverModule = __webpack_require__\(\/\*! \.\/server \*\/ "\.\/src-gen\/backend\/server\.js"\);/g,
+    'const { serverModule } = __webpack_require__(/*! ./server */ "./src-gen/backend/server.js");'
   );
 
-  writeFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), replaced, 'utf-8', function (err) {
+  writeFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), replaced, 'utf-8', function (err) {
     console.log('replaces')
     console.log(err);
   });
