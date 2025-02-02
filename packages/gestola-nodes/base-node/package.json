@@ -22,14 +22,13 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "dependencies": {
-    "@gestola/electron-app": "1.0.0"
   },
   "devDependencies": {
     "node-red": "4.0.5",
     "rimraf": "3.0.2"
   },
   "scripts": {
-    "rebuild:prod": "yarn rebuild",
+    "rebuild:prod": "yarn rebuild && ts-node ../../../scripts/df-base-replacer.ts",
     "rebuild": "yarn clean && yarn compile",
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "clean:entire": "yarn clean && rimraf node_modules",

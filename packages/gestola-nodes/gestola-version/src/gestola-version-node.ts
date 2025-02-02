@@ -1,7 +1,6 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { NodeDef, NodeAPI, Node } from "@node-red/registry";
-import ES6Node from "@gestola/df-base-node";
-import { getSymbol, diContainer } from "@gestola/df-base-node";
+import ES6Node, { diContainer, getSymbol } from "@gestola/df-base-node";
 
 import getDecorators from "inversify-inject-decorators";
 let { lazyInject } = getDecorators(diContainer);

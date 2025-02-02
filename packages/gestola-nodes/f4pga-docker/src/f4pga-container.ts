@@ -1,8 +1,8 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { NodeDef, NodeAPI, Node } from "@node-red/registry";
 import ES6Node from "@gestola/df-base-node";
-import { Docker, Options } from 'docker-cli-js';
-import tmp = require('tmp');
+//import { Docker, Options } from 'docker-cli-js';
+//import tmp = require('tmp');
 import { URI } from '@theia/core';
 
 @injectable()
@@ -29,7 +29,7 @@ export class F4PGADockerContainer extends ES6Node {
     }
 
     start(uris: URI[]){
-    
+    /*
         tmp.dir(async function _tempDirCreated(err, path, cleanupCallback) {
             if (err) { cleanupCallback(); throw err;}
           
@@ -60,7 +60,7 @@ export class F4PGADockerContainer extends ES6Node {
             });
     
             cleanupCallback();
-        });
+        });*/
 
         /*
                                 run  -it \

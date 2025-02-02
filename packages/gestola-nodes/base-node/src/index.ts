@@ -1,8 +1,9 @@
 import path = require('path');
 import { Node, NodeContext, NodeMessage, NodeMessageInFlow, NodeStatus } from "node-red";
 import { EditorRED } from "node-red"
-const { __webpack_require__ } = require("@gestola/electron-app/lib/backend/main");
-const { container } = require("@gestola/electron-app/lib/backend/main");
+//const { container, __webpack_require__ } = require("@gestola/electron-app/lib/backend/main");
+const { container, __webpack_require__ } = require("../../../../electron-app/lib/backend/main");
+//const { container, __webpack_require__ } = require("../../../../lib/backend/main");
 /*
  * This is a hack on TypeScript that lets us "extend" a node object so that we
  * can use ES6 classes with all the proper type hinting instead of constructor
@@ -13,25 +14,29 @@ const { container } = require("@gestola/electron-app/lib/backend/main");
 export const diContainer = container;
 
 export function getSymbol(file:string, name:string): SymbolConstructor {
+    
     let resolved = require.resolve(file);
+    console.log(resolved);
+
     let buff;
+    let symbol: SymbolConstructor;
+
     if (resolved.includes('packages')) {
         buff = path.join('..', 'packages', resolved.split('packages')[1]);
-        console.log(buff);
-        let kek: SymbolConstructor = __webpack_require__.c[buff].exports[name];
-        console.log('qqq', kek, container.isBound(kek));
-        return kek;
-    }
-    else if (resolved.includes('node_modules')) {
+    } else if (resolved.includes('@gestola')) {
+        buff = path.join('..', 'packages', resolved.split('@gestola')[1]);
+    } else if (resolved.includes('node_modules') && !resolved.includes('@gestola')) {
         buff = path.join('..', 'node_modules', resolved.split('node_modules')[1]);
-        console.log(buff);
-        let kek: SymbolConstructor = __webpack_require__.c[buff].exports[name];
-        console.log('qqq', kek, container.isBound(kek));
-        return kek;
-    }
-    else {
+    } else {
         throw "___Cannot resolve___";
     }
+
+    console.log(buff);
+    symbol = __webpack_require__.c[buff].exports[name];
+    console.log('qqq', symbol, container.isBound(symbol));
+    return symbol;
+
+
 }
 
 

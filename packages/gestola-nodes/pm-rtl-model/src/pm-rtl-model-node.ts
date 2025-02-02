@@ -1,11 +1,9 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { NodeDef, NodeAPI, Node } from "@node-red/registry";
-import ES6Node from "@gestola/df-base-node";
-import { getSymbol } from "@gestola/df-base-node";
+import ES6Node, { diContainer, getSymbol } from "@gestola/df-base-node";
 
-const { container } = require("@gestola/electron-app/lib/backend/main");
 import getDecorators from "inversify-inject-decorators";
-let { lazyInject } = getDecorators(container);
+let { lazyInject } = getDecorators(diContainer);
 
 import { ProjectService } from "@gestola/project-manager/lib/common/protocol2";
 const ProjectServiceSymbol = getSymbol("@gestola/project-manager/lib/common/protocol2", 'ProjectService');
