@@ -8,7 +8,7 @@ import { FrontendApplicationStateService } from '@theia/core/lib/browser/fronten
 import { ProgressService } from '@theia/core/lib/common/progress-service';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Disposable } from '@theia/core/lib/common/disposable';
-import { ProjectManager } from '@gestola/project-manager';
+import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { SelectionService } from '@theia/core';
 import { WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
 
@@ -177,22 +177,24 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             const treeRoot = WorkspaceNode.createRoot();
 
             let rootFolder;
-            switch(this.rootId){        
+            switch(this.rootId){      
+                
                 case "file-navigator-system":
-                    rootFolder = await proj.systemFolderFStat();
+                    rootFolder = await this.fileService.resolve(proj.systemUri);
                     break;
                 case "file-navigator-rtl":
-                    rootFolder = await proj.rtlFolderFStat();
+                    rootFolder = await this.fileService.resolve(proj.rtlUri);
                     break;
                 case "file-navigator-fpga": 
-                    rootFolder = await proj.fpgaFolderFStat();
+                    rootFolder = await this.fileService.resolve(proj.fpgaUri);
                     break;
                 case "file-navigator-topology": 
-                    rootFolder = await proj.topologyFolderFStat();
+                    rootFolder = await this.fileService.resolve(proj.topologyUri);
                     break;
                 case "file-navigator-other": 
-                    rootFolder = await proj.otherFolderFStat();
+                    rootFolder = await this.fileService.resolve(proj.otherUri);
                     break;
+            
             }
 
             if(rootFolder && rootFolder.children){

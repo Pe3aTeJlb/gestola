@@ -1,13 +1,23 @@
 import { URI } from "@theia/core";
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskCustomization } from '@theia/task/lib/common/task-protocol';
-import { Database } from "sqlite";
+import { Project } from "./project";
+//import { Database } from "sqlite";
 
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
 export interface ProjectManagerBackendService {
     getTemplates(): Promise<Template[]>;
     createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
+    updateCurrProject(proj: Project): void;
+    updateOpenedProjects(projs: Project[]): void;
+}
+
+export const ProjectService = Symbol('ProjectService');
+export const PROJECT_SERVICE_PATH = '/services/gestolaProjectService';
+export interface ProjectService {
+    getProjectConfigState(): Promise<Object>;
+    getProject(): Project;
 }
 
 export interface Template {
@@ -36,5 +46,5 @@ export interface TemplateContribution {
 export const DatabaseBackendService = Symbol('DatabaseBackendService');
 export const DATABASE_BACKEND_PATH = '/services/gestolaDatabaseBackend';
 export interface DatabaseBackendService {
-    createSQLiteConnection(uri: URI): Promise<Database>;
+    //createSQLiteConnection(uri: URI): Promise<Database>;
 }

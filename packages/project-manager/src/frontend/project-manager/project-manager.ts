@@ -4,7 +4,7 @@ import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/co
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import { Project } from './project';
+import { Project } from '../../common/project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
@@ -169,9 +169,10 @@ export class ProjectManager implements FrontendApplicationContribution {
         for(let i = 0; i < roots.length; i++){
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
-                this.openedProjects.push(new Project(this, roots[j]));
+                this.openedProjects.push(new Project(roots[j].resource));
             }
         }
+        this.projManagerBackendService.updateOpenedProjects(this.openedProjects);
         this.fireProjectsListChangeEvent();
     }
 
@@ -198,9 +199,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     setProject(proj: Project){
-
         this.currProj = proj;
-        //this.projManagerBackendService.updateCurrProject(proj);
+        this.projManagerBackendService.updateCurrProject(proj);
         this.fireProjectChangeEvent();
     }
 

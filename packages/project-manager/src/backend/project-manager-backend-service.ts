@@ -6,10 +6,14 @@ import * as fsextra from 'fs-extra';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
-import { defProjStruct } from '../frontend/project-manager/project';
+import { Project, defProjStruct } from '../common/project';
+import { ProjectService } from '../common/protocol';
 
 @injectable()
-export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService {
+export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService, ProjectService {
+
+    currProj: Project;
+    openedProjects: Project[];
 
     @inject(ContributionProvider) @named(TemplateContribution)
     protected readonly tempaltesProvider: ContributionProvider<TemplateContribution>;
@@ -93,6 +97,22 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
             launchJson['configurations'] = [...existingLaunchConfigurations, ...newLaunchConfigs];
             fs.writeFileSync(launchJsonPath, JSON.stringify(launchJson, undefined, 2));
         }
+    }
+
+    updateCurrProject(proj: Project): void {
+        this.currProj = proj;
+    }
+
+    updateOpenedProjects(projs: Project[]): void {
+        this.openedProjects = projs;
+    }
+
+    public async getProjectConfigState(): Promise<Object> {
+        return this.currProj.getProjectConfigState();
+    }
+
+    public getProject(): Project {
+        return this.currProj;
     }
 
 }

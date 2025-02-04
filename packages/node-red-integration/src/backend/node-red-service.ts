@@ -13,8 +13,6 @@ import * as fs from 'fs';
 export class NodeRedServiceImpl implements NodeRedService, BackendApplicationContribution {
     
     onStart(server: http.Server | https.Server): MaybePromise<void> {
-        
-        console.log("Node red server", __dirname);
 
         var app = express();
         var netServer = http.createServer(app);

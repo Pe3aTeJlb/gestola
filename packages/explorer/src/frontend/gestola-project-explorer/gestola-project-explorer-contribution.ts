@@ -6,7 +6,8 @@ import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-ex
 import { Command, CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MenuPath, isOSX, nls } from "@theia/core";
 import { CommonCommands, CommonMenus, CompositeTreeNode, FrontendApplicationContribution, KeybindingContribution, KeybindingRegistry, SHELL_TABBAR_CONTEXT_MENU, SelectableTreeNode, Widget, codicon } from '@theia/core/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { ProjectManager, ProjectManagerCommands } from '@gestola/project-manager';
+import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManagerCommands } from '@gestola/project-manager/lib/frontend/project-manager/project-manager-commands';
 import { GestolaExplorerContextKeyService } from './gestola-explorer-context-key-service';
 import { GestolaFileNavigatorWidget } from './file-explorer/file-navigator-widget';
 import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';

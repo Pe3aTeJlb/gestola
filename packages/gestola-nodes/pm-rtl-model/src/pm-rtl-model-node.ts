@@ -5,8 +5,8 @@ import ES6Node, { diContainer, getSymbol } from "@gestola/df-base-node";
 import getDecorators from "inversify-inject-decorators";
 let { lazyInject } = getDecorators(diContainer);
 
-import { ProjectService } from "@gestola/project-manager/lib/common/protocol2";
-const ProjectServiceSymbol = getSymbol("@gestola/project-manager/lib/common/protocol2", 'ProjectService');
+import { ProjectService } from "@gestola/project-manager/lib/common/protocol";
+const ProjectServiceSymbol = getSymbol("@gestola/project-manager/lib/common/protocol", 'ProjectService');
 
 @injectable()
 export class ProjectManagerRTLModel extends ES6Node {
@@ -25,13 +25,11 @@ export class ProjectManagerRTLModel extends ES6Node {
           
             console.log("bbbbbbbbb", this.projectService);
 
-            let rtl_model = await this.projectService.getRTLModelFiles();
-            let projConfig = this.projectService.getProjectConfigState();
+            let projConfig = this.projectService.getProject();
 
             const newMsg = {
                 ...msg,
-                rtl:rtl_model,
-                config:projConfig
+                paths: [projConfig.getRTLUri().path.fsPath(), projConfig.getFPGAtUri().path.fsPath()]
             };
             send(newMsg);
             if (done) { done(); }

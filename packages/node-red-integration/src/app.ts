@@ -8,8 +8,6 @@ import * as express from "express";
 
 export async function launch(argv?: string[]): Promise<void> {
 
-    console.log("Node red server", __dirname);
-
     var app = express();
     var netServer = http.createServer(app);
 

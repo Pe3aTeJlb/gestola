@@ -27,7 +27,9 @@
   "dependencies": {
     "inversify-inject-decorators": "3.1.0",
     "@gestola/df-base-node": "1.0.0",
-    "docker-cli-js": "2.10.0"
+    "docker-cli-js": "2.10.0",
+    "tmp": "0.2.3",
+    "docker-names-ts": "1.2.4"
   },
   "devDependencies": {
     "@types/node-red": "1.3.5",
