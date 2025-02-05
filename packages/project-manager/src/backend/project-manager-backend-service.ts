@@ -6,7 +6,8 @@ import * as fsextra from 'fs-extra';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
-import { Project, defProjStruct } from '../common/project';
+import { defProjStruct } from '../common/project';
+import { Project }  from '../common/project';
 import { ProjectService } from '../common/protocol';
 
 @injectable()
@@ -107,8 +108,8 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         this.openedProjects = projs;
     }
 
-    public async getProjectConfigState(): Promise<Object> {
-        return this.currProj.getProjectConfigState();
+    public getProjectConfigState(): Object {
+        return this.currProj.getConfig();
     }
 
     public getProject(): Project {

@@ -23,13 +23,9 @@ export class ProjectManagerRTLModel extends ES6Node {
 
         this.on("input", async (msg, send, done) => {
           
-            console.log("bbbbbbbbb", this.projectService);
-
-            let projConfig = this.projectService.getProject();
-
             const newMsg = {
                 ...msg,
-                paths: [projConfig.getRTLUri().path.fsPath(), projConfig.getFPGAtUri().path.fsPath()]
+                project: this.projectService.getProject()
             };
             send(newMsg);
             if (done) { done(); }

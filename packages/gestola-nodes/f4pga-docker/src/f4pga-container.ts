@@ -3,7 +3,7 @@ import { NodeDef, NodeAPI, Node } from "@node-red/registry";
 import ES6Node from "@gestola/df-base-node";
 import { Docker, Options } from 'docker-cli-js';
 import tmp = require('tmp');
-//import dockerNames from 'docker-names-ts';
+import { Project } from "@gestola/project-manager/lib/common/project";
 
 @injectable()
 export class F4PGADockerContainer extends ES6Node {
@@ -17,7 +17,7 @@ export class F4PGADockerContainer extends ES6Node {
 
         this.on("input", async (msg:any, send, done) => {
 
-            //this.start(msg.paths);
+            this.start(msg.project);
 
             const newMsg = {
                 ...msg
@@ -28,7 +28,7 @@ export class F4PGADockerContainer extends ES6Node {
 
     }
 
-    start(paths: string[]){
+    start(proj: Project){
     
         tmp.dir(async function _tempDirCreated(err, path, cleanupCallback) {
             if (err) { cleanupCallback(); throw err;}
@@ -48,16 +48,15 @@ export class F4PGADockerContainer extends ES6Node {
             await docker.command("--version").then(function (data) {
                 console.log('data = ', data);
             });
-        /*
+        
             await docker.command(`run --rm \
-                                --name ${dockerNames.getRandomName(5)} \
-                                --mount type=bind,source=${paths[0]},target=/shared \
-                                --mount type=bind,source=${paths[1]},target=/output \
+                                --mount type=bind,source=${proj.rtlUri.path},target=/shared \
+                                --mount type=bind,source=${proj.fpgaUri.path},target=/output \
                                 --env ECAD_USER=$(id -u $\{USER\}):$(id -g $\{USER\}) \
                                 test:latest`
                                 ).then(function (data) {
                 console.log('data = ', data);
-            });*/
+            });
     
             cleanupCallback();
         });

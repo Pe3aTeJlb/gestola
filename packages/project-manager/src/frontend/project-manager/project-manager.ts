@@ -4,7 +4,7 @@ import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/co
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import { Project } from '../../common/project';
+import  { Project }  from '../../common/project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';

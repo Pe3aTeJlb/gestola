@@ -81,7 +81,7 @@ export class Project {
         this.isFavorite = !this.isFavorite;
     }
 
-    public async getProjectConfigState(): Promise<Object> {
+    public getConfig(): Object {
         return {
             name: this.projName,
             root: this.rootUri,

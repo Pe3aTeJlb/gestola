@@ -63,7 +63,8 @@
     
     "play": "yarn --cwd electron-app start",
     "debug": "yarn rebuild && yarn --cwd electron-app start",
-    "debug:r": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",
+    "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
 
     "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",

@@ -1,7 +1,7 @@
 import { URI } from "@theia/core";
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskCustomization } from '@theia/task/lib/common/task-protocol';
-import { Project } from "./project";
+import { Project }  from "./project";
 //import { Database } from "sqlite";
 
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
@@ -16,7 +16,7 @@ export interface ProjectManagerBackendService {
 export const ProjectService = Symbol('ProjectService');
 export const PROJECT_SERVICE_PATH = '/services/gestolaProjectService';
 export interface ProjectService {
-    getProjectConfigState(): Promise<Object>;
+    getProjectConfigState(): Object;
     getProject(): Project;
 }
 
