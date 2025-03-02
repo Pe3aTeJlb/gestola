@@ -8,7 +8,7 @@ import { Message } from '@theia/core/lib/browser';
 export class NodeRedIntegrationWidget extends ReactWidget {
 
     static readonly ID = 'node-red-integration:widget';
-    static readonly LABEL = 'Design Flow Editor';
+    static readonly LABEL = 'Gestola: Design Flow Editor';
     private src = `http://127.0.0.1:1880/admin`;
 
     @inject(MessageService)
