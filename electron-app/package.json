@@ -26,7 +26,8 @@
     "@gestola/explorer": "1.0.0",
     "@gestola/node-red-integration": "1.0.0",
     "@gestola/openfpgaloader": "1.0.0",
-    "@gestola/verible-wrapper": "1.0.0"
+    "@gestola/verible-wrapper": "1.0.0",
+    "@gestola/grammars-support": "1.0.0"
     
   },
   "devDependencies": {

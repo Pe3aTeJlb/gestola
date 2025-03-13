@@ -1,0 +1,12 @@
+{
+    "extends": "../../configs/base.tsconfig",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": "src",
+        "baseUrl": ".",
+        "outDir": "lib"
+    },
+    "include": [
+      "src" 
+    ]
+}

@@ -29,13 +29,14 @@
   },
   "scripts": {
     
-    "setup": "yarn install --ignore-workspace-root-check && yarn update:dependencies && yarn update:plugins && yarn && yarn download:plugins && yarn build",
+    "setup": "yarn && yarn update:dependencies && yarn update:plugins && yarn download:plugins && yarn build && yarn build:vscode-ext",
     "prepare": "lerna run prepare",
     "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.2 && lerna run update:next 1.53.2",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
     "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts",
     "build": "yarn clean:all && yarn compile && yarn --cwd electron-app build:test",
+    "build:vscode-ext": "lerna run rebuild:vscode-ext",
     "compile": "lerna run compile",
     "postinstall": "theia check:theia-version",
     
@@ -70,7 +71,9 @@
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
 
     "bundle": "yarn --cwd electron-app bundle",
-    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start"
+    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+
+    "kk": "yarn --cwd packages/verible-wrapper rebuild:prod"
 
   },
   "workspaces": [

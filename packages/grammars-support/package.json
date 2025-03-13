@@ -1,0 +1,232 @@
+{
+  "name": "@gestola/grammars-support",
+  "private": true,
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "dependencies": {
+    "@types/vscode": "^1.98.0",
+    "typescript": "~5.4.5",
+    "symlink-dir": "latest"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "~3.1.0"
+  },
+  "scripts": {
+    "rebuild:vscode-ext": "yarn vscode:prepublish && yarn symlink",
+    "vscode:prepublish": "yarn run compile",
+    "symlink": "symlink-dir . ../../plugins/grammars-support",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "package": "vsce package --yarn -o ../../plugins"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "vhdl",
+        "aliases": [
+          "VHDL",
+          "vhdl"
+        ],
+        "configuration": "./configs/vhdl.configuration.json",
+        "extensions": [
+          ".vhd",
+          ".vho",
+          ".vhdl",
+          ".vhd"
+        ]
+      },
+      {
+        "id": "verilog",
+        "aliases": [
+          "Verilog",
+          "verilog"
+        ],
+        "configuration": "./configs/verilog.configuration.json",
+        "extensions": [
+          ".v",
+          ".vh",
+          ".vl"
+        ]
+      },
+      {
+        "id": "systemverilog",
+        "aliases": [
+          "System Verilog",
+          "systemverilog"
+        ],
+        "configuration": "./configs/systemverilog.configuration.json",
+        "extensions": [
+          ".sv",
+          ".svh",
+          ".SV"
+        ]
+      },
+      {
+        "id": "vcd",
+        "extensions": [
+          ".vcd"
+        ]
+      },
+      {
+        "id": "gtkw_waveconfig",
+        "extensions": [
+          ".gtkw"
+        ]
+      },
+      {
+        "id": "gtkw_wavebin",
+        "extensions": [
+          ".fst",
+          ".ghw"
+        ]
+      },
+      {
+        "id": "tcl",
+        "aliases": [
+          "TCL",
+          "tcl"
+        ],
+        "configuration": "./configs/tcl.configuration.json",
+        "extensions": [
+          ".tcl",
+          ".pro"
+        ]
+      },
+      {
+        "id": "ucf",
+        "aliases": [
+          "vivado ucf",
+          "ucf constraints"
+        ],
+        "configuration": "./configs/ucfconstraints.configuration.json",
+        "extensions": [
+          ".ucf"
+        ]
+      },
+      {
+        "id": "xdc",
+        "aliases": [
+          "vivado xdc",
+          "xdc constraints"
+        ],
+        "configuration": "./configs/xdcconstraints.configuration.json",
+        "extensions": [
+          ".xdc",
+          ".sdc"
+        ]
+      },
+      {
+        "id": "ldc",
+        "aliases": [
+          "lattice constraints"
+        ],
+        "configuration": "./configs/xdcconstraints.configuration.json",
+        "extensions": [
+          ".ldc",
+          ".pdc"
+        ]
+      },
+      {
+        "id": "TL-Verilog",
+        "aliases": [
+          "TL-Verilog",
+          "tlv",
+          "Transactional-Level Verilog"
+        ],
+        "configuration": "./configs/tlverilog.configuration.json",
+        "extensions": [
+          ".tlv"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "vhdl",
+        "scopeName": "source.vhdl",
+        "path": "./syntaxes/vhdl/vhdl.tmLanguage.json"
+      },
+      {
+        "language": "verilog",
+        "scopeName": "source.verilog",
+        "path": "./syntaxes/verilog.tmLanguage"
+      },
+      {
+        "language": "systemverilog",
+        "scopeName": "source.systemverilog",
+        "path": "./syntaxes/systemverilog.tmLanguage"
+      },
+      {
+        "language": "tcl",
+        "scopeName": "source.tcl",
+        "path": "./syntaxes/tcl/tcl.tmLanguage.json"
+      },
+      {
+        "language": "xdc",
+        "scopeName": "source.xdcconstraints",
+        "path": "./syntaxes/xdc.tmLanguage"
+      },
+      {
+        "language": "ldc",
+        "scopeName": "source.xdcconstraints",
+        "path": "./syntaxes/xdc.tmLanguage"
+      },
+      {
+        "language": "ucf",
+        "scopeName": "source.ucfconstraints",
+        "path": "./syntaxes/ucf.tmLanguage"
+      },
+      {
+        "language": "TL-Verilog",
+        "scopeName": "source.tlverilog",
+        "path": "./syntaxes/tlverilog.tmLanguage"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "vhdl",
+        "path": "./snippets/vhdl/vhdl.json"
+      },
+      {
+        "language": "verilog",
+        "path": "./snippets/verilog/verilog.json"
+      },
+      {
+        "language": "systemverilog",
+        "path": "./snippets/systemverilog/systemverilog.json"
+      },
+      {
+        "language": "tcl",
+        "path": "./snippets/tcl/tcl.json"
+      },
+      {
+        "language": "xdc",
+        "path": "./snippets/xdc/xdc.json"
+      },
+      {
+        "language": "ldc",
+        "path": "./snippets/xdc/xdc.json"
+      },
+      {
+        "language": "TL-Verilog",
+        "path": "./snippets/tlverilog/tlverilog.json"
+      },
+      {
+        "language": "systemverilog",
+        "path": "./snippets/verilog/verilog.json"
+      }
+    ]}
+}
