@@ -10,6 +10,7 @@
         "explorer":{
             "view-container-title": "Gestola: Project Explorer",
             "project-explorer-view-title": "Project Explorer",
+            "solution-explorer-view-title": "Solution Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Topology", 

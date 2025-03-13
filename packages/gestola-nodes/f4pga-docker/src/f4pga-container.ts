@@ -3,7 +3,7 @@ import { NodeDef, NodeAPI, Node } from "@node-red/registry";
 import ES6Node from "@gestola/df-base-node";
 import { Docker, Options } from 'docker-cli-js';
 import tmp = require('tmp');
-import { Project } from "@gestola/project-manager/lib/common/project";
+import { IProject } from "@gestola/project-manager/lib/common/project";
 import DockerNames from "@gestola/docker-like-names";
 
 @injectable()
@@ -29,7 +29,7 @@ export class F4PGADockerContainer extends ES6Node {
 
     }
 
-    start(proj: Project){
+    start(proj: IProject){
     
 
         DockerNames.getRandomName(6);
@@ -52,9 +52,10 @@ export class F4PGADockerContainer extends ES6Node {
                 console.log('data = ', data);
             });
         
+            //TODO add ref to rtl uri and fpga uri
             await docker.command(`run --rm \
-                                --mount type=bind,source=${proj.rtlUri.path},target=/shared \
-                                --mount type=bind,source=${proj.fpgaUri.path},target=/output \
+                                --mount type=bind,source=${proj},target=/shared \
+                                --mount type=bind,source=${proj},target=/output \
                                 --env ECAD_USER=$(id -u $\{USER\}):$(id -g $\{USER\}) \
                                 test:latest`
                                 ).then(function (data) {

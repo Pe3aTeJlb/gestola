@@ -4,11 +4,13 @@ import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/co
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import  { Project }  from '../../common/project';
+import  { Project }  from './project';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { DatabaseBackendService, ProjectManagerBackendService, Template } from '../../common/protocol';
+import { Solution } from './solution';
+import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -18,9 +20,18 @@ export interface ProjectsListChangeEvent {
     readonly projects: Project[];
 }
 
+export interface SolutionChangeEvent {
+    readonly solution: Solution;
+}
+
+export interface SolutionsListChangeEvent {
+    readonly solutions: Solution[];
+}
+
 export interface ProjectFavoriteStatusChangeEvent {
     readonly project: Project;
 }
+
 
 @injectable()
 export class ProjectManager implements FrontendApplicationContribution {
@@ -48,6 +59,9 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     @inject(DatabaseBackendService)
     private readonly databaseBackendService: DatabaseBackendService;
+
+    @inject(VeriblePrefsManager)
+    private readonly veriblePrefsManager: VeriblePrefsManager;
 
     projRoot: FileStat | undefined;
 
@@ -84,8 +98,16 @@ export class ProjectManager implements FrontendApplicationContribution {
             }
 
         });
+
+        this.onDidChangeProject((event: ProjectChangeEvent) => {
+            let sol = event.proj.getCurrSolution();
+            if(sol){
+                this.fireSolutionChangeEvent(sol);
+            }
+        });
+        this.onDidChangeSolution((event: SolutionChangeEvent) => this.veriblePrefsManager.setFilelistPath(event.solution.veribleFilelistUri.path.fsPath()));
     
-        await this.refreshProjectsList();
+        //await this.refreshProjectsList();
 
         if(this.openedProjects.length > 1){
             this.setProject(this.openedProjects[0]);
@@ -115,7 +137,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.fileDialogService.showOpenDialog(options).then(async uri => {
 
             if (uri) {
-                if(await this.isDirEmpty(this.fileService, uri)){
+                if(await this.isDirEmpty(uri)){
                     if(quickPickResult?.value){
                         await this.projManagerBackendService.createProjectFromTemplate(quickPickResult.value.id, uri);
                         this.projToSet = uri;
@@ -142,7 +164,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
         this.fileDialogService.showOpenDialog(options).then(async uri => {
             if (uri) {
-                if(await this.isDirEmpty(this.fileService, uri)){
+                if(await this.isDirEmpty(uri)){
                     this.messageService.error("Selected directory is not a Gestola project");
                 } else {
                     if(await this.checkForGestolaProject(uri)){
@@ -169,7 +191,9 @@ export class ProjectManager implements FrontendApplicationContribution {
         for(let i = 0; i < roots.length; i++){
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
-                this.openedProjects.push(new Project(roots[j].resource));
+                if(this.openedProjects.filter(e => e.rootUri.isEqual(roots[j].resource)).length == 0){
+                    this.openedProjects.push(await (new Project()).constructProject(this.fileService, roots[j]));
+                }
             }
         }
         this.projManagerBackendService.updateOpenedProjects(this.openedProjects);
@@ -205,6 +229,29 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
+    async addSolution(sol: Solution){
+        if(this.currProj){
+            this.currProj.addSolution(sol);
+            this.fireSolutionListChangeEvent();
+            this.setSolution(sol);
+        }
+    }
+
+    async removeSolution(sol: Solution[]){
+        if(this.currProj){
+            this.currProj.removeSolution(sol);
+            this.fireSolutionListChangeEvent();
+        }
+    }
+
+    setSolution(solution: Solution): void {
+        if(this.currProj){
+            this.currProj.setCurrSolution(solution);
+            this.fireSolutionChangeEvent(solution)
+        }
+    }
+
+
 
     //Context
 
@@ -224,6 +271,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.onDidChangeProjectEmitter.fire({proj: this.currProj} as ProjectChangeEvent);
     }
 
+
     protected readonly onDidChangeProjectListEmitter = new Emitter<ProjectsListChangeEvent>();
     get onDidChangeProjectList(): Event<ProjectsListChangeEvent> {
 		return this.onDidChangeProjectListEmitter.event;
@@ -232,6 +280,25 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.onDidChangeProjectListEmitter.fire({projects: this.getOpenedProjects()} as ProjectsListChangeEvent);
     }
 
+
+    protected readonly onDidChangeSolutionEmitter = new Emitter<SolutionChangeEvent>();
+    get onDidChangeSolution(): Event<SolutionChangeEvent> {
+        return this.onDidChangeSolutionEmitter.event;
+    }
+    private fireSolutionChangeEvent(sol: Solution){
+        this.onDidChangeSolutionEmitter.fire({solution: sol} as SolutionChangeEvent);
+    }
+
+
+    protected readonly onDidChangeSolutionListEmitter = new Emitter<SolutionsListChangeEvent>();
+    get onDidChangeSoltionList(): Event<SolutionsListChangeEvent> {
+		return this.onDidChangeSolutionListEmitter.event;
+	}
+    private fireSolutionListChangeEvent(){
+        this.onDidChangeSolutionListEmitter.fire({solutions: this.currProj?.solutions} as SolutionsListChangeEvent);
+    }
+
+
     protected readonly onDidChangeFavoriteStatusEmitter = new Emitter<ProjectFavoriteStatusChangeEvent>();
     get onDidChangeProjectFavoriteStatus(): Event<ProjectFavoriteStatusChangeEvent> {
         return this.onDidChangeFavoriteStatusEmitter.event;
@@ -239,6 +306,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     private fireProjectFavoriteStatusChangeEvent(proj: Project){
         this.onDidChangeFavoriteStatusEmitter.fire({project: proj} as ProjectFavoriteStatusChangeEvent);
     }
+
+    
 
 
 
@@ -250,7 +319,7 @@ export class ProjectManager implements FrontendApplicationContribution {
             return;
         }
 
-        let dirs = Array.from((await this.getSubDirList(this.fileService, path)).values());
+        let dirs = Array.from((await this.getSubDirList(path)).values());
         let check = true;
         
         for (let regexp of Project.regexp) {
@@ -261,12 +330,12 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     }
 
-    private async isDirEmpty(fileService: FileService, path: URI): Promise<boolean> {
-        return (await (await fileService.activateProvider(path.scheme)).readdir(path)).length === 0;
+    private async isDirEmpty(path: URI): Promise<boolean> {
+        return (await (await this.fileService.activateProvider(path.scheme)).readdir(path)).length === 0;
     }
 
-    private async getSubDirList(fileService: FileService, path: URI) {
-        return await (await fileService.activateProvider(path.scheme)).readdir(path);
+    private async getSubDirList(path: URI) {
+        return await (await this.fileService.activateProvider(path.scheme)).readdir(path);
     }
 
     public getOpenedProjects(): Project[]{
@@ -297,8 +366,6 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.databaseBackendService;
     }
 
-    onStop(): void {
-        //throw new Error('Method not implemented.');
-    }
+
 
 }

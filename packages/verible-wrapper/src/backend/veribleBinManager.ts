@@ -24,7 +24,6 @@ export class VeribleBinManager implements BackendApplicationContribution {
             }
         } else if (os.platform().toString() === 'linux'){
             if(os.arch().toString() === 'x64' || os.arch().toString() === 'ia32'){
-                console.log('kekj');
                 resPath = path.resolve(__dirname, '../../resources/verible/linux/x64');
             }
         }
@@ -36,7 +35,6 @@ export class VeribleBinManager implements BackendApplicationContribution {
             fs.mkdir(veriblePath, (error) => {console.log(error)});
             fs.readdir(resPath, (err, files) => {
                 files.forEach(file => {
-                    console.log('lolxd',file);
                   fs.copyFile(path.join(resPath, file), path.join(veriblePath, file), (error) => {console.log(error)});
                 });
               });

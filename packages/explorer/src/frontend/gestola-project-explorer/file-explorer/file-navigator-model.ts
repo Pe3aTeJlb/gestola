@@ -104,6 +104,11 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             this.updateRoot(); 
             //this.refresh()
         }));
+        this.toDispose.push(this.projManager.onDidChangeSolution(() => {
+            this.updateRoot(); 
+            //this.refresh()
+        }));
+
 
         this.selectionService.onSelectionChanged(() => {
             this.applySelection();
@@ -172,39 +177,57 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async createRoot(): Promise<TreeNode | undefined> {
         let proj = this.projManager.getCurrProject();
+        let sol = this.projManager.getCurrProject()?.getCurrSolution();
         if(proj){
 
-            const treeRoot = WorkspaceNode.createRoot();
+            if(this.rootId === "file-navigator-system"){
 
-            let rootFolder;
-            switch(this.rootId){      
+                const treeRoot = WorkspaceNode.createRoot();
+
+                let rootFolder;
+                rootFolder = await proj.systemFolderFStat();
+
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+
+            } else if (sol){
+
+                const treeRoot = WorkspaceNode.createRoot();
+
+                let rootFolder;
+                switch(this.rootId){      
+                    
+                    case "file-navigator-rtl":
+                        rootFolder = await sol.rtlFolderFStat();
+                        break;
+                    case "file-navigator-fpga": 
+                        rootFolder = await sol.fpgaFolderFStat();
+                        break;
+                    case "file-navigator-topology": 
+                        rootFolder = await sol.topologyFolderFStat();
+                        break;
+                    case "file-navigator-other": 
+                        rootFolder = await sol.otherFolderFStat();
+                        break;
                 
-                case "file-navigator-system":
-                    rootFolder = await this.fileService.resolve(proj.systemUri);
-                    break;
-                case "file-navigator-rtl":
-                    rootFolder = await this.fileService.resolve(proj.rtlUri);
-                    break;
-                case "file-navigator-fpga": 
-                    rootFolder = await this.fileService.resolve(proj.fpgaUri);
-                    break;
-                case "file-navigator-topology": 
-                    rootFolder = await this.fileService.resolve(proj.topologyUri);
-                    break;
-                case "file-navigator-other": 
-                    rootFolder = await this.fileService.resolve(proj.otherUri);
-                    break;
-            
-            }
+                }
 
-            if(rootFolder && rootFolder.children){
-                this.rootUri = rootFolder.resource;
-                treeRoot.children.push(
-                    await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
-                );
-            }
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
 
-            return treeRoot;
+                return treeRoot;
+
+            }
 
         }
 

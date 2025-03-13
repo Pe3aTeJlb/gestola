@@ -11,6 +11,8 @@ import { DatabaseBackendServiceImpl } from './databse-backend-service';
 
 export default new ContainerModule(bind => {
 
+    console.log("Launch dir", __dirname);
+
     //Localization
     bind(CustomLocalizationContribution).toSelf().inSingletonScope();
     bind(LocalizationContribution).toService(CustomLocalizationContribution);

@@ -7,14 +7,14 @@ import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
 import { defProjStruct } from '../common/project';
-import { Project }  from '../common/project';
+import { IProject }  from '../common/project';
 import { ProjectService } from '../common/protocol';
 
 @injectable()
 export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService, ProjectService {
 
-    currProj: Project;
-    openedProjects: Project[];
+    currProj: IProject;
+    openedProjects: IProject[];
 
     @inject(ContributionProvider) @named(TemplateContribution)
     protected readonly tempaltesProvider: ContributionProvider<TemplateContribution>;
@@ -100,19 +100,19 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
         }
     }
 
-    updateCurrProject(proj: Project): void {
+    updateCurrProject(proj: IProject): void {
         this.currProj = proj;
     }
 
-    updateOpenedProjects(projs: Project[]): void {
+    updateOpenedProjects(projs: IProject[]): void {
         this.openedProjects = projs;
     }
 
     public getProjectConfigState(): Object {
-        return this.currProj.getConfig();
+        return this.currProj;
     }
 
-    public getProject(): Project {
+    public getProject(): IProject {
         return this.currProj;
     }
 

@@ -25,12 +25,13 @@
             "view-welcome": "Вы еще не создали проект",
             "create-project": "Создать проект",
             "open-project": "Открыть проект",
+            "project-explorer-view-title": "Обозреватель проектов",
+            "solution-explorer-view-title": "Обозреватель решений",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-fpgaLvl": "FPGA",
             "file-navigator-topologyLvl": "Топология", 
             "file-navigator-otherFiles": "Другие файлы"
-
         },
 
         "branding":{

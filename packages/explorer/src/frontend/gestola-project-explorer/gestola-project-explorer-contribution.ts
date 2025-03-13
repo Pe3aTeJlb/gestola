@@ -205,7 +205,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
       }
     
-    override  registerMenus(menus: MenuModelRegistry): void {
+    override registerMenus(menus: MenuModelRegistry): void {
 
         super.registerMenus(menus);
 
@@ -259,8 +259,6 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             tooltip: nls.localize('gestola/project-manager/open-gestola-project', 'Open Gestola Project'),
             priority: 1,
         });
-
-
 
         registry.registerItem({
             id: NEW_FILE_TOOLBAR.id,

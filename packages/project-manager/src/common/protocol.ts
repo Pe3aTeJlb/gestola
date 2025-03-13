@@ -1,7 +1,7 @@
 import { URI } from "@theia/core";
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskCustomization } from '@theia/task/lib/common/task-protocol';
-import { Project }  from "./project";
+import { IProject }  from "./project";
 //import { Database } from "sqlite";
 
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
@@ -9,15 +9,15 @@ export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBacke
 export interface ProjectManagerBackendService {
     getTemplates(): Promise<Template[]>;
     createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
-    updateCurrProject(proj: Project): void;
-    updateOpenedProjects(projs: Project[]): void;
+    updateCurrProject(proj: IProject): void;
+    updateOpenedProjects(projs: IProject[]): void;
 }
 
 export const ProjectService = Symbol('ProjectService');
 export const PROJECT_SERVICE_PATH = '/services/gestolaProjectService';
 export interface ProjectService {
     getProjectConfigState(): Object;
-    getProject(): Project;
+    getProject(): IProject;
 }
 
 export interface Template {

@@ -26,7 +26,8 @@
   "dependencies": {
     "@theia/core": "1.53.2",
     "fs-extra": "11.2.0",
-    "sqlite": "5.1.1"
+    "sqlite": "5.1.1",
+    "@gestola/verible-wrapper": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "3.0.2"

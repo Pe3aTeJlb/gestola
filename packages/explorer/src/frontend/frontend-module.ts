@@ -7,6 +7,7 @@ import { TabBarToolbarContribution } from '@theia/core/lib/browser/shell/tab-bar
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './gestola-project-explorer/file-explorer/file-navigator-widget';
 import { GestolaExplorerContextKeyService } from './gestola-project-explorer/gestola-explorer-context-key-service';
 import { GestolaProjectExplorerViewContribution } from './gestola-project-explorer/gestola-project-explorer-contribution';
+import { SolutionExplorerWidget } from "./gestola-project-explorer/solution-explorer/solution-explorer-widget";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -30,6 +31,12 @@ export default new ContainerModule((bind, _unbind) => {
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: ProjectExplorerWidget.ID,
         createWidget: () => ProjectExplorerWidget.createWidget(container)
+    })).inSingletonScope();
+
+    bind(SolutionExplorerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+        id: SolutionExplorerWidget.ID,
+        createWidget: () => SolutionExplorerWidget.createWidget(container)
     })).inSingletonScope();
 
   
