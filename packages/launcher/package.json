@@ -22,8 +22,8 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.53.2",
-    "@theia/plugin-ext": "1.53.2",
+    "@theia/core": "1.59.0",
+    "@theia/plugin-ext": "1.59.0",
     "body-parser": "^1.17.2",
     "fs-extra": "^4.0.2",
     "@vscode/sudo-prompt": "9.3.1",

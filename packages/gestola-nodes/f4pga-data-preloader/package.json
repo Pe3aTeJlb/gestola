@@ -40,7 +40,6 @@
     "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
     "clean:entire": "yarn clean && rimraf node_modules",
     "compile": "tsc -b",
-    "watch": "tsc -w",
-    "update:next": "ts-node ../scripts/update-theia-version.ts"
+    "watch": "tsc -w"
   }
 }

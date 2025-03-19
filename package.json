@@ -15,8 +15,7 @@
     "yarn": ">=1.7.0 <2",
     "node": ">=20.11.1"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/decompress": "^4.2.7",
     "@types/temp": "^0.9.4",
@@ -28,32 +27,26 @@
     "replace-regex": "0.0.3"
   },
   "scripts": {
-    
     "setup": "yarn && yarn update:dependencies && yarn update:plugins && yarn download:plugins && yarn build && yarn build:vscode-ext",
     "prepare": "lerna run prepare",
-    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.53.2 && lerna run update:next 1.53.2",
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.59.0 && lerna run update:next 1.59.0",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
-    "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts",
+    "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts && yarn build:vscode-ext",
     "build": "yarn clean:all && yarn compile && yarn --cwd electron-app build:test",
     "build:vscode-ext": "lerna run rebuild:vscode-ext",
     "compile": "lerna run compile",
     "postinstall": "theia check:theia-version",
-    
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
-    
     "package:prod": "yarn rebuild:prod && yarn --cwd electron-app package:prod",
     "package:test": "yarn rebuild:prod && yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
-    
     "clean:entire": "lerna run clean:entire && rimraf plugins && rimraf .browser_modules && rimraf node_modules",
     "clean:all": "lerna run clean",
     "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
-    
     "rebuild": "lerna run rebuild",
     "rebuild:prod": "lerna run rebuild:prod",
-
     "rebuild:electron": "yarn --cwd electron-app rebuild",
     "rebuild:launcher": "yarn --cwd packages/launcher rebuild",
     "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
@@ -61,20 +54,15 @@
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
     "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",
-    
     "play": "yarn --cwd electron-app start",
     "debug": "yarn rebuild && yarn --cwd electron-app start",
     "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",
     "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-
     "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
-
     "bundle": "yarn --cwd electron-app bundle",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-
     "kk": "yarn --cwd packages/verible-wrapper rebuild:prod"
-
   },
   "workspaces": [
     "packages/**/",
@@ -82,6 +70,7 @@
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
+    "lramseyer.vaporview": "https://lramseyer.gallery.vsassets.io/_apis/public/gallery/publisher/lramseyer/extension/vaporview/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
     "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
     "CHIPSAlliance.verible": "https://CHIPSAlliance.gallery.vsassets.io/_apis/public/gallery/publisher/CHIPSAlliance/extension/verible/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
