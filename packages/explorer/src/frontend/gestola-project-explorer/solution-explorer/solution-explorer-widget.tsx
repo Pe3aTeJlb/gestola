@@ -93,7 +93,7 @@ export class SolutionExplorerWidget extends TreeViewWelcomeWidget {
     }
 
     protected renderRemoveButton(node: SolutionTreeNode): React.ReactNode {
-        return <span className={`result-node-buttons1 ${codicon('close')}`} onClick={() => this.projManager.removeSolution([node.solution])}></span>;
+        return <span className={`result-node-buttons1 ${codicon('trash')}`} onClick={() => this.projManager.removeSolution([node.solution])}></span>;
     }
 
     protected renderCurrentProjectPointer(node: SolutionTreeNode): React.ReactNode {

@@ -4,7 +4,13 @@
         
         "project-manager":{
             "open-gestola-project": "Open Gestola Project",
-            "create-gestola-project": "Create Gestola Project"
+            "create-gestola-project": "Create Gestola Project",
+            "create-solution": "Create Solution",
+            "delete-solution": "Delete Solution",
+            "exclude-from-design": "Exclude from Design",
+            "include-into-design": "Include into Design",
+            "set-as-top-module": "Set as Top Module"
+
         },
 
         "explorer":{

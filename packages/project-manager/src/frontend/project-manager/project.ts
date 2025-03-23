@@ -3,12 +3,12 @@ import { IProject } from '../../common/project';
 import { Solution } from './solution';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
-
-export const defProjStruct = ['.theia', 'database', 'system', '.config'];
+import { ProjectManager } from './project-manager';
 
 export class Project implements IProject {
 
-    fileService: FileService
+    projManager: ProjectManager;
+    fileService: FileService;
 
     projName: string;
 
@@ -33,9 +33,10 @@ export class Project implements IProject {
                                 new RegExp('\.config'), 
                             ];
 
-    public async constructProject(fileService: FileService, projectRoot: FileStat): Promise<Project>{
+    public async constructProject(projManager: ProjectManager, projectRoot: FileStat): Promise<Project>{
 
-        this.fileService = fileService;
+        this.projManager = projManager;
+        this.fileService = this.projManager.getFileSerivce();
 
         this.rootFStat = projectRoot;
 
@@ -66,7 +67,7 @@ export class Project implements IProject {
         for(let dir of dirs){
             let uri = new URI(projRoot.path.join(dir[0]).fsPath());
             if(await this.checkSolutionStruct(uri)){
-                this.solutions.push(new Solution(this.fileService, uri));
+                this.solutions.push(new Solution(this.projManager, uri));
             }
         }
 
@@ -89,6 +90,10 @@ export class Project implements IProject {
         return await (await this.fileService.activateProvider(path.scheme)).readdir(path);
     }
 
+
+    public async saveMetadata(){
+        this.solutions.forEach(async e => await e.saveMetadata());
+    }
 
 
     public getCurrSolution(): Solution | undefined{

@@ -2,11 +2,14 @@ import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
 import { ISolution } from '../../common/solution';
+import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager } from './project-manager';
 
-export const defSolutionStruct = ['rtl', 'fpga', 'topology', 'other', '.config'];
+export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
+export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
 
-export class Solution implements ISolution{
+export class Solution implements ISolution {
 
+    projManager: ProjectManager;
     fileService: FileService;
 
     solutionName: string;
@@ -18,14 +21,18 @@ export class Solution implements ISolution{
     otherUri: URI;
     configUri: URI;
 
+    solutionDesctiptionUri: URI;
     veribleFilelistUri: URI;
 
     target: string = 'zybo';
+    topLevelModule: URI | undefined = undefined;
 
     isFavorite: boolean = false;
 
-    hdlExt = ['.v', '.vh', '.sv', '.svh'];
     indexedHDLFiles: URI[] = [];
+    designHDLFiles: URI[] = [];
+    excludedDesignHDLFiles: URI[] = [];
+    topModuleHierarchyHDLFiles: URI[] = [];
 
     public static regexp =  [
                                 new RegExp('rtl'), 
@@ -35,11 +42,17 @@ export class Solution implements ISolution{
                                 new RegExp('.config')
                             ];
 
+    public static moduleDeclarationRegexp: RegExp = /(?<=\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(\([^;]*\))*;/gmi;
+    public static moduleNameFromDeclarationRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*\(|;)/gmi;
+    
+    public static instanceDeclarationRegexp = new RegExp('(?<!module\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(#\s*\([^;]*\))*\s+\b[A-Za-z_]{1}[A-Za-z0-9_$]*\s*(\([^;]*\);){1}', 'gmi');
+    public static instanceClassNameRegexp = /[A-Za-z_]{1}[A-Za-z0-9_$]*/gmi;
                             
     
-    constructor(fileservice: FileService, solutionRoot: URI){
+    constructor(projManager: ProjectManager, solutionRoot: URI){
 
-        this.fileService = fileservice;
+        this.projManager = projManager;
+        this.fileService = this.projManager.getFileSerivce();
 
         let a = solutionRoot.path.fsPath().split('/').pop();
         if(a) this.solutionName = a;
@@ -50,21 +63,64 @@ export class Solution implements ISolution{
         this.topologyUri = this.solutionUri.resolve('topology');
         this.otherUri = this.solutionUri.resolve('other');
         this.configUri = this.solutionUri.resolve('.config');
-        this.veribleFilelistUri = this.configUri.resolve('verible.filelist');    
+        this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
+        this.solutionDesctiptionUri = this.configUri.resolve('solution_description.json');
 
         this.fileService.onDidFilesChange((event) => event.changes.forEach(i => {
             if(this.rtlUri.isEqualOrParent(i.resource)){
-                if(this.hdlExt.includes(i.resource.path.ext)){
+                if(hdlExt.includes(i.resource.path.ext)){
 
-                    if((i.type == FileChangeType.ADDED || i.type == FileChangeType.UPDATED) && !this.indexedHDLFiles.includes(i.resource)){
-                        this.indexedHDLFiles.push(i.resource);
+                    if(i.type == FileChangeType.ADDED){
+                        if(this.indexedHDLFiles.find(e => e.isEqual(i.resource)) === undefined){
+                            this.indexedHDLFiles.push(i.resource);
+                            this.designHDLFiles.push(i.resource);
+                        }
+                    } else if (i.type == FileChangeType.UPDATED) {
+                        if(this.indexedHDLFiles.find(e => e.isEqual(i.resource)) === undefined){
+                            this.indexedHDLFiles.push(i.resource);
+                            this.designHDLFiles.push(i.resource);
+                        }
                     } else if (i.type == FileChangeType.DELETED){
                         this.indexedHDLFiles = this.indexedHDLFiles.filter(e => !e.isEqual(i.resource));
+                        this.designHDLFiles = this.designHDLFiles.filter(e => !e.isEqual(i.resource));
+                        this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.filter(e => !e.isEqual(i.resource));
                     } 
-                    this.fileService.write(this.veribleFilelistUri, this.indexedHDLFiles.map(e => e.path.fsPath()).join('\n'));
+                    this.updateVeribleMetaFile();
                 }
             }
         }));
+
+        this.projManager.onDidChangeSolution(async (event) => {
+            if(event.solution == this && !(await this.fileService.exists(this.veribleFilelistUri))){
+                this.updateVeribleMetaFile();
+            }
+        });
+
+        this.projManager.onDidDesignFilesInclude((event: DesignFilesExcludeEvent) => {
+            
+            if(this.projManager.getCurrProject()?.getCurrSolution() == this){
+                this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.designHDLFiles = this.designHDLFiles.concat(event.uris);
+                this.updateVeribleMetaFile();
+            }
+
+        });
+
+        this.projManager.onDidDesignFilesExclude((event: DesignFilesExcludeEvent) => {
+
+            if(this.projManager.getCurrProject()?.getCurrSolution() == this){
+                this.designHDLFiles = this.designHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.concat(event.uris);
+                this.updateVeribleMetaFile();
+            }
+
+        });
+
+        this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
+            this.topLevelModule = event.uri;
+            this.buildModulesDependencyTree(this.topLevelModule);
+        });
+
 
         this.indexHDLFiles();
 
@@ -73,7 +129,14 @@ export class Solution implements ISolution{
     private async indexHDLFiles(): Promise<void>{
         this.indexedHDLFiles = [];
         await this.processDir(this.rtlUri);
-        await this.fileService.write(this.veribleFilelistUri, this.indexedHDLFiles.map(e => e.path.fsPath()).join('\n'));
+        if(await this.fileService.exists(this.solutionDesctiptionUri)){
+            const data = JSON.parse((await this.fileService.read(this.solutionDesctiptionUri)).value);
+            if(data.top_module)this.topLevelModule = this.solutionUri.resolve(data.top_module);
+            this.excludedDesignHDLFiles = data.design_exclude.map((e: string) => this.solutionUri.resolve(e));
+        }
+        this.designHDLFiles = this.indexedHDLFiles.filter(e => this.excludedDesignHDLFiles.find(i => i.isEqual(e)) === undefined);
+
+        await this.updateVeribleMetaFile();
     }
 
     private async processDir(baseUri: URI) {
@@ -82,8 +145,10 @@ export class Solution implements ISolution{
             if(content[1] == FileType.File){
                 let extIndex = content[0].lastIndexOf('.');
                 let ext = extIndex === -1 ? '' : content[0].substring(extIndex);
-                if(this.hdlExt.includes(ext)){
-                    this.indexedHDLFiles.push(new URI(baseUri.path.join(content[0]).fsPath()));
+                if(hdlExt.includes(ext)){
+                    let uri = new URI(baseUri.path.join(content[0]).fsPath());
+                    this.indexedHDLFiles.push(uri);
+                    if(hdlExtWtHeaders.includes(ext)) await this.processHDLFile(uri);
                 }
             } else if (content[1] == FileType.Directory){
                 let uri = new URI(baseUri.path.join(content[0]).fsPath());
@@ -91,6 +156,44 @@ export class Solution implements ISolution{
             }
         }
     }
+
+    private async processHDLFile(uri: URI){
+
+        console.log('lel 1', uri.path.fsPath());
+        let content = (await this.fileService.read(uri)).value;
+        let modules = content.match(Solution.moduleDeclarationRegexp)?.map(e => e.match(Solution.moduleNameFromDeclarationRegexp));
+        console.log('modules', modules);
+
+
+    }
+
+
+
+
+
+    private async buildModulesDependencyTree(root: URI){
+
+    }
+
+
+
+
+
+
+    private async updateVeribleMetaFile(){
+        this.fileService.write(this.veribleFilelistUri, this.designHDLFiles.map(e => e.path.fsPath()).join('\n'));
+    }
+
+    public async saveMetadata(){
+       let string = JSON.stringify({
+            top_module:  this.topLevelModule ? this.solutionUri.relative(this.topLevelModule)?.toString() : undefined,
+            design_exclude: this.excludedDesignHDLFiles.map(e => this.solutionUri.relative(e)?.toString())
+       });
+       this.fileService.write(this.solutionDesctiptionUri, string);
+    }
+
+
+    //Getters
 
     public getRootUri(): URI{ 
         return this.solutionUri;

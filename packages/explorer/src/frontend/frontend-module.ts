@@ -8,6 +8,9 @@ import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavig
 import { GestolaExplorerContextKeyService } from './gestola-project-explorer/gestola-explorer-context-key-service';
 import { GestolaProjectExplorerViewContribution } from './gestola-project-explorer/gestola-project-explorer-contribution';
 import { SolutionExplorerWidget } from "./gestola-project-explorer/solution-explorer/solution-explorer-widget";
+import { DesignFilesExcludeHandler } from "./gestola-project-explorer/design-exclude-handler";
+import { DesignFilesIncludeHandler } from "./gestola-project-explorer/design-include-handler";
+import { DesignSetTopModuleHandler } from "./gestola-project-explorer/design-set-top-handler";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -25,7 +28,9 @@ export default new ContainerModule((bind, _unbind) => {
     bind(FrontendApplicationContribution).toService(GestolaProjectExplorerViewContribution);
     bind(TabBarToolbarContribution).toService(GestolaProjectExplorerViewContribution);
 
-
+    bind(DesignFilesIncludeHandler).toSelf().inSingletonScope();
+    bind(DesignFilesExcludeHandler).toSelf().inSingletonScope();
+    bind(DesignSetTopModuleHandler).toSelf().inSingletonScope();
 
     bind(ProjectExplorerWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(({ container }) => ({

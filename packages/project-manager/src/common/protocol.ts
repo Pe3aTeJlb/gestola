@@ -7,8 +7,10 @@ import { IProject }  from "./project";
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
 export interface ProjectManagerBackendService {
-    getTemplates(): Promise<Template[]>;
+    getProjectTemplates(): Promise<ProjectTemplate[]>;
+    getSolutionTemplates(): Promise<SolutionTemplate[]>;
     createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
+    createSolutionFromTemplate(templateId: string, uri: URI): Promise<void>;
     updateCurrProject(proj: IProject): void;
     updateOpenedProjects(projs: IProject[]): void;
 }
@@ -20,25 +22,40 @@ export interface ProjectService {
     getProject(): IProject;
 }
 
-export interface Template {
+
+
+export const ProjectTemplateContribution = Symbol('ProjectTemplateContribution');
+export interface ProjectTemplateContribution {
+    readonly templates: ProjectTemplate[];
+}
+
+export interface ProjectTemplate {
     id: string;
     label: string;
     resourcesPath: string;
     welcomeFile?: string;
-    tasks?: (options: TemplateOptions) => TaskCustomization[];
-    launches?: (options: TemplateOptions) => DebugConfiguration[];
+    tasks?: (options: ProjectTemplateOptions) => TaskCustomization[];
+    launches?: (options: ProjectTemplateOptions) => DebugConfiguration[];
 }
 
-export interface TemplateOptions {
+export interface ProjectTemplateOptions {
     /** The full path of the selected target folder. */
     targetFolder: string;
     /** The name of the target folder. */
     targetFolderName: string;
 }
 
-export const TemplateContribution = Symbol('TemplateContribution');
-export interface TemplateContribution {
-    readonly templates: Template[];
+
+
+export const SolutionTemplateContribution = Symbol('SolutionTemplateContribution');
+export interface SolutionTemplateContribution {
+    readonly templates: SolutionTemplate[];
+}
+
+export interface SolutionTemplate {
+    id: string;
+    label: string;
+    resourcesPath: string;
 }
 
 

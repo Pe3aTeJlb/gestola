@@ -1,17 +1,17 @@
 import { URI } from '@theia/core';
 import { injectable } from '@theia/core/shared/inversify';
 import { PanelKind, RevealKind } from '@theia/task/lib/common';
-import { Template, TemplateOptions } from '../common/protocol';
+import { ProjectTemplate, ProjectTemplateOptions } from '../common/protocol';
 
 @injectable()
-export class GestolaTemplateContribution implements GestolaTemplateContribution {
-    get templates(): Template[] {
+export class GestolaProjectTemplateContribution implements GestolaProjectTemplateContribution {
+    get templates(): ProjectTemplate[] {
         return [{
-            id: "gestola-default-template",
+            id: "gestola-project-default-template",
             label: 'Default Template (CMake)',
             welcomeFile: 'README.md',
-            resourcesPath: new URI(__dirname).resolve('../../resources/templates/default').normalizePath().toString(),
-            launches: (options: TemplateOptions) => [{
+            resourcesPath: new URI(__dirname).resolve('../../resources/project_templates/default').normalizePath().toString(),
+            launches: (options: ProjectTemplateOptions) => [{
                 'type': 'gdb',
                 'request': 'launch',
                 'name': `Debug System Model`,
@@ -19,7 +19,7 @@ export class GestolaTemplateContribution implements GestolaTemplateContribution 
                 'initCommands': ['tbreak main'],
                 'preLaunchTask': `Binary Build System Model`
             }],
-            tasks: (options: TemplateOptions) => [{
+            tasks: (options: ProjectTemplateOptions) => [{
                 'label': `Binary Build System Model`,
                 'type': 'shell',
                 'command': 'cmake . && make',
@@ -52,10 +52,10 @@ export class GestolaTemplateContribution implements GestolaTemplateContribution 
             }]
         },
         {
-            id: "gestola-empty-template",
+            id: "gestola-project-empty-template",
             label: 'Empty Template',
             welcomeFile: 'README.md',
-            resourcesPath: new URI(__dirname).resolve('../../resources/templates/empty').normalizePath().toString()
+            resourcesPath: new URI(__dirname).resolve('../../resources/project_templates/empty').normalizePath().toString()
         },
         ];
     }

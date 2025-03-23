@@ -1,14 +1,14 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { WorkspaceService } from "@theia/workspace/lib/browser/workspace-service";
-import { MessageService, QuickPickService, QuickPickValue, nls } from '@theia/core/lib/common';
+import { MessageService, QuickInputService, QuickPickService, QuickPickValue, nls } from '@theia/core/lib/common';
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import  { Project }  from './project';
-import { FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { DatabaseBackendService, ProjectManagerBackendService, Template } from '../../common/protocol';
+import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, SolutionTemplate } from '../../common/protocol';
 import { Solution } from './solution';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 
@@ -32,6 +32,18 @@ export interface ProjectFavoriteStatusChangeEvent {
     readonly project: Project;
 }
 
+export interface DesignFilesIncludeEvent {
+    readonly uris: URI[];
+}
+
+export interface DesignFilesExcludeEvent {
+    readonly uris: URI[];
+}
+
+export interface DesignTopModuleChangeEvent {
+    readonly uri: URI;
+}
+
 
 @injectable()
 export class ProjectManager implements FrontendApplicationContribution {
@@ -53,6 +65,9 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     @inject(QuickPickService)
     private readonly quickPickService: QuickPickService;
+
+    @inject(QuickInputService)
+    private readonly quickInputService: QuickInputService;
 
     @inject(ProjectManagerBackendService)
     private readonly projManagerBackendService: ProjectManagerBackendService;
@@ -115,12 +130,25 @@ export class ProjectManager implements FrontendApplicationContribution {
         
     }
 
+    onWillStop(app: FrontendApplication): boolean | undefined | OnWillStopAction<any>{
 
+        return  {
+            action: async () => {
+                this.saveProjectsMetaData();
+                return true;
+            },
+            reason: 'Saving projects metadata before close',
+            priority: 1001
+        };
+
+    };
+
+    /* Project */
 
     async createProject() {
 
-        const templates = await this.projManagerBackendService.getTemplates();
-        const items: QuickPickValue<Template>[] = templates.map((e: Template) => <QuickPickValue<Template>>{ label: e.label, value: e });
+        const templates = await this.projManagerBackendService.getProjectTemplates();
+        const items: QuickPickValue<ProjectTemplate>[] = templates.map((e: ProjectTemplate) => <QuickPickValue<ProjectTemplate>>{ label: e.label, value: e });
         let quickPickResult = await this.quickPickService.show(items);
         if(!quickPickResult){
             return;
@@ -192,7 +220,7 @@ export class ProjectManager implements FrontendApplicationContribution {
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
                 if(this.openedProjects.filter(e => e.rootUri.isEqual(roots[j].resource)).length == 0){
-                    this.openedProjects.push(await (new Project()).constructProject(this.fileService, roots[j]));
+                    this.openedProjects.push(await (new Project()).constructProject(this, roots[j]));
                 }
             }
         }
@@ -219,6 +247,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     async removeProject(proj: Project[]){
+        proj.forEach(async e => await this.saveProjectMetaData(e));
         this.workspaceService.removeRoots(proj.map(i => i.rootUri));
     }
 
@@ -228,9 +257,49 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.fireProjectChangeEvent();
     }
 
+    async saveProjectsMetaData(){
+        this.openedProjects.forEach(async e => await this.saveProjectMetaData(e));
+    }
 
-    async addSolution(sol: Solution){
+    async saveProjectMetaData(proj: Project){
+       proj.saveMetadata();
+    }
+
+
+    /*  Solution */
+
+    async createSolution() {
+
+        if(!this.currProj) return;
+
+        let quickInputResult = await this.quickInputService.input();
+
+        if(!quickInputResult){
+            return;
+        }
+
+        if(this.currProj.solutions.map(e => e.solutionName).includes(quickInputResult)){
+            this.messageService.error(`Solution ${quickInputResult} already exists`);
+            return;
+        }
+
+        const templates = await this.projManagerBackendService.getSolutionTemplates();
+        const items: QuickPickValue<SolutionTemplate>[] = templates.map((e: SolutionTemplate) => <QuickPickValue<SolutionTemplate>>{ label: e.label, value: e });
+        let quickPickResult = await this.quickPickService.show(items);
+        if(!quickPickResult){
+            return;
+        }
+
+        let solUri = this.currProj.rootUri.resolve(quickInputResult);
+        await this.projManagerBackendService.createSolutionFromTemplate(quickPickResult.value.id, solUri);
+        await this.addSolution(solUri);
+
+    }
+
+
+    async addSolution(solUri: URI){
         if(this.currProj){
+            let sol = new Solution(this, solUri);
             this.currProj.addSolution(sol);
             this.fireSolutionListChangeEvent();
             this.setSolution(sol);
@@ -238,10 +307,31 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     async removeSolution(sol: Solution[]){
+
         if(this.currProj){
-            this.currProj.removeSolution(sol);
-            this.fireSolutionListChangeEvent();
+
+            const shouldDelete = await new ConfirmDialog({
+                title: 'Delete confirmation',
+                msg: sol.length > 1 ? `Confirm the deletion of multiple solutions` : `Confirm the deletion of ${sol[0].solutionName}`,
+                ok: Dialog.YES,
+                cancel: Dialog.CANCEL,
+            }).open();
+
+            if(shouldDelete){
+
+                this.currProj.removeSolution(sol);
+                for(let s of sol){
+                    await this.fileService.delete(s.solutionUri, {
+                        recursive: true,
+                        useTrash: true
+                    });
+                }
+                this.fireSolutionListChangeEvent();
+
+            }
+
         }
+
     }
 
     setSolution(solution: Solution): void {
@@ -305,6 +395,42 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireProjectFavoriteStatusChangeEvent(proj: Project){
         this.onDidChangeFavoriteStatusEmitter.fire({project: proj} as ProjectFavoriteStatusChangeEvent);
+    }
+
+
+    public includeFilesIntoDesign(uris: URI[]){
+        this.fireDesignFilesIncludeEvent(uris);
+    };
+    protected readonly onDidDesignFilesIncludeEmitter = new Emitter<DesignFilesIncludeEvent>();
+    get onDidDesignFilesInclude(): Event<DesignFilesIncludeEvent> {
+        return this.onDidDesignFilesIncludeEmitter.event;
+    }
+    private fireDesignFilesIncludeEvent(uris: URI[]){
+        this.onDidDesignFilesIncludeEmitter.fire({uris: uris} as DesignFilesIncludeEvent);
+    }
+
+
+    public excludeFilesFromDesign(uris: URI[]){
+        this.fireDesignFilesExcludeEvent(uris);
+    }
+    protected readonly onDidDesignFilesExcludeEmitter = new Emitter<DesignFilesExcludeEvent>();
+    get onDidDesignFilesExclude(): Event<DesignFilesExcludeEvent> {
+        return this.onDidDesignFilesExcludeEmitter.event;
+    }
+    private fireDesignFilesExcludeEvent(uris: URI[]){
+        this.onDidDesignFilesExcludeEmitter.fire({uris: uris} as DesignFilesExcludeEvent);
+    }
+
+
+    public setTopModule(uri: URI){
+        this.fireDesignTopModuleChangeEvent(uri);
+    }
+    protected readonly onDidChangeDesignTopModuleEmitter = new Emitter<DesignTopModuleChangeEvent>();
+    get onDidChangeDesignTopModule(): Event<DesignTopModuleChangeEvent> {
+        return this.onDidChangeDesignTopModuleEmitter.event;
+    }
+    private fireDesignTopModuleChangeEvent(uri: URI){
+        this.onDidChangeDesignTopModuleEmitter.fire({uri: uri} as DesignTopModuleChangeEvent);
     }
 
     

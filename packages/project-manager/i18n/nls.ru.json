@@ -9,6 +9,11 @@
         "project-manager":{
             "open-gestola-project": "Открыть проект Гестола",
             "create-gestola-project": "Создать проект Гестола",
+            "create-solution": "Создать решение",
+            "delete-solution": "Удалить решение",
+            "exclude-from-design": "Исключить из дизайна",
+            "include-to-design": "Включить в дизайн",
+            "set-as-top-module": "Установить в качестве Top Module",
             "open": "Открыть",
             "create": "Создать",
 

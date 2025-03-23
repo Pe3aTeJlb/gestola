@@ -3,8 +3,8 @@ import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-con
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { ProjectExplorerWidget } from './project-explorer/project-explorer-widget';
 import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer-widget-factory';
-import { Command, CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MenuPath, isOSX, nls } from "@theia/core";
-import { CommonCommands, CommonMenus, CompositeTreeNode, FrontendApplicationContribution, KeybindingContribution, KeybindingRegistry, SHELL_TABBAR_CONTEXT_MENU, SelectableTreeNode, Widget, codicon } from '@theia/core/lib/browser';
+import { Command, CommandRegistry, MenuModelRegistry, MenuPath, SelectionService, URI, isOSX, nls } from "@theia/core";
+import { CommonCommands, CommonMenus, CompositeTreeNode, FrontendApplicationContribution, KeybindingRegistry, SHELL_TABBAR_CONTEXT_MENU, SelectableTreeNode, Widget, codicon } from '@theia/core/lib/browser';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { ProjectManagerCommands } from '@gestola/project-manager/lib/frontend/project-manager/project-manager-commands';
@@ -14,6 +14,11 @@ import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
 import { WorkspaceCommands, WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
 import { FileNavigatorCommands } from '@theia/navigator/lib/browser/file-navigator-commands';
 import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
+import { SolutionExplorerWidget } from './solution-explorer/solution-explorer-widget';
+import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
+import { DesignFilesExcludeHandler } from './design-exclude-handler';
+import { DesignFilesIncludeHandler } from './design-include-handler';
+import { DesignSetTopModuleHandler } from './design-set-top-handler';
 
 export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
     id: "project-explorer:toggle",
@@ -83,20 +88,31 @@ export namespace NavigatorContextMenu {
 }
 
 @injectable()
-export class GestolaProjectExplorerViewContribution extends AbstractViewContribution<ProjectExplorerWidget> implements FrontendApplicationContribution, TabBarToolbarContribution, CommandContribution, MenuContribution, KeybindingContribution {
+export class GestolaProjectExplorerViewContribution extends AbstractViewContribution<ProjectExplorerWidget> implements FrontendApplicationContribution, TabBarToolbarContribution {
 
     @inject(GestolaExplorerContextKeyService)
     protected readonly contextKeyService: GestolaExplorerContextKeyService;
-/*
+
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
-*/
+
     @inject(WorkspaceCommandContribution)
     protected readonly workspaceCommandContribution: WorkspaceCommandContribution;
 
+    @inject(SelectionService) 
+    protected readonly selectionService: SelectionService;
+
+    @inject(DesignFilesIncludeHandler) 
+    protected readonly designFilesIncludeHandler: DesignFilesIncludeHandler;
+
+    @inject(DesignFilesExcludeHandler) 
+    protected readonly designFilesExcludeHandler: DesignFilesExcludeHandler;
+
+    @inject(DesignSetTopModuleHandler) 
+    protected readonly designSetTopModuleHandler: DesignSetTopModuleHandler;
+
     constructor(
         @inject(FileNavigatorPreferences) protected readonly fileNavigatorPreferences: FileNavigatorPreferences,
-        @inject(ProjectManager) protected readonly projManager: ProjectManager,
     ) {
         super({
             viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
@@ -133,8 +149,23 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
     }
 
+    protected newUriAwareCommandHandler(handler: UriCommandHandler<URI>): UriAwareCommandHandler<URI> {
+        return UriAwareCommandHandler.MonoSelect(this.selectionService, handler);
+    }
+
+    protected newMultiUriAwareCommandHandler(handler: UriCommandHandler<URI[]>): UriAwareCommandHandler<URI[]> {
+        return UriAwareCommandHandler.MultiSelect(this.selectionService, handler);
+    }
+
     protected withProjectExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: ProjectExplorerWidget) => T): T | false {
         if (widget instanceof ProjectExplorerWidget) {
+            return cb(widget);
+        }
+        return false;
+    }
+
+    protected withSolutionExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: SolutionExplorerWidget) => T): T | false {
+        if (widget instanceof SolutionExplorerWidget) {
             return cb(widget);
         }
         return false;
@@ -155,7 +186,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         commands.registerCommand(ProjectManagerCommands.CREATE_GESTOLA_PROJECT, {
             isEnabled: widget => this.withProjectExplorerWidget(widget, () => true),
             isVisible: widget => this.withProjectExplorerWidget(widget, () => true),
-            execute: () => this.projManager.createProject()
+            execute: () =>  this.projManager.createProject()
         });
 
         commands.registerCommand(ProjectManagerCommands.OPEN_GESTOLA_PROJECT, {
@@ -164,7 +195,22 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             execute: () => this.projManager.openProject()
         });
 
-        
+
+
+        commands.registerCommand(ProjectManagerCommands.CREATE_SOLUTION, {
+            isEnabled: widget => this.withSolutionExplorerWidget(widget, () => true),
+            isVisible: widget => this.withSolutionExplorerWidget(widget, () => true),
+            execute: () => this.projManager.createSolution()
+        });
+
+
+
+
+        commands.registerCommand(ProjectManagerCommands.DESIGN_FILES_INCLUDE, this.newMultiUriAwareCommandHandler(this.designFilesIncludeHandler));
+        commands.registerCommand(ProjectManagerCommands.DESIGN_FILES_EXCLUDE, this.newMultiUriAwareCommandHandler(this.designFilesExcludeHandler));
+        commands.registerCommand(ProjectManagerCommands.DESIGN_SET_TOP_MODULE, this.newUriAwareCommandHandler(this.designSetTopModuleHandler));
+
+
 
         commands.registerCommand(COLLAPSE_ALL, {
             execute: widget => this.withFileNavigatorWidget(widget, (widget) => this.collapseFileNavigatorTree(widget)),
@@ -211,6 +257,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
         menus.registerMenuAction(CommonMenus.FILE, {
             commandId: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.id,
+            label: ProjectManagerCommands.CREATE_GESTOLA_PROJECT.label,
             order: 'a'
         });
 
@@ -218,6 +265,22 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             commandId: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
             order: 'a'
         });
+
+        menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: ProjectManagerCommands.DESIGN_SET_TOP_MODULE.id,
+            order: 'b'
+        });
+
+        menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: ProjectManagerCommands.DESIGN_FILES_INCLUDE.id,
+            order: 'c'
+        });
+
+        menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: ProjectManagerCommands.DESIGN_FILES_EXCLUDE.id,
+            order: 'c'
+        });
+
 
     }
 
@@ -258,6 +321,13 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             command: ProjectManagerCommands.OPEN_GESTOLA_PROJECT.id,
             tooltip: nls.localize('gestola/project-manager/open-gestola-project', 'Open Gestola Project'),
             priority: 1,
+        });
+
+        registry.registerItem({
+            id: ProjectManagerCommands.CREATE_SOLUTION.id,
+            command: ProjectManagerCommands.CREATE_SOLUTION.id,
+            tooltip: nls.localize('gestola/project-manager/create-solution', 'Create Solution'),
+            priority: 0,
         });
 
         registry.registerItem({
