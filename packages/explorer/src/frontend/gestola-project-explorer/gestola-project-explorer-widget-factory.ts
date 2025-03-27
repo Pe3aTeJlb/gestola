@@ -5,6 +5,7 @@ import { ProjectExplorerWidget } from './project-explorer/project-explorer-widge
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-explorer/file-navigator-widget';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { SolutionExplorerWidget } from './solution-explorer/solution-explorer-widget';
+import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -53,6 +54,9 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
     
         const projectExplorerWidget = await this.widgetManager.getOrCreateWidget(ProjectExplorerWidget.ID);
         const solutionExplorerWidget = await this.widgetManager.getOrCreateWidget(SolutionExplorerWidget.ID);
+
+        const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
+
         const systemFollderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system"});
         const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl"});
         const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga"});
@@ -61,6 +65,9 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         
         viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions1);
         viewContainer.addWidget(solutionExplorerWidget, this.projectsNavigatorWidgetOptions1);
+
+        viewContainer.addWidget(moduleHierarchyWidget, this.projectsNavigatorWidgetOptions1);
+
         viewContainer.addWidget(systemFollderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(rtlFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(fpgaFolderFileNavigator, this.projectsNavigatorWidgetOptions2);

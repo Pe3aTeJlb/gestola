@@ -20,7 +20,8 @@
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Topology", 
-            "file-explorer-otherFiles": "Other Files"
+            "file-explorer-otherFiles": "Other Files",
+            "module-hierarchy": "Module Hierarchy"
         }
     }
 

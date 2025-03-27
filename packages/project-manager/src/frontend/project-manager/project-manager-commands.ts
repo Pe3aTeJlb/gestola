@@ -39,5 +39,11 @@ export namespace ProjectManagerCommands {
         id: 'gestola-project-manager.set-as-top-module',
         label: 'Set as Top Module',
     }, 'gestola/project-manager/set-as-top-module');
+
+    export const REFRESH_MODULES_HIERARCHY = Command.toLocalizedCommand({
+        id: 'gestola-project-manager.refresh-modules-hierarchy',
+        label: 'Refrash Modules Hierarchy',
+        iconClass: codicon('refresh')
+    }, 'gestola/project-manager/set-as-top-module');
    
 }

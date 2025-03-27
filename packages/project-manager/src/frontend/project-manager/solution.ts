@@ -7,6 +7,42 @@ import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager } f
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
 
+export const regexp =  [
+    new RegExp('rtl'), 
+    new RegExp('fpga'), 
+    new RegExp('topology'), 
+    new RegExp('other'),
+    new RegExp('.config')
+];
+
+export const verilogModuleNaneRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*/gmi;
+
+export const moduleDeclarationRegexp: RegExp = /(?<=\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(\([^;]*\))*;/gmi;
+export const moduleNameFromDeclarationRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*#?\(|;)/gmi;
+
+export const instanceDeclarationRegexp: RegExp = /(?<!\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(#\s*\([^;]*\))*\s*(?<!\bmodule\s*)\b[A-Za-z_]{1}[A-Za-z0-9_$]*\s*(\([^;]*\);){1}/gmi;
+export const instanceClassNameRegexp: RegExp = /(?<!\.)\b[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*\()/gmi;
+
+export interface HDLFileDescription {
+    uri: URI,
+    module: ModuleDescription
+}
+
+export interface ModuleDescription {
+    name: string,
+    dependencies: string[]
+}
+
+export interface TopLevelModule {
+    name: string,
+    uri: URI
+}
+
+export interface SolutionDescription{
+    name: string,
+    relPath: string
+}
+
 export class Solution implements ISolution {
 
     projManager: ProjectManager;
@@ -25,29 +61,18 @@ export class Solution implements ISolution {
     veribleFilelistUri: URI;
 
     target: string = 'zybo';
-    topLevelModule: URI | undefined = undefined;
+    topLevelModule: TopLevelModule | undefined = undefined;
 
     isFavorite: boolean = false;
 
     indexedHDLFiles: URI[] = [];
-    designHDLFiles: URI[] = [];
-    excludedDesignHDLFiles: URI[] = [];
+
+    designIncludedHDLFiles: URI[] = [];
+    designExcludedHDLFiles: URI[] = [];
+
     topModuleHierarchyHDLFiles: URI[] = [];
 
-    public static regexp =  [
-                                new RegExp('rtl'), 
-                                new RegExp('fpga'), 
-                                new RegExp('topology'), 
-                                new RegExp('other'),
-                                new RegExp('.config')
-                            ];
-
-    public static moduleDeclarationRegexp: RegExp = /(?<=\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(\([^;]*\))*;/gmi;
-    public static moduleNameFromDeclarationRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*\(|;)/gmi;
-    
-    public static instanceDeclarationRegexp = new RegExp('(?<!module\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(#\s*\([^;]*\))*\s+\b[A-Za-z_]{1}[A-Za-z0-9_$]*\s*(\([^;]*\);){1}', 'gmi');
-    public static instanceClassNameRegexp = /[A-Za-z_]{1}[A-Za-z0-9_$]*/gmi;
-                            
+    hdlFilesDescription: HDLFileDescription[] = [];                            
     
     constructor(projManager: ProjectManager, solutionRoot: URI){
 
@@ -66,24 +91,49 @@ export class Solution implements ISolution {
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
         this.solutionDesctiptionUri = this.configUri.resolve('solution_description.json');
 
-        this.fileService.onDidFilesChange((event) => event.changes.forEach(i => {
+        this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
             if(this.rtlUri.isEqualOrParent(i.resource)){
                 if(hdlExt.includes(i.resource.path.ext)){
 
                     if(i.type == FileChangeType.ADDED){
+
                         if(this.indexedHDLFiles.find(e => e.isEqual(i.resource)) === undefined){
                             this.indexedHDLFiles.push(i.resource);
-                            this.designHDLFiles.push(i.resource);
+                            this.designIncludedHDLFiles.push(i.resource);
+                            await this.processHDLFile(i.resource);
+                            this.updateTopLevelModuleFilesHierarchy();
                         }
+
                     } else if (i.type == FileChangeType.UPDATED) {
+
                         if(this.indexedHDLFiles.find(e => e.isEqual(i.resource)) === undefined){
+
                             this.indexedHDLFiles.push(i.resource);
-                            this.designHDLFiles.push(i.resource);
+                            this.designIncludedHDLFiles.push(i.resource);
+                            this.hdlFilesDescription = this.hdlFilesDescription.filter(e => !e.uri.isEqual(i.resource));
+                            await this.processHDLFile(i.resource);
+
                         }
+
+                        if(this.topModuleHierarchyHDLFiles.find(e => e.isEqual(i.resource)) !== undefined){
+                            this.updateTopLevelModuleFilesHierarchy();
+                        }
+
                     } else if (i.type == FileChangeType.DELETED){
+
                         this.indexedHDLFiles = this.indexedHDLFiles.filter(e => !e.isEqual(i.resource));
-                        this.designHDLFiles = this.designHDLFiles.filter(e => !e.isEqual(i.resource));
-                        this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.filter(e => !e.isEqual(i.resource));
+
+                        this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => !e.isEqual(i.resource));
+                        this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => !e.isEqual(i.resource));
+
+                        this.hdlFilesDescription    = this.hdlFilesDescription.filter(e => !e.uri.isEqual(i.resource));
+
+                        this.checkTopLevelModuleRelevance();
+
+                        if(this.topModuleHierarchyHDLFiles.find(e => e.isEqual(i.resource)) !== undefined){
+                            this.updateTopLevelModuleFilesHierarchy();
+                        }
+
                     } 
                     this.updateVeribleMetaFile();
                 }
@@ -99,8 +149,8 @@ export class Solution implements ISolution {
         this.projManager.onDidDesignFilesInclude((event: DesignFilesExcludeEvent) => {
             
             if(this.projManager.getCurrProject()?.getCurrSolution() == this){
-                this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
-                this.designHDLFiles = this.designHDLFiles.concat(event.uris);
+                this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.designIncludedHDLFiles = this.designIncludedHDLFiles.concat(event.uris);
                 this.updateVeribleMetaFile();
             }
 
@@ -109,18 +159,18 @@ export class Solution implements ISolution {
         this.projManager.onDidDesignFilesExclude((event: DesignFilesExcludeEvent) => {
 
             if(this.projManager.getCurrProject()?.getCurrSolution() == this){
-                this.designHDLFiles = this.designHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
-                this.excludedDesignHDLFiles = this.excludedDesignHDLFiles.concat(event.uris);
+                this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
+                this.checkTopLevelModuleRelevance();
                 this.updateVeribleMetaFile();
             }
 
         });
 
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            this.topLevelModule = event.uri;
-            this.buildModulesDependencyTree(this.topLevelModule);
+            this.updateTopLevelModule(event.module);
+            event.complete();
         });
-
 
         this.indexHDLFiles();
 
@@ -131,10 +181,12 @@ export class Solution implements ISolution {
         await this.processDir(this.rtlUri);
         if(await this.fileService.exists(this.solutionDesctiptionUri)){
             const data = JSON.parse((await this.fileService.read(this.solutionDesctiptionUri)).value);
-            if(data.top_module)this.topLevelModule = this.solutionUri.resolve(data.top_module);
-            this.excludedDesignHDLFiles = data.design_exclude.map((e: string) => this.solutionUri.resolve(e));
+            if(data.top_module){
+                this.topLevelModule = {name: data.top_module.name, uri:this.solutionUri.resolve(data.top_module.relPath)} as TopLevelModule;
+            }
+            this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.solutionUri.resolve(e));
         }
-        this.designHDLFiles = this.indexedHDLFiles.filter(e => this.excludedDesignHDLFiles.find(i => i.isEqual(e)) === undefined);
+        this.designIncludedHDLFiles = this.indexedHDLFiles.filter(e => this.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined);
 
         await this.updateVeribleMetaFile();
     }
@@ -159,19 +211,51 @@ export class Solution implements ISolution {
 
     private async processHDLFile(uri: URI){
 
-        console.log('lel 1', uri.path.fsPath());
         let content = (await this.fileService.read(uri)).value;
-        let modules = content.match(Solution.moduleDeclarationRegexp)?.map(e => e.match(Solution.moduleNameFromDeclarationRegexp));
-        console.log('modules', modules);
+        let modules = content.split(/endmodule/gmi);
 
+        for(let i = 0; i < modules.length - 1; i++){
+
+            let name = modules[i].match(moduleDeclarationRegexp)?.map(e => e.match(moduleNameFromDeclarationRegexp))[0] as any;
+            let dependencies = modules[i].match(instanceDeclarationRegexp)?.map(e => e.match(verilogModuleNaneRegexp))[0]?.[0] as any;
+            this.hdlFilesDescription.push({uri: uri, module: {name: name[0], dependencies: dependencies}});
+
+        }
 
     }
 
 
 
+    private checkTopLevelModuleRelevance(): void {
 
+        if(this.topLevelModule?.uri
+            || this.indexedHDLFiles.find(e => this.topLevelModule?.uri.isEqual(e)) === undefined
+            || this.designIncludedHDLFiles.find(e => this.topLevelModule?.uri.isEqual(e)) === undefined){
+            this.projManager.setTopModule(undefined);
+        }
 
-    private async buildModulesDependencyTree(root: URI){
+    }
+
+    private updateTopLevelModule(module: TopLevelModule | undefined): void {
+        
+        this.topLevelModule = module;
+        this.updateTopLevelModuleFilesHierarchy()
+
+    }
+
+    private updateTopLevelModuleFilesHierarchy(){
+        this.topModuleHierarchyHDLFiles = [];
+        if(this.topLevelModule){
+            this.collectTopModuleHierarchyHDLFiles(this.hdlFilesDescription.find(e => this.topLevelModule?.uri.isEqual(e.uri) && e.module.name == this.topLevelModule.name));
+        }
+    }
+
+    private collectTopModuleHierarchyHDLFiles(node: HDLFileDescription | undefined){
+        
+        if(node){
+            this.topModuleHierarchyHDLFiles.push(node.uri);
+            this.hdlFilesDescription.filter(e => node.module.dependencies.includes(e.module.name)).filter(e => this.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).forEach(e => this.collectTopModuleHierarchyHDLFiles(e));
+        }
 
     }
 
@@ -181,13 +265,18 @@ export class Solution implements ISolution {
 
 
     private async updateVeribleMetaFile(){
-        this.fileService.write(this.veribleFilelistUri, this.designHDLFiles.map(e => e.path.fsPath()).join('\n'));
+        this.fileService.write(this.veribleFilelistUri, this.designIncludedHDLFiles.map(e => e.path.fsPath()).join('\n'));
     }
 
     public async saveMetadata(){
        let string = JSON.stringify({
-            top_module:  this.topLevelModule ? this.solutionUri.relative(this.topLevelModule)?.toString() : undefined,
-            design_exclude: this.excludedDesignHDLFiles.map(e => this.solutionUri.relative(e)?.toString())
+            top_module:  this.topLevelModule 
+                        ? {
+                            name: this.topLevelModule.name, 
+                            relPath: this.solutionUri.relative(this.topLevelModule.uri)?.toString()
+                            } as SolutionDescription 
+                        : undefined,
+            design_exclude: this.designExcludedHDLFiles.map(e => this.solutionUri.relative(e)?.toString())
        });
        this.fileService.write(this.solutionDesctiptionUri, string);
     }

@@ -23,7 +23,7 @@ export class DesignSetTopModuleHandler implements UriCommandHandler<URI> {
     isEnabled(uri: URI): boolean {
         let sol = this.projManager.getCurrProject()?.getCurrSolution();
         if(sol) {
-            return (sol.designHDLFiles.find(e => uri.isEqual(e)) !== undefined && !sol.topLevelModule?.isEqual(uri) && sol.rtlUri.isEqualOrParent(uri));
+            return (sol.designIncludedHDLFiles.find(e => uri.isEqual(e)) !== undefined && !sol.topLevelModule?.uri.isEqual(uri) && sol.rtlUri.isEqualOrParent(uri));
         } else {
             return false;
         }

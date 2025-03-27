@@ -19,6 +19,7 @@ import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/commo
 import { DesignFilesExcludeHandler } from './design-exclude-handler';
 import { DesignFilesIncludeHandler } from './design-include-handler';
 import { DesignSetTopModuleHandler } from './design-set-top-handler';
+import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
 
 export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
     id: "project-explorer:toggle",
@@ -171,6 +172,13 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         return false;
     }
 
+    protected withModulesHierarchyWidget<T>(widget: Widget | undefined, cb: (navigator: ModuleHierarchyTreeWidget) => T): T | false {
+        if (widget instanceof ModuleHierarchyTreeWidget) {
+            return cb(widget);
+        }
+        return false;
+    }
+
     protected withFileNavigatorWidget<T>(widget: Widget | undefined, cb: (navigator: GestolaFileNavigatorWidget) => T): T | false {
         if (widget instanceof GestolaFileNavigatorWidget) {
             return cb(widget);
@@ -201,6 +209,13 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             isEnabled: widget => this.withSolutionExplorerWidget(widget, () => true),
             isVisible: widget => this.withSolutionExplorerWidget(widget, () => true),
             execute: () => this.projManager.createSolution()
+        });
+
+
+        commands.registerCommand(ProjectManagerCommands.REFRESH_MODULES_HIERARCHY, {
+            isEnabled: widget => this.withModulesHierarchyWidget(widget, () => true),
+            isVisible: widget => this.withModulesHierarchyWidget(widget, () => true),
+            execute: widget => this.withModulesHierarchyWidget(widget, (widget) => {console.log('trigger refresh');widget.model.refresh()}),
         });
 
 
@@ -353,6 +368,14 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             command: COLLAPSE_ALL.id,
             tooltip: nls.localizeByDefault('Collapse All'),
             priority: 3,
+        });
+
+
+        registry.registerItem({
+            id: ProjectManagerCommands.REFRESH_MODULES_HIERARCHY.id,
+            command: ProjectManagerCommands.REFRESH_MODULES_HIERARCHY.id,
+            tooltip: 'Refresh',
+            priority: 1,
         });
 
     }

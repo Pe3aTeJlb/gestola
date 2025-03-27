@@ -31,12 +31,12 @@ export class DesignFilesExcludeHandler implements UriCommandHandler<URI[]> {
         let sol = this.projManager.getCurrProject()?.getCurrSolution();
         if(!sol) return false;
         if(uris.filter(e => sol?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
-        return uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.excludedDesignHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
+        return uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
 
     }
     
     execute(uris: URI[]){
-        this.projManager.excludeFilesFromDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.excludedDesignHDLFiles.find(i => e.isEqual(i)) === undefined));
+        this.projManager.excludeFilesFromDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.designExcludedHDLFiles.find(i => e.isEqual(i)) === undefined));
     }
 
 

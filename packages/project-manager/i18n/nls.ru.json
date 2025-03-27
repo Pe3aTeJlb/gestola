@@ -36,7 +36,8 @@
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-fpgaLvl": "FPGA",
             "file-navigator-topologyLvl": "Топология", 
-            "file-navigator-otherFiles": "Другие файлы"
+            "file-navigator-otherFiles": "Другие файлы",
+            "module-hierarchy": "Иерархия модуля"
         },
 
         "branding":{

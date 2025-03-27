@@ -1,7 +1,7 @@
 import React = require('react');
 import { injectable, inject, interfaces, Container } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
-import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeViewWelcomeWidget, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
+import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { SolutionExplorerTreeImpl, SolutionTreeNode } from './solution-explorer-tree-impl';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
@@ -15,7 +15,7 @@ export const SOLUTION_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 };
 
 @injectable()
-export class SolutionExplorerWidget extends TreeViewWelcomeWidget {
+export class SolutionExplorerWidget extends TreeWidget {
 
     static readonly ID = 'gestola-project-manager:solution-explorer';
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/solution-explorer-view-title", "Solution Explorer");

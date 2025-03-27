@@ -9,7 +9,7 @@ import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribu
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, SolutionTemplate } from '../../common/protocol';
-import { Solution } from './solution';
+import { Solution, TopLevelModule } from './solution';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 
 export interface ProjectChangeEvent {
@@ -41,7 +41,8 @@ export interface DesignFilesExcludeEvent {
 }
 
 export interface DesignTopModuleChangeEvent {
-    readonly uri: URI;
+    readonly module: TopLevelModule | undefined;
+    complete: () => void
 }
 
 
@@ -120,7 +121,10 @@ export class ProjectManager implements FrontendApplicationContribution {
                 this.fireSolutionChangeEvent(sol);
             }
         });
-        this.onDidChangeSolution((event: SolutionChangeEvent) => this.veriblePrefsManager.setFilelistPath(event.solution.veribleFilelistUri.path.fsPath()));
+        this.onDidChangeSolution((event: SolutionChangeEvent) => {
+            this.veriblePrefsManager.setFilelistPath(event.solution.veribleFilelistUri.path.fsPath());
+            this.fireDesignTopModuleChangeEvent(event.solution.topLevelModule);
+        });
     
         //await this.refreshProjectsList();
 
@@ -341,6 +345,38 @@ export class ProjectManager implements FrontendApplicationContribution {
         }
     }
 
+    async selectModule(items: string[]): Promise<string | undefined> {
+
+        
+        const qitems: QuickPickValue<string>[] = items.map((e: string) => <QuickPickValue<string>>{ label: e, value: e });
+        let quickPickResult = await this.quickPickService.show(qitems);
+        return quickPickResult ? quickPickResult.value : undefined; 
+
+    }
+
+    public async setTopModule(uri: URI | undefined){
+        if(uri && this.currProj?.curSolution){
+            let descriptions = this.currProj.curSolution.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
+            if(descriptions.length > 0){
+                if(descriptions.length > 1){
+                    let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
+                    if(moduleName) this.fireDesignTopModuleChangeEvent({name: moduleName, uri: descriptions[0].uri});
+                } else {
+                    this.fireDesignTopModuleChangeEvent({name: descriptions[0].module.name, uri: descriptions[0].uri});
+                }
+            }
+        } else {
+            this.fireDesignTopModuleChangeEvent(undefined);
+        }
+    }
+
+    public includeFilesIntoDesign(uris: URI[]){
+        this.fireDesignFilesIncludeEvent(uris);
+    };
+
+    public excludeFilesFromDesign(uris: URI[]){
+        this.fireDesignFilesExcludeEvent(uris);
+    }
 
 
     //Context
@@ -398,9 +434,6 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    public includeFilesIntoDesign(uris: URI[]){
-        this.fireDesignFilesIncludeEvent(uris);
-    };
     protected readonly onDidDesignFilesIncludeEmitter = new Emitter<DesignFilesIncludeEvent>();
     get onDidDesignFilesInclude(): Event<DesignFilesIncludeEvent> {
         return this.onDidDesignFilesIncludeEmitter.event;
@@ -410,9 +443,6 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    public excludeFilesFromDesign(uris: URI[]){
-        this.fireDesignFilesExcludeEvent(uris);
-    }
     protected readonly onDidDesignFilesExcludeEmitter = new Emitter<DesignFilesExcludeEvent>();
     get onDidDesignFilesExclude(): Event<DesignFilesExcludeEvent> {
         return this.onDidDesignFilesExcludeEmitter.event;
@@ -422,15 +452,22 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    public setTopModule(uri: URI){
-        this.fireDesignTopModuleChangeEvent(uri);
-    }
     protected readonly onDidChangeDesignTopModuleEmitter = new Emitter<DesignTopModuleChangeEvent>();
     get onDidChangeDesignTopModule(): Event<DesignTopModuleChangeEvent> {
         return this.onDidChangeDesignTopModuleEmitter.event;
     }
-    private fireDesignTopModuleChangeEvent(uri: URI){
-        this.onDidChangeDesignTopModuleEmitter.fire({uri: uri} as DesignTopModuleChangeEvent);
+    private fireDesignTopModuleChangeEvent(module: TopLevelModule | undefined){
+        this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
+            console.log('kek callback'), this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrSolution()?.topLevelModule)
+        }} as DesignTopModuleChangeEvent);
+    }
+
+    protected readonly onDidChangedDesignTopModuleEmitter = new Emitter<DesignTopModuleChangeEvent>();
+    get onDidChangedDesignTopModule(): Event<DesignTopModuleChangeEvent> {
+        return this.onDidChangedDesignTopModuleEmitter.event;
+    }
+    private fireDesignTopModuleChangedEvent(module: TopLevelModule | undefined){
+        this.onDidChangedDesignTopModuleEmitter.fire({module: module} as DesignTopModuleChangeEvent);
     }
 
     

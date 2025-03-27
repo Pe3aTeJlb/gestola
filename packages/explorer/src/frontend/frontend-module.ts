@@ -11,6 +11,7 @@ import { SolutionExplorerWidget } from "./gestola-project-explorer/solution-expl
 import { DesignFilesExcludeHandler } from "./gestola-project-explorer/design-exclude-handler";
 import { DesignFilesIncludeHandler } from "./gestola-project-explorer/design-include-handler";
 import { DesignSetTopModuleHandler } from "./gestola-project-explorer/design-set-top-handler";
+import { ModuleHierarchyTreeWidget } from "./gestola-project-explorer/module-hierarchy/module-hierarchy-widget";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -42,6 +43,12 @@ export default new ContainerModule((bind, _unbind) => {
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: SolutionExplorerWidget.ID,
         createWidget: () => SolutionExplorerWidget.createWidget(container)
+    })).inSingletonScope();
+
+    bind(ModuleHierarchyTreeWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+        id: ModuleHierarchyTreeWidget.ID,
+        createWidget: () => ModuleHierarchyTreeWidget.createWidget(container)
     })).inSingletonScope();
 
   
