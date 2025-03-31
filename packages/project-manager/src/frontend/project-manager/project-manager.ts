@@ -458,7 +458,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireDesignTopModuleChangeEvent(module: TopLevelModule | undefined){
         this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
-            console.log('kek callback'), this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrSolution()?.topLevelModule)
+            this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrSolution()?.topLevelModule)
         }} as DesignTopModuleChangeEvent);
     }
 

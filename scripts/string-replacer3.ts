@@ -25,7 +25,7 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), 'utf-8'
   );
 
   writeFile(path.resolve(__dirname, '../electron-app/lib/backend/main.js'), replaced, 'utf-8', function (err) {
-    console.log('replaces')
+    console.log('replaces from', __filename);
     console.log(err);
   });
   

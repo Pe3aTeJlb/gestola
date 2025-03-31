@@ -1,10 +1,11 @@
 import {readFile, writeFile} from 'fs';
 const path = require('path');
+let hash = 'af8ce7';
 
 /* Отвечает за правку упакованного node-red */
 
 //readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), 'utf-8', function (err, contents) {
-readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), 'utf-8', function (err, contents) {
+readFile(path.resolve(__dirname, `../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-${hash}.js`), 'utf-8', function (err, contents) {
   if (err) {
     console.log(err);
     return;
@@ -58,8 +59,8 @@ replaced = replaced.replace(
     'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err+" " + JSON.stringify(nodeErrors[i]));'
   );
 
-  writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), replaced, 'utf-8', function (err) {
-    console.log('replaces')
+  writeFile(path.resolve(__dirname, `../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-${hash}.js`), replaced, 'utf-8', function (err) {
+    console.log('replaces from', __filename);
     console.log(err);
   });
   

@@ -23,6 +23,12 @@
         },
         {
           "path": "packages/gestola-nodes/lower-case"
-        }
+        },
+        {
+          "path": "packages/verible-wrapper"
+        },
+        {
+          "path": "packages/verilator-wrapper"
+        },
     ]
 }

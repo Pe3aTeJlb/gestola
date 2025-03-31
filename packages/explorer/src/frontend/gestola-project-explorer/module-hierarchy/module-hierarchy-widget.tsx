@@ -11,6 +11,7 @@ export const MODULES_HIERARCHY_WIDGET_TREE_PROPS: TreeProps = {
     virtualized: false,
     multiSelect: false,
     search: false,
+    expandOnlyOnExpansionToggleClick: true,
     leftPadding: 22
 };
 
@@ -36,7 +37,7 @@ export class ModuleHierarchyTreeWidget extends TreeWidget {
 
         this.model.root = ModuleTreeRootNode.createRoot();
         
-        this.projManager.onDidChangedDesignTopModule(() => {console.log('refresh'); this.model.refresh();});
+        this.projManager.onDidChangedDesignTopModule(() => this.model.refresh());
         this.projManager.onDidDesignFilesInclude(() => this.model.refresh());
         this.projManager.onDidDesignFilesExclude(() => this.model.refresh());
 
@@ -65,7 +66,7 @@ export class ModuleHierarchyTreeWidget extends TreeWidget {
 
     protected override tapNode(node?: ModuleTreeNode | undefined): void {
         
-        if (node && node.fileDesc && this.corePreferences['workbench.list.openMode'] === 'doubleClick') {
+        if (node && node.fileDesc && this.corePreferences['workbench.list.openMode'] === 'singleClick') {
             this.open(node.fileDesc.uri, { mode: 'reveal', preview: true });
         }
         if (SelectableTreeNode.is(node)) {

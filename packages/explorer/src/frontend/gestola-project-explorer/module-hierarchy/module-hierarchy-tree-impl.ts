@@ -24,7 +24,7 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
       let sol = this.projManager.getCurrProject()?.getCurrSolution();
       if(sol){
         return Promise.resolve(
-          sol.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies.includes(e.module.name)).filter(e => sol?.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).map(i => this.makeTreeNode(i))
+          sol.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies?.includes(e.module.name)).filter(e => sol?.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).map(i => this.makeTreeNode(i))
         );
       }
     }
@@ -110,6 +110,6 @@ export interface ModuleTreeTerminalNode extends CompositeTreeNode, SelectableTre
 
 export namespace ModuleTreeTerminalNode {
   export function is(node: object): node is ModuleTreeNode {
-    return !!node && "fileDesc" in node && (node.fileDesc as HDLFileDescription).module.dependencies.length == 0;
+    return !!node && "fileDesc" in node && (node.fileDesc as HDLFileDescription).module.dependencies?.length == 0;
   }
 }

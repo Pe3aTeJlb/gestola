@@ -15,10 +15,12 @@ export const regexp =  [
     new RegExp('.config')
 ];
 
+export const comment: RegExp = /\/\*[\s\S\n]*?\*\/|\/\/.*$/gmi;
+
 export const verilogModuleNaneRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*/gmi;
 
-export const moduleDeclarationRegexp: RegExp = /(?<=\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(\([^;]*\))*;/gmi;
-export const moduleNameFromDeclarationRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*#?\(|;)/gmi;
+export const moduleDeclarationRegexp: RegExp = /(?<=\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(#\s*\([^;]*\))*\s*(\([^;]*\))*;/gmi;
+export const moduleNameFromDeclarationRegexp: RegExp = /[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*#?\(|\s*;)/gmi;
 
 export const instanceDeclarationRegexp: RegExp = /(?<!\bmodule\s*)\b([A-Za-z_]{1}[A-Za-z0-9_$]*)\s*(#\s*\([^;]*\))*\s*(?<!\bmodule\s*)\b[A-Za-z_]{1}[A-Za-z0-9_$]*\s*(\([^;]*\);){1}/gmi;
 export const instanceClassNameRegexp: RegExp = /(?<!\.)\b[A-Za-z_]{1}[A-Za-z0-9_$]*(?=\s*\()/gmi;
@@ -30,7 +32,7 @@ export interface HDLFileDescription {
 
 export interface ModuleDescription {
     name: string,
-    dependencies: string[]
+    dependencies: string[] | undefined
 }
 
 export interface TopLevelModule {
@@ -70,8 +72,6 @@ export class Solution implements ISolution {
     designIncludedHDLFiles: URI[] = [];
     designExcludedHDLFiles: URI[] = [];
 
-    topModuleHierarchyHDLFiles: URI[] = [];
-
     hdlFilesDescription: HDLFileDescription[] = [];                            
     
     constructor(projManager: ProjectManager, solutionRoot: URI){
@@ -101,7 +101,6 @@ export class Solution implements ISolution {
                             this.indexedHDLFiles.push(i.resource);
                             this.designIncludedHDLFiles.push(i.resource);
                             await this.processHDLFile(i.resource);
-                            this.updateTopLevelModuleFilesHierarchy();
                         }
 
                     } else if (i.type == FileChangeType.UPDATED) {
@@ -115,10 +114,6 @@ export class Solution implements ISolution {
 
                         }
 
-                        if(this.topModuleHierarchyHDLFiles.find(e => e.isEqual(i.resource)) !== undefined){
-                            this.updateTopLevelModuleFilesHierarchy();
-                        }
-
                     } else if (i.type == FileChangeType.DELETED){
 
                         this.indexedHDLFiles = this.indexedHDLFiles.filter(e => !e.isEqual(i.resource));
@@ -129,10 +124,6 @@ export class Solution implements ISolution {
                         this.hdlFilesDescription    = this.hdlFilesDescription.filter(e => !e.uri.isEqual(i.resource));
 
                         this.checkTopLevelModuleRelevance();
-
-                        if(this.topModuleHierarchyHDLFiles.find(e => e.isEqual(i.resource)) !== undefined){
-                            this.updateTopLevelModuleFilesHierarchy();
-                        }
 
                     } 
                     this.updateVeribleMetaFile();
@@ -168,7 +159,7 @@ export class Solution implements ISolution {
         });
 
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            this.updateTopLevelModule(event.module);
+            this.topLevelModule = event.module;
             event.complete();
         });
 
@@ -211,7 +202,7 @@ export class Solution implements ISolution {
 
     private async processHDLFile(uri: URI){
 
-        let content = (await this.fileService.read(uri)).value;
+        let content = (await this.fileService.read(uri)).value.replace(comment, "");
         let modules = content.split(/endmodule/gmi);
 
         for(let i = 0; i < modules.length - 1; i++){
@@ -236,26 +227,32 @@ export class Solution implements ISolution {
 
     }
 
-    private updateTopLevelModule(module: TopLevelModule | undefined): void {
-        
-        this.topLevelModule = module;
-        this.updateTopLevelModuleFilesHierarchy()
 
+
+    public collectDependencyHDLFiles(): URI[] {
+        return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => this.topLevelModule?.uri.isEqual(e.uri) && e.module.name == this.topLevelModule.name));
     }
 
-    private updateTopLevelModuleFilesHierarchy(){
-        this.topModuleHierarchyHDLFiles = [];
-        if(this.topLevelModule){
-            this.collectTopModuleHierarchyHDLFiles(this.hdlFilesDescription.find(e => this.topLevelModule?.uri.isEqual(e.uri) && e.module.name == this.topLevelModule.name));
-        }
+    public collectDependencyHDLFilesFor(node: TopLevelModule): URI[] {
+        return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => node.uri.isEqual(e.uri) && e.module.name == node.name));
     }
 
-    private collectTopModuleHierarchyHDLFiles(node: HDLFileDescription | undefined){
-        
+    private collectModuleDependencyHDLFiles(node: HDLFileDescription | undefined): URI[] {
+
         if(node){
-            this.topModuleHierarchyHDLFiles.push(node.uri);
-            this.hdlFilesDescription.filter(e => node.module.dependencies.includes(e.module.name)).filter(e => this.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).forEach(e => this.collectTopModuleHierarchyHDLFiles(e));
+
+            let arr: URI[] = [];
+            arr.push(node.uri);
+        
+            this.hdlFilesDescription.filter(e => node.module.dependencies?.includes(e.module.name))
+            .filter(e => this.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined)
+            .forEach(e => arr.push(...this.collectModuleDependencyHDLFiles(e)));
+
+            return arr;
+        } else {
+            return [] as URI[];
         }
+    
 
     }
 

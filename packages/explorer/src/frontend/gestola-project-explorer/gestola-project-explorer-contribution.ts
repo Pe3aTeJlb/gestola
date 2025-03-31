@@ -215,7 +215,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         commands.registerCommand(ProjectManagerCommands.REFRESH_MODULES_HIERARCHY, {
             isEnabled: widget => this.withModulesHierarchyWidget(widget, () => true),
             isVisible: widget => this.withModulesHierarchyWidget(widget, () => true),
-            execute: widget => this.withModulesHierarchyWidget(widget, (widget) => {console.log('trigger refresh');widget.model.refresh()}),
+            execute: widget => this.withModulesHierarchyWidget(widget, (widget) => widget.model.refresh()),
         });
 
 

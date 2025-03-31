@@ -39,7 +39,7 @@ readFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), 'ut
   );
 
   writeFile(path.resolve(__dirname, '../electron-app/src-gen/backend/main.js'), replaced, 'utf-8', function (err) {
-    console.log('replaces')
+    console.log('replaces from', __filename);
     console.log(err);
   });
   

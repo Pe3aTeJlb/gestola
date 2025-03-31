@@ -1,6 +1,6 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { IProject } from '../../common/project';
-import { Solution } from './solution';
+import { Solution, regexp as SolutionRegexp } from './solution';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { ProjectManager } from './project-manager';
@@ -78,7 +78,7 @@ export class Project implements IProject {
         let dirs = Array.from((await this.readDir(path)).values());
         let check = true;
 
-        for (let regexp of Solution.regexp) {
+        for (let regexp of SolutionRegexp) {
             if (dirs.filter( i => i[0].match(regexp)).length !== 1) {check = false; break;}
         }
 

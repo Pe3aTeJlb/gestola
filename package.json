@@ -62,7 +62,7 @@
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
     "bundle": "yarn --cwd electron-app bundle",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "kk": "yarn --cwd packages/verible-wrapper rebuild:prod"
+    "kk": "yarn --cwd electron-app ts-node ../scripts/string-replacer-test.ts"
   },
   "workspaces": [
     "packages/**/",

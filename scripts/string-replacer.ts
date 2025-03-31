@@ -83,7 +83,7 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
   );
 
   writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), replaced, 'utf-8', function (err) {
-    console.log('replaces')
+    console.log('replaces from', __filename);
     console.log(err);
   });
   

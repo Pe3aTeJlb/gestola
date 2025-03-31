@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/verible-wrapper",
+  "name": "@gestola/verilator-wrapper",
   "private": true,
   "keywords": [
     "gestola",
@@ -20,6 +20,11 @@
     "src"
   ],
   "dependencies": {
+    "@theia/core": "1.59.0",
+    "@gestola/project-manager": "1.0.0",
+    "docker-cli-js": "2.10.0",
+    "tmp": "0.2.3",
+    "@gestola/docker-like-names": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "3.0.2"
@@ -35,8 +40,8 @@
   },
   "theiaExtensions": [
     {
-      "backend": "lib/backend/backend-module",
-      "frontend": "lib/frontend/frontend-module"
+      "frontend": "lib/frontend/frontend-module",
+      "backend": "lib/backend/backend-module"
     }
   ]
 }
