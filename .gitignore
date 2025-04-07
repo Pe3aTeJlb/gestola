@@ -4,6 +4,7 @@ lib
 *.log
 electron-app/src-gen
 electron-app/dist
+electron-app/resources/verilator
 electron-app/gen-webpack*
 packages/**/tsconfig.tsbuildinfo
 plugins

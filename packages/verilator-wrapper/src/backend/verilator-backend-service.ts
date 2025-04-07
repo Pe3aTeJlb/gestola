@@ -10,12 +10,8 @@ export class VerilatorBackendServiceImpl implements VerilatorBackendService {
     
     async runVerilator(runPath: URI, topLevelModule: string, dependencies: URI[]): Promise<void> {
         
-        console.log('kek lol 2');
-
         const tempName = URI.fromFilePath(tmp.tmpNameSync({prefix: "verilator"})).path.name;
         const dependenciesDescription = tmp.fileSync({name:tempName, tmpdir: runPath?.path.fsPath()});
-        console.log('File: ', dependenciesDescription.name);
-        console.log('Filedescriptor: ', dependenciesDescription.fd);
         
         fs.writeFileSync(dependenciesDescription.fd, dependencies.map(e => '`include ' + `"${runPath.relative(e)?.toString()}"`).join('\n'));
 

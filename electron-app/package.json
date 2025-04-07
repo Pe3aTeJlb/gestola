@@ -20,6 +20,7 @@
     "@theia/terminal": "1.59.0",
     "@theia/workspace": "1.59.0",
     "@theia/vsx-registry": "1.59.0",
+    "@theia/plugin-ext-vscode": "1.59.0",
     "@gestola/launcher": "1.0.0",
     "@gestola/branding": "1.0.0",
     "@gestola/project-manager": "1.0.0",

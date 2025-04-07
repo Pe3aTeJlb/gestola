@@ -13,7 +13,6 @@ export class VerilatorFrontendService {
 
     public runVerilator(){
 
-        console.log('kek lol 1');
         let sol = this.projManager.getCurrProject()?.getCurrSolution();
         if(sol && sol.topLevelModule){
             

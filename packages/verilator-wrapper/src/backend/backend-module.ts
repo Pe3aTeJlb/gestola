@@ -18,8 +18,13 @@ import { ContainerModule } from '@theia/core/shared/inversify';
 import { VERILATOR_BACKEND_PATH, VerilatorBackendService } from '../common/protocol';
 import { JsonRpcConnectionHandler } from '@theia/core/lib/common/messaging';
 import { VerilatorBackendServiceImpl } from './verilator-backend-service';
+import { VerilatorImageManager } from './verilatorImageManager';
+import { BackendApplicationContribution } from '@theia/core/lib/node/backend-application';
 
 export default new ContainerModule(bind => {
+
+    bind(VerilatorImageManager).toSelf().inSingletonScope();
+    bind(BackendApplicationContribution).toService(VerilatorImageManager);
 
     bind(VerilatorBackendServiceImpl).toSelf().inSingletonScope();
     bind(VerilatorBackendService).to(VerilatorBackendServiceImpl).inSingletonScope()
