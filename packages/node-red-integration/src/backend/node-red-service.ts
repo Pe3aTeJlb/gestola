@@ -45,7 +45,7 @@ export class NodeRedServiceImpl implements NodeRedService, BackendApplicationCon
 
     launch(): Promise<void> {
         RED.start().then(async () =>{
-            //await RED.runtime.flows.setFlows({flows: {flows: [], credentials: {}}});
+            await RED.runtime.flows.setFlows({flows: {flows: [], credentials: {}}});
             console.info("------ Engine started! ------");
         });
         return Promise.resolve();
@@ -53,15 +53,15 @@ export class NodeRedServiceImpl implements NodeRedService, BackendApplicationCon
 
     async openFile(uri: URI): Promise<void> {
 
+        if(!uri) return;
+
         let flowData = await this.readJSONFile(uri); 
         let flowDesc = flowData.filter((e:any) => e.type == 'tab')[0];
         let flowNodes = flowData.filter((e:any) => e.z == flowDesc.id);
 
-        if(!(await RED.runtime.flows.getFlows({})).flows.some((e:any) => e.type == 'tab' && e.id == flowDesc.id)){
-            await RED.runtime.flows.addFlow({flow: {id: flowDesc.id, label: flowDesc.label, nodes: flowNodes }});
-        };
+        await RED.runtime.flows.addFlow({flow: {id: flowDesc.id, label: flowDesc.label, nodes: flowNodes }});
 
-        return Promise.resolve();;
+        return Promise.resolve();
 
     }
 

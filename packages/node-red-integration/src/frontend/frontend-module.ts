@@ -5,7 +5,7 @@ import { NodeRedIntegrationContribution } from './node-red-integration-contribut
 import { bindViewContribution, WidgetFactory } from '@theia/core/lib/browser';
 import '../../src/frontend/style/index.css';
 import { OpenHandler } from '@theia/core/lib/browser';
-import { NodeRedFileOpener } from './node-red-file-opener';
+import { NodeRedFileOpener, NodeRedIntegrationOptions } from './node-red-file-opener';
 import { NODE_RED_BACKEND_PATH, NodeRedService } from "../common/protocol"
 import { WebSocketConnectionProvider } from '@theia/core/lib/browser';
 
@@ -14,15 +14,20 @@ export default new ContainerModule(bind => {
     bindViewContribution(bind, NodeRedIntegrationContribution);
     bind(FrontendApplicationContribution).toService(NodeRedIntegrationContribution);
 
-    bind(NodeRedIntegrationWidget).toSelf();
-    bind(WidgetFactory).toDynamicValue(ctx => ({
-        id: NodeRedIntegrationWidget.ID,
-        createWidget: () => ctx.container.get<NodeRedIntegrationWidget>(NodeRedIntegrationWidget)
-    })).inSingletonScope();
-
     bind(NodeRedFileOpener).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(NodeRedFileOpener);
     bind(OpenHandler).toService(NodeRedFileOpener);
+
+    bind(NodeRedIntegrationWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: NodeRedIntegrationWidget.ID,
+        createWidget: (options: NodeRedIntegrationOptions) => {
+            const child = ctx.container.createChild();
+            const widget = child.get(NodeRedIntegrationWidget);
+            widget.configure(options);
+            return widget;
+        }
+    }));
 
     bind(NodeRedService).toDynamicValue(ctx => {
         const connection = ctx.container.get(WebSocketConnectionProvider);
