@@ -1,6 +1,6 @@
 import {readFile, writeFile} from 'fs';
 const path = require('path');
-let hash = 'af8ce7';
+let hash = 'ef7666';
 
 /* Отвечает за правку упакованного node-red */
 

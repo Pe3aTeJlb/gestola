@@ -30,5 +30,8 @@
         {
           "path": "packages/verilator-wrapper"
         },
+        {
+          "path": "packages/waveform-viewer"
+        },
     ]
 }

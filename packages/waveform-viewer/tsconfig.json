@@ -1,0 +1,19 @@
+{
+    "extends": "../../configs/base.tsconfig",
+    "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "composite": true,
+        "rootDir": "src",
+        "baseUrl": ".",
+        "outDir": "lib"
+    },
+    "include": [
+      "src" 
+    ],
+    "references": [
+        {
+            "path": "../project-manager"
+        }
+    ]
+}

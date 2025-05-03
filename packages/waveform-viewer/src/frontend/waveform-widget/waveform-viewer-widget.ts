@@ -1,0 +1,76 @@
+import { inject, injectable, postConstruct } from 'inversify';
+import { Title, Widget } from '@theia/core/lib/browser';
+import { NavigatableWaveformViewerOptions, NavigatableTreeEditorWidget } from "../tree-editor-widget/navigatable-waveform-viewer-widget";
+import { NetlistTreeWidget } from "./netlist-tree-widget";
+import { WaveformWidget } from './waveform-widget';
+import { ILogger } from '@theia/core/lib/common';
+import { FileService } from '@theia/filesystem/lib/browser/file-service';
+import { WaveformViewerBackendService } from '../../common/protocol';
+import { IWaveformDumpDoc, TransactionPackage } from '../../common/waveform-doc-dto';
+import { DocumentWatcher } from '../../common/document-watcher';
+//import { DocumentWatcher } from '../../common/document-watcher';
+
+@injectable()
+export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
+
+    static readonly ID = 'waveform-viewer:widget';
+    static readonly LABEL = 'Gestola: Waveform Viewer';
+
+    constructor(
+        @inject(NetlistTreeWidget)
+        readonly netlistWidget: NetlistTreeWidget,
+        @inject(WaveformWidget)
+        override readonly viewerWidget: WaveformWidget,
+        @inject(FileService)
+        readonly fileService: FileService,
+        @inject(ILogger) 
+        override readonly logger: ILogger,
+        @inject(NavigatableWaveformViewerOptions)
+        protected override readonly options: NavigatableWaveformViewerOptions,
+        @inject(DocumentWatcher) 
+        readonly documentWatcher: DocumentWatcher,
+        @inject(WaveformViewerBackendService)
+        readonly waveformViewerBackendService: WaveformViewerBackendService
+    ) {
+        super(
+            netlistWidget,
+            viewerWidget,
+            logger,
+            WaveformViewerWidget.ID,
+            options
+        );
+
+        this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
+            console.log('chunk receiverd');
+            console.log(event);
+        });
+        
+    }
+
+    @postConstruct()
+    protected override init() {
+        console.log('kek lol init');
+        this.configureTitle(this.title);
+        this.configure();
+    }
+
+    protected async configure(){
+        let doc: IWaveformDumpDoc = await this.waveformViewerBackendService.load(this.options.uri);
+        this.netlistWidget.setData(doc.netlistTree);
+        this.viewerWidget.setData(doc);
+    }
+
+    protected getTypeProperty(): string {
+        return 'typeId';
+    }
+
+    protected override configureTitle(title: Title<Widget>): void {
+        super.configureTitle(title);
+        //title.iconClass = "waveform-file";
+    }
+
+    override dispose(): void {
+        
+    }
+
+}

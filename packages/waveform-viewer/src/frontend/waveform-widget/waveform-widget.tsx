@@ -1,0 +1,280 @@
+import * as React from 'react';
+import { injectable, postConstruct, inject} from '@theia/core/shared/inversify';
+import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
+import { MessageService } from '@theia/core';
+import { Message } from '@theia/core/lib/browser';
+import { ActionType, EventHandler, NetlistId, ViewerState } from './waveform/helper';
+import { WaveformDataManager } from './waveform/data_manager';
+import { LabelsPanels } from './waveform/labels';
+import { NetlistTreeWidget, CheckedChangedEvent } from './netlist-tree-widget';
+import { IWaveformDumpDoc } from '../../common/waveform-doc-dto';
+import { waitForRevealed } from '@theia/core/lib/browser';
+import { Viewport } from './waveform/viewport';
+import { ControlBar } from './waveform/control_bar';
+import { VaporviewWebview } from './waveform/vaporview';
+import { NavigatableWaveformViewerOptions } from '../tree-editor-widget/navigatable-waveform-viewer-widget';
+import { WaveformViewerBackendService } from '../../common/protocol';
+
+@injectable()
+export class WaveformWidget extends ReactWidget {
+
+    @inject(MessageService)
+    protected readonly messageService!: MessageService;
+
+    doc: IWaveformDumpDoc;
+    viewerState: ViewerState;
+
+    events: EventHandler;
+    dataManager: WaveformDataManager;
+    labelsPanel: LabelsPanels;
+    viewport: Viewport;
+    controlBar: ControlBar;
+    vp: VaporviewWebview;
+
+    constructor(
+      @inject(NetlistTreeWidget)
+      readonly netlistWidget: NetlistTreeWidget,
+      @inject(NavigatableWaveformViewerOptions)
+      readonly options: NavigatableWaveformViewerOptions,
+      @inject(WaveformViewerBackendService)
+      readonly waveformViewerBackendService: WaveformViewerBackendService
+    ){
+      super();
+
+      waitForRevealed(this).then(() => {
+
+        this.viewerState = {
+          markerTime: null,
+          altMarkerTime: null,
+          selectedSignal: null,
+          selectedSignalIndex: -1,
+          displayedSignals: [],
+          zoomRatio: 1,
+          scrollLeft: 0,
+          touchpadScrolling: false,
+          autoTouchpadScrolling: false,
+          mouseupEventType: null
+        };
+
+        this.events = new EventHandler();
+        this.dataManager = new WaveformDataManager(this);
+        this.labelsPanel = new LabelsPanels(this);
+        this.viewport = new Viewport(this);
+        this.controlBar = new ControlBar(this);
+        this.vp = new VaporviewWebview(this);
+
+      });
+
+      this.netlistWidget.onDidChangeCheckedState((event: CheckedChangedEvent) => {
+        
+        if(event.change){
+
+          const metadata  = this.doc.netlistIdTable[event.node.netlistId]?.netlistItem;
+          if (!metadata) {return;}
+    
+          let signal = {
+            signalId:    metadata.signalId,
+            signalWidth: metadata.width,
+            signalName:  metadata.name,
+            modulePath:  metadata.modulePath,
+            netlistId:   metadata.netlistId,
+            type:        metadata.type,
+            encoding:    metadata.encoding,
+         }
+
+          this.dataManager.addVariable([signal]);
+        } else {
+
+          if (event.node.netlistId === null) {return;}
+          const index = this.viewerState.displayedSignals.findIndex((id: NetlistId) => id === event.node.netlistId);
+          if (index === -1) {
+            return;
+          } else {
+            const newindex = Math.min(this.viewerState.displayedSignals.length - 2, index);
+            this.events.dispatch(ActionType.RemoveVariable, event.node.netlistId);
+            if (this.viewerState.selectedSignal === event.node.netlistId) {
+              const newNetlistId = this.viewerState.displayedSignals[newindex];
+              this.events.dispatch(ActionType.SignalSelect, newNetlistId);
+            }
+          }
+
+        }
+      });
+
+    }
+  
+    @postConstruct()
+    protected init(): void {
+        this.doInit()
+    }
+
+    protected async doInit(): Promise <void> {
+        //this.id = WaveformWidget.ID;
+        //this.title.label = WaveformWidget.LABEL;
+        //this.title.caption = WaveformWidget.LABEL;
+        //this.title.closable = true;
+        //this.title.iconClass = '';
+        this.update();
+    }
+
+    public setData(doc: IWaveformDumpDoc){
+      this.doc = doc;
+    }
+
+    render(): React.ReactElement {
+        return<div id="vaporview-top">
+            <div id="control-bar">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <symbol id="binary-edge" viewBox="0 0 16 16">
+                    <path d="M 2 14 L 2 14 L 8 14 L 8 3 C 8 1 8 1 10 1 L 14 1 L 14 2 L 9 2 L 9 13 C 9 15 9 15 7 15 L 2 15 L 2 14"/>
+                  </symbol>
+                  <symbol id="bus-edge" viewBox="0 0 16 16">
+                    <path d="M 2 1 L 6 1 L 8 6 L 10 1 L 14 1 L 14 2 L 10.663 2 L 8.562 7.5 L 10.663 14 L 14 14 L 14 15 L 10 15 L 8 9 L 6 15 L 2 15 L 2 14 L 5.337 14 L 7.437 7.5 L 5.337 2 L 2 2 L 2 1"/>
+                  </symbol>
+                  <symbol id="arrow" viewBox="0 0 16 16">
+                    <path d="M 1 7 L 1 8 L 6 8 L 4 10 L 4.707 10.707 L 7.914 7.5 L 4.707 4.293 L 4 5 L 6 7 L 6 7 L 1 7"/>
+                  </symbol>
+                  <symbol id="back-arrow" viewBox="0 0 16 16">
+                    <use href="#arrow" transform="scale(-1, 1) translate(-16, 0)"/>
+                  </symbol>
+                  <symbol id="next-posedge" viewBox="0 0 16 16">
+                    <use href="#arrow"/>
+                    <use href="#binary-edge" transform="translate(3, 0)"/>
+                  </symbol>
+                  <symbol id="next-negedge" viewBox="0 0 16 16">
+                    <use href="#arrow"/>
+                    <use href="#binary-edge" transform="translate(3, 16) scale(1, -1)"/>
+                  </symbol>
+                  <symbol id="next-edge" viewBox="0 0 16 16">
+                    <use href="#arrow"/>
+                    <use href="#bus-edge" transform="translate(3, 0)"/>
+                  </symbol>
+                  <symbol id="previous-posedge" viewBox="0 0 16 16">
+                    <use href="#back-arrow"/>
+                    <use href="#binary-edge" transform="translate(-3, 0)"/>
+                  </symbol>
+                  <symbol id="previous-negedge" viewBox="0 0 16 16">
+                    <use href="#back-arrow"/>
+                    <use href="#binary-edge" transform="translate(-3, 16) scale(1, -1)"/>
+                  </symbol>
+                  <symbol id="previous-edge" viewBox="0 0 16 16">
+                    <use href="#back-arrow"/>
+                    <use href="#bus-edge" transform="translate(-3, 0)"/>
+                  </symbol>
+                  <symbol id="time-equals" viewBox="0 0 16 16">
+                    <text x="8" y="8" className="icon-text">t=</text>
+                  </symbol>
+                  <symbol id="search-hex" viewBox="0 0 16 16">
+                    <text id="search-symbol" x="8" y="8" className="icon-text">hex</text>
+                  </symbol>
+                  <symbol id="touchpad" viewBox="0 0 16 16">
+                    <path d="M 1 2 L 1 10 C 1 11 2 11 2 11 L 3 11 L 3 10 L 2 10 L 2 2 L 14 2 L 14 10 L 12 10 L 12 11 L 14 11 C 14 11 15 11 15 10 L 15 2 C 15 2 15 1 14 1 L 2 1 C 1 1 1 2 1 2 M 4 14 L 5 14 L 5 11 C 5 10 5 9 6 9 C 7 9 7 10 7 11 L 7 14 L 8 14 L 8 9 C 8 8 8 7 9 7 C 10 7 10 8 10 9 L 10 14 L 11 14 L 11 9 C 11 7 10.5 6 9 6 C 7.5 6 7 7 7 8 L 7 8.5 C 6.917 8.261 6.671 8.006 6 8 C 4.5 8 4 9 4 11 L 4 14"/>
+                  </symbol>
+                  <symbol id="mouse" viewBox="0 0 16 16">
+                    <path d="M 3 14 L 3 8 Q 3 2 8 2 Q 13 2 13 8 L 13 14 L 12 14 L 12 8 Q 12 3 8.5 3 L 8.5 5 Q 9 5 9 6 L 9 7 Q 9 8 8.5 8 L 8.5 9 L 7.5 9 L 7.5 8 Q 7 8 7 7 L 7 6 Q 7 5 7.5 5 L 7.5 3 Q 4 3 4 8 L 4 14 L 3 14"/>
+                  </symbol>
+                  <symbol id="auto" viewBox="0 0 16 16">
+                    <text x="8" y="8" className="icon-text">auto</text>
+                  </symbol>
+                </defs>
+              </svg>
+              <div className="control-bar-group">
+                <div className="control-bar-button" title="Zoom Out (Ctrl + scroll down)" id="zoom-out-button">
+                  <div className='codicon codicon-zoom-out'></div>
+                </div>
+                <div className="control-bar-button" title="Zoom In (Ctrl + scroll up)" id="zoom-in-button">
+                  <div className='codicon codicon-zoom-in'></div>
+                </div>
+              </div>
+              <div className="control-bar-group">
+                <div className="control-bar-button" title="Go To Previous Negative Edge Transition" id="previous-negedge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-negedge"/></svg>
+                </div>
+                <div className="control-bar-button" title="Go To Previous Positive Edge Transition" id="previous-posedge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-posedge"/></svg>
+                </div>
+                <div className="control-bar-button" title="Go To Previous Transition (Ctrl + &#8678;)" id="previous-edge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-edge"/></svg>
+                </div>
+                <div className="control-bar-button" title="Go To Next Transition (Ctrl + &#8680;)" id="next-edge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-edge"/></svg>
+                </div>
+                <div className="control-bar-button" title="Go To Next Positive Edge Transition" id="next-posedge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-posedge"/></svg>
+                </div>
+                <div className="control-bar-button" title="Go To Next Negative Edge Transition" id="next-negedge-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-negedge"/></svg>
+                </div>
+              </div>
+              <div className="control-bar-group">
+                <div id="search-container">
+                  <textarea id="search-bar" className="search-input" wrap="off" aria-label="Find" placeholder="Search" title="Find"></textarea>
+                  <div className="search-button selected-button" title="Go to Time specified" id="time-equals-button">
+                    <svg className="custom-icon" viewBox="0 0 16 16"><use href="#time-equals"/></svg>
+                  </div>
+                  <div className="search-button" title="Search by hex value" id="value-equals-button">
+                    <svg className="custom-icon" viewBox="0 0 16 16"><use id="value-icon-reference" href="#search-hex"/></svg>
+                  </div>
+                </div>
+                <div className="control-bar-button" title="Previous" id="previous-button">
+                  <div className='codicon codicon-arrow-left' ></div>
+                </div>
+                <div className="control-bar-button" title="Next" id="next-button">
+                  <div className='codicon codicon-arrow-right'></div>
+                </div>
+              </div>
+              <div className="control-bar-group">
+                <div className="format-button" title="Enable Mouse Scrolling" id="mouse-scroll-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#mouse"/></svg>
+                </div>
+                <div className="format-button" title="Enable Touchpad Scrolling" id="touchpad-scroll-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#touchpad"/></svg>
+                </div>
+                <div className="format-button" title="Auto Detect Mouse/Touchpad" id="auto-scroll-button">
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#auto"/></svg>
+                </div>
+              </div>
+            </div>
+            <div id="viewer-container">
+              <div id="resize-1" className="resize-bar is-idle"></div>
+              <div id="resize-2" className="resize-bar is-idle"></div>
+            </div>
+            <div id="waveform-labels-container" className="labels-container">
+              <div id="waveform-labels-spacer" className="ruler-spacer"> </div>
+              <div id="waveform-labels">               </div>
+            </div>
+            <div id="transition-display-container" className="labels-container">
+              <div className="ruler-spacer"></div>
+              <div id="transition-display"></div>
+            </div>
+            <div id="scrollArea">
+              <div id="contentArea">
+                <svg id="main-marker" className="time-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
+                <svg id="alt-marker" className="time-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
+                <div id="ruler">
+                  <canvas id="rulerCanvas" height="40"></canvas>
+                </div>
+                <div id="waveformArea"></div>
+              </div>
+            </div>
+            <div id="scrollbarContainer">
+              <canvas id="scrollbarAreaCanvas"></canvas>
+              <div id="scrollbar"></div>
+            </div>
+          </div>
+    }
+
+    protected displayMessage(): void {
+        this.messageService.info('Congratulations: Waveform Viewer Successfully Created!');
+    }
+
+    protected override onActivateRequest(msg: Message): void {
+        super.onActivateRequest(msg);
+        const htmlElement = document.getElementById('displayMessageButton');
+        if (htmlElement) {
+            htmlElement.focus();
+        }
+    }
+
+}
