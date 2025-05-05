@@ -11,11 +11,9 @@ export class DocumentWatcher {
         const newMetadataEmitter = this.onMetadataReceivedEmitter;
         return {
             onTransactionReceived(event: TransactionPackage) {
-                console.log('chunk transaction', event);
                 newTransactionEmitter.fire(event);
             },
             onMetadataReceived(event: MetadataPackage) {
-                console.log('meta transaction', event);
                 newMetadataEmitter.fire(event);
             }
         };

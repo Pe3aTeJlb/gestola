@@ -56,11 +56,9 @@ export class WaveformDataManager {
   }
 
   private fetch() {
-    
-    console.log('fetching !!!', this.requestActive, this.queued);
+    ;
     if (this.requestActive) {return;}
     if (this.queued.length === 0) {return;}
-    console.log('fetching !!!', this.widget);
 
     this.requestActive = true;
     this.requested     = this.queued;
@@ -144,8 +142,6 @@ export class WaveformDataManager {
 
   updateWaveformChunk(message: any) {
 
-    console.log('update waveform');
-
     const signalId = message.signalId;
     if (this.valueChangeDataTemp[signalId].totalChunks === 0) {
       this.valueChangeDataTemp[signalId].totalChunks = message.totalChunks;
@@ -159,14 +155,13 @@ export class WaveformDataManager {
 
     if (!allChunksLoaded) {return;}
 
-    console.log('all chunks loaded');
+    //console.log('all chunks loaded');
 
     this.receive(signalId);
 
     const transitionData = JSON.parse(this.valueChangeDataTemp[signalId].chunkData.join(""));
-    console.log('kek', transitionData);
     this.updateWaveform(signalId, transitionData, message.min, message.max);
-    console.log('update waveform complete');
+
   }
 
   //updateWaveformFull(message: any) {
@@ -202,7 +197,7 @@ export class WaveformDataManager {
       this.widget.events.dispatch(ActionType.RedrawVariable, netlistId);
       this.cacheValueFormat(this.netlistData[netlistId]);
     });
-    console.log('kek 2', this.valueChangeData[signalId]);
+
   }
 
   // binary searches for a value in an array. Will return the index of the value if it exists, or the lower bound if it doesn't
@@ -364,7 +359,6 @@ export class WaveformDataManager {
       return data[index];
     }
   
-    console.log('index', time, index, this.valueChangeData[signalId]);
     const timeBefore = time - data[index - 1][0];
     const timeAfter  = data[index][0] - time;
   

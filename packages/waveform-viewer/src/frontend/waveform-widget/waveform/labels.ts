@@ -287,7 +287,6 @@ export class LabelsPanels {
       this.webview.style.gridTemplateColumns = `${e.x-this.webview.getBoundingClientRect().left}px ${column2}px auto`;
       this.resize1.style.left = `${e.x-this.webview.getBoundingClientRect().left}px`;
       this.resize2.style.left = `${e.x -this.webview.getBoundingClientRect().left+ column2}px`;
-      console.log('res', e.x, this.resize1.style.left);
     } else if (this.resizeIndex === 2) {
       const newWidth    = Math.max(10, e.x - this.webview.getBoundingClientRect().left - column1);
       const newPosition = Math.max(10 + column1, e.x - this.webview.getBoundingClientRect().left);

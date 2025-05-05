@@ -4,7 +4,7 @@ import { WaveformViewerFrontendService, WaveformViewerBackendService } from '../
 import * as fs from 'fs';
 import { WaveformDumpDoc } from './document/waveform-dump-doc';
 import { Worker } from 'worker_threads';
-import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../common/waveform-doc-dto';
+import { IWaveformDumpDoc } from '../common/waveform-doc-dto';
 
 @injectable()
 export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendService {
@@ -36,9 +36,7 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
        // throw new Error('Method not implemented.');
     }
     setClient(client: WaveformViewerFrontendService): void {
-        console.log('adding client', client);
         this.clients.push(client);
-        client.onTransactionReceived({} as TransactionPackage);
     }
     getClient?(): WaveformViewerFrontendService | undefined {
         return undefined;
@@ -56,7 +54,7 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
             }
         }
 
-        let document: WaveformDumpDoc = await WaveformDumpDoc.create(uri, this.wasmWorker, this.wasmModule);
+        let document: WaveformDumpDoc = await WaveformDumpDoc.create(this.clients[0], uri, this.wasmWorker, this.wasmModule);
         this.documentMap.set(uri.path.fsPath(), document);
 
         return document as IWaveformDumpDoc;
@@ -64,22 +62,7 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
     }
 
     getSignalData(uri: URI, signalIdList: number[]): void {
-        console.log(' signal data');
-        this.documentMap.get(uri.path.fsPath())?.getSignalData(this, signalIdList);
-    }
-
-    sendChunk(msg: TransactionPackage){
-        console.log('kek lel 1', msg);
-        this.clients.forEach(client => {
-            client.onTransactionReceived(msg);
-        });
-    }
-
-    sendMetadata(msg: MetadataPackage){
-        console.log('kek lel 1', msg);
-        this.clients.forEach(client => {
-            client.onMetadataReceived(msg);
-        });
+        this.documentMap.get(uri.path.fsPath())?.getSignalData(signalIdList);
     }
 
 }

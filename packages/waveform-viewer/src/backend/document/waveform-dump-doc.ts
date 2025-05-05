@@ -4,7 +4,7 @@ import { Worker } from 'worker_threads';
 import { NetlistIdTable, NetlistItem, SignalId, createScope, createVar } from "../../common/netlist-dto";
 import * as fs from 'fs';
 import { IWaveformDumpDoc, MetadataPackage, TransactionPackage, WaveformTopMetadata as WaveformTopMetadata } from '../../common/waveform-doc-dto';
-import { WaveformViewverBackendServiceImpl } from '../waveform-viewer-backend-service';
+import { WaveformViewerFrontendService } from 'src/common/protocol';
 
 export interface fsWrapper {
   loadStatic: boolean;
@@ -20,7 +20,7 @@ export interface fsWrapper {
 export class WaveformDumpDoc implements IWaveformDumpDoc {
 
     private readonly uri: URI;
-    public backendService: WaveformViewverBackendServiceImpl;
+    public backend: WaveformViewerFrontendService;
 
     public netlistTree:         NetlistItem[] = [];
     public netlistIdTable: NetlistIdTable = [];
@@ -70,9 +70,7 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
         this.setChunkSize(chunksize, timeend);
       },
       sendtransitiondatachunk: (signalid: number, totalchunks: number, chunknum: number, min: number, max: number ,transitionData: string) => {
-        console.log('total chinks 1');
-        console.log('total chinks', totalchunks);
-        this.backendService.sendChunk({
+        this.backend.onTransactionReceived({
           uri: this.uri,
           signalId: signalid,
           transitionDataChunk: transitionData,
@@ -98,6 +96,7 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
     }
 
     static async create(
+      backend: WaveformViewerFrontendService,
       uri: URI,
       wasmWorker: Worker,
       wasmModule: WebAssembly.Module,
@@ -119,12 +118,16 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
         },
         close: (fd: number) => {}
       };
-
       const document  = new WaveformDumpDoc(uri, fsWrapper, wasmWorker);
+      document.setBackend(backend);
       await document.createWasmApi(wasmModule);
       await document.load();
       await document.generateTreeData(document.netlistTree);
       return document;
+    }
+
+    public setBackend(back: WaveformViewerFrontendService){
+      this.backend = back;
     }
 
     public async createWasmApi(wasmModule: WebAssembly.Module) {
@@ -226,9 +229,7 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
       return Promise.resolve(element.children);
     }
   
-    public async getSignalData(back:WaveformViewverBackendServiceImpl, signalIdList: SignalId[]) {
-      console.log(' get signal data');
-      this.backendService = back;
+    public async getSignalData(signalIdList: SignalId[]) {
       this.wasmApi.getsignaldata(signalIdList);
     }
 
@@ -251,7 +252,7 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
 
     public onDoneParsingWaveforms() {
 
-      this.backendService.sendMetadata({
+      this.backend.onMetadataReceived({
         uri: this.uri,
         metadata: this.metadata
       } as MetadataPackage);

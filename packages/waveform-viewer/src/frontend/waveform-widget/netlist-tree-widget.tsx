@@ -184,7 +184,6 @@ export class NetlistTreeWidget extends TreeWidget {
                 return 0
             }
         });
-        console.log('lolx', nodes);
         (this.model.root as CompositeTreeNode).children = nodes;
         this.model.refresh();
     }

@@ -41,16 +41,10 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
         );
 
         this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
-            console.log('chunk receiverd');
-            console.log('e', event);
-            if(event.totalChunks){
-                this.waveformWidget.updateWaveformChunk(event);
-            }
+            this.waveformWidget.updateWaveformChunk(event);
         });
 
         this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
-            console.log('meta receiverd');
-            console.log('e', event);
             this.waveformWidget.setMetadata(event.metadata);
         });
         
