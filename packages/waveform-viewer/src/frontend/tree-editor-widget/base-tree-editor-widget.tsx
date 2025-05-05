@@ -28,7 +28,7 @@ export abstract class BaseTreeEditorWidget extends BaseWidget {
 
     constructor(
         protected readonly treeWidget: TreeWidget,
-        protected readonly viewerWidget: BaseWidget,
+        protected readonly waveformWidget: BaseWidget,
         protected readonly logger: ILogger,
         readonly widgetId: string
     ) {
@@ -53,14 +53,14 @@ export abstract class BaseTreeEditorWidget extends BaseWidget {
     }
 
     protected renderError(errorMessage: string): void {
-        const root = createRoot(this.viewerWidget.node);
+        const root = createRoot(this.waveformWidget.node);
         root.render(<React.Fragment>{errorMessage}</React.Fragment>);
     }
 
 
     protected override onAfterAttach(msg: Message): void {
         this.splitPanel.addWidget(this.treeWidget);
-        this.splitPanel.addWidget(this.viewerWidget);
+        this.splitPanel.addWidget(this.waveformWidget);
         this.splitPanel.setRelativeSizes([1, 4]);
         Widget.attach(this.splitPanel, this.node);
         this.treeWidget.activate();

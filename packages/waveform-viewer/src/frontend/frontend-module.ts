@@ -43,7 +43,7 @@ export default new ContainerModule(bind => {
     bind(WaveformViewerBackendService).toDynamicValue(ctx => {
         const connection = ctx.container.get(WebSocketConnectionProvider);
         const documentWatcher = ctx.container.get(DocumentWatcher);
-        return connection.createProxy<WaveformViewerBackendService>(WAVEFROM_VIEWER_BACKEND_PATH, documentWatcher);
+        return connection.createProxy<WaveformViewerBackendService>(WAVEFROM_VIEWER_BACKEND_PATH, documentWatcher.getFrontendService());
     }).inSingletonScope();
 
 });

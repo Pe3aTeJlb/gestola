@@ -120,13 +120,13 @@ export class LabelsPanels {
     const data          = this.widget.dataManager.netlistData[netlistId];
     const vscodeContext = data.vscodeContext;
     const selectorClass = isSelected ? 'is-selected' : 'is-idle';
-    const joinString    = '<p style="color:var(--vscode-foreground)">-></p>';
+    const joinString    = '<p style="color:var(--theia-foreground)">-></p>';
     const width         = data.signalWidth;
     const parseValue    = data.valueFormat.formatString;
     const valueIs9State = data.valueFormat.is9State;
     const pElement      = value.map((v: string) => {
       const is9State     = valueIs9State(v);
-      const colorStyle   = is9State ? 'var(--vscode-debugTokenExpression-error)' : data.color;
+      const colorStyle   = is9State ? 'var(--theia-debugTokenExpression-error)' : data.color;
       const displayValue = parseValue(v, width, !is9State);
       return `<p style="color:${colorStyle}">${displayValue}</p>`;
     }).join(joinString);
@@ -197,11 +197,11 @@ export class LabelsPanels {
     if (closestItemBelowIndex === -1) {closestItemBelowIndex = this.labelsList.length - 1;}
 
     if (closestItemBelow !== null) {
-      closestItemBelow.style.borderTop    = '2px dotted var(--vscode-editorCursor-foreground)';
+      closestItemBelow.style.borderTop    = '2px dotted var(--theia-editorCursor-foreground)';
       closestItemBelow.style.borderBottom = '2px dotted transparent';
     } else if (closestItemAbove !== null) {
       closestItemAbove.style.borderTop    = '2px dotted transparent';
-      closestItemAbove.style.borderBottom = '2px dotted var(--vscode-editorCursor-foreground)';
+      closestItemAbove.style.borderBottom = '2px dotted var(--theia-editorCursor-foreground)';
     }
 
     if (this.draggableItemIndex < closestItemAboveIndex) {
@@ -284,12 +284,13 @@ export class LabelsPanels {
     const column2 = parseInt(gridTemplateColumns.split(' ')[1]);
 
     if (this.resizeIndex === 1) {
-      this.webview.style.gridTemplateColumns = `${e.x}px ${column2}px auto`;
-      this.resize1.style.left = `${e.x}px`;
-      this.resize2.style.left = `${e.x + column2}px`;
+      this.webview.style.gridTemplateColumns = `${e.x-this.webview.getBoundingClientRect().left}px ${column2}px auto`;
+      this.resize1.style.left = `${e.x-this.webview.getBoundingClientRect().left}px`;
+      this.resize2.style.left = `${e.x -this.webview.getBoundingClientRect().left+ column2}px`;
+      console.log('res', e.x, this.resize1.style.left);
     } else if (this.resizeIndex === 2) {
-      const newWidth    = Math.max(10, e.x - column1);
-      const newPosition = Math.max(10 + column1, e.x);
+      const newWidth    = Math.max(10, e.x - this.webview.getBoundingClientRect().left - column1);
+      const newPosition = Math.max(10 + column1, e.x - this.webview.getBoundingClientRect().left);
       this.webview.style.gridTemplateColumns = `${column1}px ${newWidth}px auto`;
       this.resize2.style.left = `${newPosition}px`;
     }

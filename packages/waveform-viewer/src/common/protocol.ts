@@ -1,5 +1,5 @@
 import { URI } from "@theia/core";
-import { IWaveformDumpDoc, TransactionPackage } from "./waveform-doc-dto";
+import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from "./waveform-doc-dto";
 import { SignalId } from "./netlist-dto";
 import { RpcServer } from '@theia/core/lib/common/messaging/proxy-factory';
 
@@ -14,4 +14,5 @@ export interface WaveformViewerBackendService extends RpcServer<WaveformViewerFr
 export const WaveformViewerFrontendService = Symbol('WaveformViewerFrontendService');
 export interface WaveformViewerFrontendService {
     onTransactionReceived(event: TransactionPackage): void;
+    onMetadataReceived(event: MetadataPackage): void;
 }

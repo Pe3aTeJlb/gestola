@@ -7,7 +7,7 @@ import { ActionType, EventHandler, NetlistId, ViewerState } from './waveform/hel
 import { WaveformDataManager } from './waveform/data_manager';
 import { LabelsPanels } from './waveform/labels';
 import { NetlistTreeWidget, CheckedChangedEvent } from './netlist-tree-widget';
-import { IWaveformDumpDoc } from '../../common/waveform-doc-dto';
+import { IWaveformDumpDoc, TransactionPackage, WaveformTopMetadata } from '../../common/waveform-doc-dto';
 import { waitForRevealed } from '@theia/core/lib/browser';
 import { Viewport } from './waveform/viewport';
 import { ControlBar } from './waveform/control_bar';
@@ -102,6 +102,15 @@ export class WaveformWidget extends ReactWidget {
       });
 
     }
+
+    public setMetadata(metadata: WaveformTopMetadata){
+      this.viewport.init(metadata);
+    }
+
+    public updateWaveformChunk(data: TransactionPackage){
+      this.dataManager.updateWaveformChunk(data);
+    }
+
   
     @postConstruct()
     protected init(): void {

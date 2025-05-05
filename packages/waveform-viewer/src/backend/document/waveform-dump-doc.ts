@@ -3,7 +3,8 @@ import { filehandler } from './filehandler';
 import { Worker } from 'worker_threads';
 import { NetlistIdTable, NetlistItem, SignalId, createScope, createVar } from "../../common/netlist-dto";
 import * as fs from 'fs';
-import { IWaveformDumpDoc } from '../../common/waveform-doc-dto';
+import { IWaveformDumpDoc, MetadataPackage, TransactionPackage, WaveformTopMetadata as WaveformTopMetadata } from '../../common/waveform-doc-dto';
+import { WaveformViewverBackendServiceImpl } from '../waveform-viewer-backend-service';
 
 export interface fsWrapper {
   loadStatic: boolean;
@@ -19,7 +20,7 @@ export interface fsWrapper {
 export class WaveformDumpDoc implements IWaveformDumpDoc {
 
     private readonly uri: URI;
-  
+    public backendService: WaveformViewverBackendServiceImpl;
 
     public netlistTree:         NetlistItem[] = [];
     public netlistIdTable: NetlistIdTable = [];
@@ -28,6 +29,17 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
     public _wasmWorker: Worker;
     public wasmApi: any;
     private fileBuffer: Uint8Array;
+
+    public metadata:   WaveformTopMetadata = {
+      timeTableLoaded: false,
+      moduleCount:    0,
+      netlistIdCount: 0,
+      signalIdCount:  0,
+      timeEnd:     0,
+      timeScale:   1,
+      defaultZoom: 1,
+      timeUnit:    "ns",
+    };
 
     public readonly service: filehandler.Imports.Promisified = {
   
@@ -52,33 +64,40 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
         this.netlistIdTable[id] = {netlistItem: varItem, displayedItem: undefined, signalId: signalid};
       },
       setmetadata: (scopecount: number, varcount: number, timescale: number, timeunit: string) => {
-        //this.setMetadata(scopecount, varcount, timescale, timeunit);
+        this.setMetadata(scopecount, varcount, timescale, timeunit);
       },
       setchunksize: (chunksize: bigint, timeend: bigint) => {
-        //this.setChunkSize(chunksize, timeend);
+        this.setChunkSize(chunksize, timeend);
       },
       sendtransitiondatachunk: (signalid: number, totalchunks: number, chunknum: number, min: number, max: number ,transitionData: string) => {
-        
+        console.log('total chinks 1');
+        console.log('total chinks', totalchunks);
+        this.backendService.sendChunk({
+          uri: this.uri,
+          signalId: signalid,
+          transitionDataChunk: transitionData,
+          totalChunks: totalchunks,
+          chunkNum: chunknum,
+          min: min,
+          max: max
+        } as TransactionPackage);
       }
     };
   
 
   
     constructor(
-    
       uri: URI,
       fileReader: fsWrapper,
       _wasmWorker: Worker
     ) {
       this.uri = uri;
-
       this._wasmWorker = _wasmWorker;
       this.fileBuffer  = new Uint8Array(65536);
       this.fileReader = fileReader;
     }
 
     static async create(
-
       uri: URI,
       wasmWorker: Worker,
       wasmModule: WebAssembly.Module,
@@ -207,10 +226,38 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
       return Promise.resolve(element.children);
     }
   
-    public async getSignalData(signalIdList: SignalId[]) {
+    public async getSignalData(back:WaveformViewverBackendServiceImpl, signalIdList: SignalId[]) {
       console.log(' get signal data');
+      this.backendService = back;
       this.wasmApi.getsignaldata(signalIdList);
     }
+
+    public setMetadata(scopecount: number, varcount: number, timescale: number, timeunit: string) {
+      this.metadata.moduleCount    = scopecount; // scopecount might different between fsdb and vcd
+      this.metadata.netlistIdCount = varcount; // varcount is not read for fsdb
+      this.metadata.timeScale      = timescale;
+      this.metadata.timeUnit       = timeunit;
+      this.netlistIdTable = new Array(varcount);
+    }
+  
+    public setChunkSize(chunksize: bigint, timeend: bigint) {
+      //this._setChunkSize(Number(chunksize));
+      const newMinTimeStemp         = 10 ** (Math.round(Math.log10(Number(chunksize) / 128)) | 0);
+      this.metadata.defaultZoom     = 4 / newMinTimeStemp;
+      this.metadata.timeEnd         = Number(timeend);
+      this.metadata.timeTableLoaded = true;
+      this.onDoneParsingWaveforms();
+    }
+
+    public onDoneParsingWaveforms() {
+
+      this.backendService.sendMetadata({
+        uri: this.uri,
+        metadata: this.metadata
+      } as MetadataPackage);
+      
+    }
+  
   
     public async unload() {
       //console.log("Reloading document");  

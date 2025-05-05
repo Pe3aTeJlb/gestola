@@ -23,12 +23,12 @@ export abstract class NavigatableTreeEditorWidget extends BaseTreeEditorWidget i
     
     constructor(
         protected override readonly treeWidget: TreeWidget,
-        protected override readonly viewerWidget: BaseWidget,
+        protected override readonly waveformWidget: BaseWidget,
         protected override readonly logger: ILogger,
         readonly widget_id: string,
         protected readonly options: NavigatableWaveformViewerOptions
     ) {
-        super(treeWidget, viewerWidget, logger, widget_id);
+        super(treeWidget, waveformWidget, logger, widget_id);
     }
 
     /** The uri of the editor's resource. */

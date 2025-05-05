@@ -160,26 +160,26 @@ export class Viewport {
   async getThemeColors() {
     let style = window.getComputedStyle(document.body)
     // Token colors
-    this.colorKey[0] = style.getPropertyValue('--vscode-debugTokenExpression-number');
-    this.colorKey[1] = style.getPropertyValue('--vscode-debugTokenExpression-string');
-    this.colorKey[2] = style.getPropertyValue('--vscode-debugView-valueChangedHighlight');
-    this.colorKey[3] = style.getPropertyValue('--vscode-debugTokenExpression-name');
+    this.colorKey[0] = style.getPropertyValue('--theia-debugTokenExpression-number');
+    this.colorKey[1] = style.getPropertyValue('--theia-debugTokenExpression-string');
+    this.colorKey[2] = style.getPropertyValue('--theia-debugView-valueChangedHighlight');
+    this.colorKey[3] = style.getPropertyValue('--theia-debugTokenExpression-name');
 
     // Non-2-State Signal Color
-    this.xzColor = style.getPropertyValue('--vscode-debugTokenExpression-error');
+    this.xzColor = style.getPropertyValue('--theia-debugTokenExpression-error');
 
     // Ruler Color
-    this.rulerTextColor = style.getPropertyValue('--vscode-editorLineNumber-foreground');
+    this.rulerTextColor = style.getPropertyValue('--theia-editorLineNumber-foreground');
 
     // I calculated this as 174, 176, 173 @ 10% opacity in the default theme, but there was no CSS color that matched
-    this.markerAnnotation = document.documentElement.style.getPropertyValue('--vscode-editorOverviewRuler-selectionHighlightForeground');
+    this.markerAnnotation = document.documentElement.style.getPropertyValue('--theia-editorOverviewRuler-selectionHighlightForeground');
 
     // Background Color
-    this.backgroundColor = style.getPropertyValue('--vscode-editor-background');
+    this.backgroundColor = style.getPropertyValue('--theia-editor-background');
 
     // Font
-    this.fontSize = style.getPropertyValue('--vscode-editor-font-size');
-    this.fontFamily = style.getPropertyValue('--vscode-editor-font-family');
+    this.fontSize = style.getPropertyValue('--theia-editor-font-size');
+    this.fontFamily = style.getPropertyValue('--theia-editor-font-family');
     this.fontStyle = this.fontSize + ' ' + this.fontFamily;
 
     // Look through all of the fonts in the fontFamily to see which font was used
@@ -238,6 +238,7 @@ export class Viewport {
   getTimeFromClick(event: MouseEvent) {
     const bounds    = this.scrollArea.getBoundingClientRect();
     const pixelLeft = Math.round(event.pageX - bounds.left);
+    console.log('clicking', bounds, pixelLeft, this.pixelTime, this.pseudoScrollLeft,  Math.round((pixelLeft + this.pseudoScrollLeft) * this.pixelTime));
     return Math.round((pixelLeft + this.pseudoScrollLeft) * this.pixelTime);
   }
 
@@ -356,7 +357,7 @@ export class Viewport {
     this.scrollbarMoved = false;
     this.scrollbarStartX = event.clientX;
     this.scrollbar.classList.add('is-dragging');
-
+    console.log('dragging');
     document.addEventListener('mousemove', this.handleScrollbarMove, false);
     this.widget.viewerState.mouseupEventType = 'scroll';
   }

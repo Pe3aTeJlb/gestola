@@ -43,8 +43,8 @@ body {
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
-  border-bottom: 1px solid var(--vscode-widget-border);
-  background-color: var(--vscode-editorWidget-background);
+  border-bottom: 1px solid var(--theia-widget-border);
+  background-color: var(--theia-editorWidget-background);
 }
 
 .control-bar-group {
@@ -58,11 +58,11 @@ body {
   margin: 4px 6px 4px 6px;
   height: 20px;
   width: 20px;
-  fill: var(--vscode-icon-foreground);
+  fill: var(--theia-icon-foreground);
 }
 
 .control-bar-button:hover {
-  background-color: var(--vscode-toolbar-hoverBackground);
+  background-color: var(--theia-toolbar-hoverBackground);
   cursor: pointer;
   border-radius: 4px;
 }
@@ -81,23 +81,23 @@ body {
 }
 
 #search-container {
-  outline: 1px solid var(--vscode-input-border);
+  outline: 1px solid var(--theia-input-border);
   display: flex;
   align-items: center;
   overflow: hidden;
   box-sizing: border-box;
-  border: 1px var(--vscode-input-border);
+  border: 1px var(--theia-input-border);
   border-radius: 2px;
-  background-color: var(--vscode-input-background);
+  background-color: var(--theia-input-background);
   height: 25px;
 }
 
 #search-container.is-focused {
-  outline: 1px solid var(--vscode-focusBorder);
+  outline: 1px solid var(--theia-focusBorder);
 }
 
 #search-container.is-invalid {
-  outline: 1px solid var(--vscode-inputValidation-errorBorder, transparent);
+  outline: 1px solid var(--theia-inputValidation-errorBorder, transparent);
 }
 
 .search-input {
@@ -106,7 +106,7 @@ body {
   height: 23px;
   font-size: 13px;
   background-color: inherit;
-  color: var(--vscode-input-foreground);
+  color: var(--theia-input-foreground);
   border: none;
   padding: 2px 6px 2px 6px;
   font-family: "Segoe WPC", "Segoe UI", sans-serif;
@@ -122,13 +122,13 @@ body {
 .search-button {
   height: 20px;
   width: 20px;
-  fill:  var(--vscode-icon-foreground);
+  fill:  var(--theia-icon-foreground);
   margin-right: 2px;
   box-sizing: border-box;
 }
 
 .search-button:hover {
-  background-color: var(--vscode-toolbar-hoverBackground);
+  background-color: var(--theia-toolbar-hoverBackground);
   cursor: pointer;
   border-radius: 4px;
 }
@@ -136,7 +136,7 @@ body {
 .format-button {
   padding: 2px 2px 2px 2px;
   stroke: none;
-  fill: var(--vscode-icon-foreground);
+  fill: var(--theia-icon-foreground);
   height: 20px;
   width: 20px;
   margin-right: 4px;
@@ -144,39 +144,39 @@ body {
 }
 
 .format-button:hover {
-  background-color: var(--vscode-toolbar-hoverBackground);
+  background-color: var(--theia-toolbar-hoverBackground);
   cursor: pointer;
   border-radius: 4px;
 }
 
 .selected-button {
-  outline: 1px solid var(--vscode-inputOption-activeBorder);
+  outline: 1px solid var(--theia-inputOption-activeBorder);
   border-radius: 4px;
-  color: var(--vscode-inputOption-activeForeground);
-  fill:  var(--vscode-inputOption-activeForeground);
-  background-color: var(--vscode-inputOption-activeBackground);
+  color: var(--theia-inputOption-activeForeground);
+  fill:  var(--theia-inputOption-activeForeground);
+  background-color: var(--theia-inputOption-activeBackground);
 }
 
 .disabled-button {
-  color: var(--vscode-disabledForeground);
-  fill: var(--vscode-disabledForeground);
+  color: var(--theia-disabledForeground);
+  fill: var(--theia-disabledForeground);
   cursor: default;
 }
 
 .selected-button:hover {
-  outline: 1px solid var(--vscode-inputOption-activeBorder);
+  outline: 1px solid var(--theia-inputOption-activeBorder);
   border-radius: 4px;
-  color: var(--vscode-inputOption-activeForeground);
-  fill:  var(--vscode-inputOption-activeForeground);
-  background-color: var(--vscode-inputOption-activeBackground);
+  color: var(--theia-inputOption-activeForeground);
+  fill:  var(--theia-inputOption-activeForeground);
+  background-color: var(--theia-inputOption-activeBackground);
   cursor: default;
 }
 
 .disabled-button:hover {
-  color: var(--vscode-disabledForeground);
-  fill: var(--vscode-disabledForeground);
+  color: var(--theia-disabledForeground);
+  fill: var(--theia-disabledForeground);
   cursor: default;
-  background-color: var(--vscode-editor-background);
+  background-color: var(--theia-editor-background);
 }
 
 #viewer-container {
@@ -211,7 +211,7 @@ body {
 }
 
 .resize-bar {
-  border-left: 1px solid var(--vscode-editorIndentGuide-background1);
+  border-left: 1px solid var(--theia-editorIndentGuide-background1);
   animation-duration: 100ms;
   position: absolute;
   height: 100%;
@@ -228,7 +228,7 @@ body {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 4;
-  color: var(--vscode-debugTokenExpression-number);
+  color: var(--theia-debugTokenExpression-number);
 }
 
 #resize-2 {
@@ -237,10 +237,10 @@ body {
 
 @keyframes highlightresize-bar {
   0% {
-    border-left: 1px solid var(--vscode-editorIndentGuide-background1);
+    border-left: 1px solid var(--theia-editorIndentGuide-background1);
   }
   100% {
-    border-left: 4px solid var(--vscode-sash-hoverBorder);
+    border-left: 4px solid var(--theia-sash-hoverBorder);
   }
 }
 
@@ -253,7 +253,7 @@ body {
 
 .is-resizing {
   cursor: w-resize;
-  border-left: 4px solid var(--vscode-sash-hoverBorder);
+  border-left: 4px solid var(--theia-sash-hoverBorder);
 }
 
 #scrollArea {
@@ -301,21 +301,21 @@ body {
 
   height: 10px;
   width: 17px;
-  background-color: var(--vscode-scrollbarSlider-background);
+  background-color: var(--theia-scrollbarSlider-background);
 }
 
 #scrollbar:hover {
-  background-color: var(--vscode-scrollbarSlider-hoverBackground);
+  background-color: var(--theia-scrollbarSlider-hoverBackground);
 }
 
 #scrollbar.is-dragging {
-  background-color: var(--vscode-scrollbarSlider-activeBackground);
+  background-color: var(--theia-scrollbarSlider-activeBackground);
 }
 
 #highlight-zoom {
   position: absolute;
   z-index: 100;
-  background-color: var(--vscode-editor-selectionBackground);
+  background-color: var(--theia-editor-selectionBackground);
   opacity: 0.5;
   left: 0px;
   top: 0px;
@@ -332,14 +332,14 @@ body {
 }
 
 #waveform-labels {
-  color: var(--vscode-textLink-foreground);
+  color: var(--theia-textLink-foreground);
 }
 
 .waveform-label {
   position:        relative;
   will-change:     transform;
-  font-size:       var(--vscode-editor-font-size);
-  font-family:     var(--vscode-editor-font-family);
+  font-size:       var(--theia-editor-font-size);
+  font-family:     var(--theia-editor-font-family);
   display:         flex;
   align-items:     center;
   justify-content: right;
@@ -358,7 +358,7 @@ body {
 }
 
 .waveform-label .codicon-grabber {
-  color:       var(--vscode-editorLineNumber-foreground);
+  color:       var(--theia-editorLineNumber-foreground);
   position:    absolute;
   left:        0;
   padding:     0px 4px 0px 4px;
@@ -368,12 +368,12 @@ body {
 
 .waveform-label.is-idle:hover .codicon-grabber {
   opacity: 1;
-  background-color: var(--vscode-editor-background);
+  background-color: var(--theia-editor-background);
 }
 
 .waveform-label.is-selected:hover .codicon-grabber {
   opacity: 1;
-  background-color: var(--vscode-editor-background);
+  background-color: var(--theia-editor-background);
 }
 
 .waveform-label.is-idle .codicon-grabber {
@@ -385,7 +385,7 @@ body {
 }
 
 .waveform-label.is-draggable {
-  background-color:  var(--vscode-editor-inactiveSelectionBackground);
+  background-color:  var(--theia-editor-inactiveSelectionBackground);
   opacity: 0.75;
   z-index: 10;
   border-radius: 8px;
@@ -406,7 +406,7 @@ body {
   min-height: var(--ruler-height);
   position:   sticky;
   top:        0;
-  background-color: var(--vscode-editor-background);
+  background-color: var(--theia-editor-background);
   z-index:    9;
 }
 
@@ -415,7 +415,7 @@ body {
   z-index: 30;
   position: sticky;
   top: 0;
-  background: var(--vscode-editor-background);
+  background: var(--theia-editor-background);
   max-height: var(--ruler-height);
   overflow: hidden;
 }
@@ -429,8 +429,8 @@ body {
 }
 
 .is-selected{
-  border-top: 4px solid var(--vscode-editor-lineHighlightBorder);
-  border-bottom: 4px solid var(--vscode-editor-lineHighlightBorder);
+  border-top: 4px solid var(--theia-editor-lineHighlightBorder);
+  border-bottom: 4px solid var(--theia-editor-lineHighlightBorder);
 }
 
 .time-marker {
@@ -441,7 +441,7 @@ body {
   overflow: visible;
   stroke-width: 1px;
   width: 1px;
-  stroke: var(--vscode-editorLineNumber-activeForeground);
+  stroke: var(--theia-editorLineNumber-activeForeground);
 }
 
 #main-marker {

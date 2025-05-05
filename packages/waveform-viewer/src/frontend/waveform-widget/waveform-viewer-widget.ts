@@ -6,7 +6,7 @@ import { WaveformWidget } from './waveform-widget';
 import { ILogger } from '@theia/core/lib/common';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { WaveformViewerBackendService } from '../../common/protocol';
-import { IWaveformDumpDoc, TransactionPackage } from '../../common/waveform-doc-dto';
+import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../../common/waveform-doc-dto';
 import { DocumentWatcher } from '../../common/document-watcher';
 //import { DocumentWatcher } from '../../common/document-watcher';
 
@@ -20,7 +20,7 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
         @inject(NetlistTreeWidget)
         readonly netlistWidget: NetlistTreeWidget,
         @inject(WaveformWidget)
-        override readonly viewerWidget: WaveformWidget,
+        override readonly waveformWidget: WaveformWidget,
         @inject(FileService)
         readonly fileService: FileService,
         @inject(ILogger) 
@@ -34,7 +34,7 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     ) {
         super(
             netlistWidget,
-            viewerWidget,
+            waveformWidget,
             logger,
             WaveformViewerWidget.ID,
             options
@@ -42,14 +42,22 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
 
         this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
             console.log('chunk receiverd');
-            console.log(event);
+            console.log('e', event);
+            if(event.totalChunks){
+                this.waveformWidget.updateWaveformChunk(event);
+            }
+        });
+
+        this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
+            console.log('meta receiverd');
+            console.log('e', event);
+            this.waveformWidget.setMetadata(event.metadata);
         });
         
     }
 
     @postConstruct()
     protected override init() {
-        console.log('kek lol init');
         this.configureTitle(this.title);
         this.configure();
     }
@@ -57,7 +65,7 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     protected async configure(){
         let doc: IWaveformDumpDoc = await this.waveformViewerBackendService.load(this.options.uri);
         this.netlistWidget.setData(doc.netlistTree);
-        this.viewerWidget.setData(doc);
+        this.waveformWidget.setData(doc);
     }
 
     protected getTypeProperty(): string {

@@ -4,7 +4,7 @@ import { WaveformViewerFrontendService, WaveformViewerBackendService } from '../
 import * as fs from 'fs';
 import { WaveformDumpDoc } from './document/waveform-dump-doc';
 import { Worker } from 'worker_threads';
-import { IWaveformDumpDoc, TransactionPackage } from '../common/waveform-doc-dto';
+import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../common/waveform-doc-dto';
 
 @injectable()
 export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendService {
@@ -20,12 +20,10 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
 
     @postConstruct()
     init() {
-
         const workerFile = new URI(__dirname).resolveToAbsolute("..", "..", "resources",'waveform',"document", "worker.js")?.path.fsPath();
         if(workerFile){
             this.wasmWorker = new Worker(workerFile);
         }
-
     }
 
     disconnectClient(client: WaveformViewerFrontendService): void {
@@ -38,7 +36,9 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
        // throw new Error('Method not implemented.');
     }
     setClient(client: WaveformViewerFrontendService): void {
+        console.log('adding client', client);
         this.clients.push(client);
+        client.onTransactionReceived({} as TransactionPackage);
     }
     getClient?(): WaveformViewerFrontendService | undefined {
         return undefined;
@@ -46,7 +46,7 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
     }
 
     async load(uri: URI): Promise<IWaveformDumpDoc> {
-console.log('loading');
+
         if(!this.wasmModule){
             const binaryFile = new URI(__dirname).resolveToAbsolute("..", "..", 'resources','waveform', 'target', 'wasm32-unknown-unknown', this.wasmBuild, 'filehandler.wasm');
 
@@ -56,7 +56,7 @@ console.log('loading');
             }
         }
 
-        let document: WaveformDumpDoc = await WaveformDumpDoc.create( uri, this.wasmWorker, this.wasmModule);
+        let document: WaveformDumpDoc = await WaveformDumpDoc.create(uri, this.wasmWorker, this.wasmModule);
         this.documentMap.set(uri.path.fsPath(), document);
 
         return document as IWaveformDumpDoc;
@@ -65,14 +65,21 @@ console.log('loading');
 
     getSignalData(uri: URI, signalIdList: number[]): void {
         console.log(' signal data');
-        this.documentMap.get(uri.path.fsPath())?.getSignalData(signalIdList);
+        this.documentMap.get(uri.path.fsPath())?.getSignalData(this, signalIdList);
     }
 
     sendChunk(msg: TransactionPackage){
-        console.log('kek lel 1');
-        /*this.clients.forEach(client => {
+        console.log('kek lel 1', msg);
+        this.clients.forEach(client => {
             client.onTransactionReceived(msg);
-        });*/
+        });
+    }
+
+    sendMetadata(msg: MetadataPackage){
+        console.log('kek lel 1', msg);
+        this.clients.forEach(client => {
+            client.onMetadataReceived(msg);
+        });
     }
 
 }
