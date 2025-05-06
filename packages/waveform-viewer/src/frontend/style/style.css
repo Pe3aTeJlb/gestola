@@ -28,7 +28,7 @@ body {
   padding: 0;
 }
 
-#vaporview-top {
+.vaporview-top {
   display: grid;
   height: 100%;
 
@@ -37,7 +37,7 @@ body {
   overflow: hidden;
 }
 
-#control-bar {
+.control-bar {
   display: flex;
   grid-column-start: 1;
   grid-column-end: 4;
@@ -80,7 +80,7 @@ body {
   fill: inherit;
 }
 
-#search-container {
+.search-container {
   outline: 1px solid var(--theia-input-border);
   display: flex;
   align-items: center;
@@ -92,11 +92,11 @@ body {
   height: 25px;
 }
 
-#search-container.is-focused {
+.search-container.is-focused {
   outline: 1px solid var(--theia-focusBorder);
 }
 
-#search-container.is-invalid {
+.search-container.is-invalid {
   outline: 1px solid var(--theia-inputValidation-errorBorder, transparent);
 }
 
@@ -179,7 +179,7 @@ body {
   background-color: var(--theia-editor-background);
 }
 
-#viewer-container {
+.viewer-container {
   display: flex;
   position: relative;
   grid-column-start: 1;
@@ -196,14 +196,14 @@ body {
   display: none;
 }
 
-#waveform-labels-container {
+.waveform-labels-container {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 4;
 }
 
-#waveform-labels-spacer {
+.waveform-labels-spacer {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -219,11 +219,11 @@ body {
   width: 4px;
 }
 
-#resize-1 {
+.resize-1 {
   left: 150px;
 }
 
-#transition-display-container {
+.transition-display-container {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -231,7 +231,7 @@ body {
   color: var(--theia-debugTokenExpression-number);
 }
 
-#resize-2 {
+.resize-2 {
   left: 200px;
 }
 
@@ -256,7 +256,7 @@ body {
   border-left: 4px solid var(--theia-sash-hoverBorder);
 }
 
-#scrollArea {
+.scrollArea {
   position: relative;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -266,22 +266,22 @@ body {
   margin-left: 1px;
 }
 
-#scrollbarContainer {
+.scrollbarContainer {
   position: relative;
   grid-column-start: 3;
   grid-row-start: 3;
   margin-left: 1px;
 }
 
-#scrollbarAreaCanvas {
+.scrollbarAreaCanvas {
   display: block;
 }
 
-#displayedContent {
+.displayedContent {
   display: inherit;
 }
 
-#contentArea {
+.contentArea {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -290,11 +290,11 @@ body {
   height: fit-content;
 }
 
-#contentArea:focus-visible {
+.contentArea:focus-visible {
   outline: none;
 }
 
-#scrollbar {
+.scrollbar {
   position: absolute;
   bottom : 0px;
   left: 0px;
@@ -304,15 +304,15 @@ body {
   background-color: var(--theia-scrollbarSlider-background);
 }
 
-#scrollbar:hover {
+.scrollbar:hover {
   background-color: var(--theia-scrollbarSlider-hoverBackground);
 }
 
-#scrollbar.is-dragging {
+.scrollbar.is-dragging {
   background-color: var(--theia-scrollbarSlider-activeBackground);
 }
 
-#highlight-zoom {
+.highlight-zoom {
   position: absolute;
   z-index: 100;
   background-color: var(--theia-editor-selectionBackground);
@@ -323,7 +323,7 @@ body {
   border-radius: 2px;
 }
 
-#time-ruler {
+.time-ruler {
   display: flex;
   align-items: center;
   border-top: 1px solid #ddd;
@@ -331,7 +331,7 @@ body {
   height: 50px;
 }
 
-#waveform-labels {
+.waveform-labels {
   color: var(--theia-textLink-foreground);
 }
 
@@ -410,7 +410,7 @@ body {
   z-index:    9;
 }
 
-#ruler {
+.ruler {
   height: 40px;
   z-index: 30;
   position: sticky;
@@ -444,10 +444,10 @@ body {
   stroke: var(--theia-editorLineNumber-activeForeground);
 }
 
-#main-marker {
+.main-marker {
   stroke-dasharray: 2 2;
 }
 
-#alt-marker {
+.alt-marker {
   stroke-dasharray: 6 2 2 2;
 }

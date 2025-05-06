@@ -47,25 +47,25 @@ export class ControlBar {
     this.widget = widget;
     this.events = this.widget.events;
 
-    this.zoomInButton  = document.getElementById('zoom-in-button')!;
-    this.zoomOutButton = document.getElementById('zoom-out-button')!;
-    this.prevNegedge   = document.getElementById('previous-negedge-button')!;
-    this.prevPosedge   = document.getElementById('previous-posedge-button')!;
-    this.nextNegedge   = document.getElementById('next-negedge-button')!;
-    this.nextPosedge   = document.getElementById('next-posedge-button')!;
-    this.prevEdge      = document.getElementById('previous-edge-button')!;
-    this.nextEdge      = document.getElementById('next-edge-button')!;
-    this.timeEquals    = document.getElementById('time-equals-button')!;
-    this.valueEquals   = document.getElementById('value-equals-button')!;
-    this.valueEqualsSymbol = document.getElementById('search-symbol')!;
-    this.previousButton = document.getElementById('previous-button')!;
-    this.nextButton    = document.getElementById('next-button')!;
-    this.autoScroll    = document.getElementById('auto-scroll-button')!;
-    this.touchScroll   = document.getElementById('touchpad-scroll-button')!;
-    this.mouseScroll   = document.getElementById('mouse-scroll-button')!;
-    this.searchContainer = document.getElementById('search-container');
-    this.searchBar     = document.getElementById('search-bar');
-    this.valueIconRef  = document.getElementById('value-icon-reference');
+    this.zoomInButton  = document.getElementById('zoom-in-button'+'-'+this.widget.widgetId)!;
+    this.zoomOutButton = document.getElementById('zoom-out-button'+'-'+this.widget.widgetId)!;
+    this.prevNegedge   = document.getElementById('previous-negedge-button'+'-'+this.widget.widgetId)!;
+    this.prevPosedge   = document.getElementById('previous-posedge-button'+'-'+this.widget.widgetId)!;
+    this.nextNegedge   = document.getElementById('next-negedge-button'+'-'+this.widget.widgetId)!;
+    this.nextPosedge   = document.getElementById('next-posedge-button'+'-'+this.widget.widgetId)!;
+    this.prevEdge      = document.getElementById('previous-edge-button'+'-'+this.widget.widgetId)!;
+    this.nextEdge      = document.getElementById('next-edge-button'+'-'+this.widget.widgetId)!;
+    this.timeEquals    = document.getElementById('time-equals-button'+'-'+this.widget.widgetId)!;
+    this.valueEquals   = document.getElementById('value-equals-button'+'-'+this.widget.widgetId)!;
+    this.valueEqualsSymbol = document.getElementById('search-symbol'+'-'+this.widget.widgetId)!;
+    this.previousButton = document.getElementById('previous-button'+'-'+this.widget.widgetId)!;
+    this.nextButton    = document.getElementById('next-button'+'-'+this.widget.widgetId)!;
+    this.autoScroll    = document.getElementById('auto-scroll-button'+'-'+this.widget.widgetId)!;
+    this.touchScroll   = document.getElementById('touchpad-scroll-button'+'-'+this.widget.widgetId)!;
+    this.mouseScroll   = document.getElementById('mouse-scroll-button'+'-'+this.widget.widgetId)!;
+    this.searchContainer = document.getElementById('search-container'+'-'+this.widget.widgetId)!;
+    this.searchBar     = document.getElementById('search-bar'+'-'+this.widget.widgetId)!;
+    this.valueIconRef  = document.getElementById('value-icon-reference'+'-'+this.widget.widgetId)!;
 
     if (this.zoomInButton === null || this.zoomOutButton === null || this.prevNegedge === null ||
         this.prevPosedge === null || this.nextNegedge === null || this.nextPosedge === null ||

@@ -14,7 +14,7 @@ export class WaveformDataManager {
   netlistData: NetlistData[]      = [];
   valueChangeDataTemp: any        = [];
 
-  contentArea: HTMLElement = document.getElementById('contentArea')!;
+  contentArea: HTMLElement = document.getElementById('contentArea'+'-'+this.widget.widgetId)!;
 
   waveDromClock = {
     netlistId: null,
@@ -22,7 +22,7 @@ export class WaveformDataManager {
   };
 
   constructor(private widget: WaveformWidget) {
-    this.contentArea = document.getElementById('contentArea')!;
+    this.contentArea = document.getElementById('contentArea'+'-'+this.widget.widgetId)!;
 
     if (this.contentArea === null) {throw new Error("Could not find contentArea");}
 
@@ -56,7 +56,7 @@ export class WaveformDataManager {
   }
 
   private fetch() {
-    ;
+    
     if (this.requestActive) {return;}
     if (this.queued.length === 0) {return;}
 

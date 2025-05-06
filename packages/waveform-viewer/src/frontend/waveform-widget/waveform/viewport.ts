@@ -72,15 +72,15 @@ export class Viewport {
   constructor(
     private widget: WaveformWidget,
   ) {
-    const scrollArea         = document.getElementById('scrollArea');
-    const contentArea        = document.getElementById('contentArea');
-    const waveformArea       = document.getElementById('waveformArea');
-    const scrollbar          = document.getElementById('scrollbar');
-    const scrollbarContainer = document.getElementById('scrollbarContainer');
-    const scrollbarCanvas    = document.getElementById('scrollbarAreaCanvas');
-    const rulerCanvas        = document.getElementById('rulerCanvas');
-    const markerElement      = document.getElementById('main-marker');
-    const altMarkerElement   = document.getElementById('alt-marker');
+    const scrollArea         = document.getElementById('scrollArea'+'-'+this.widget.widgetId);
+    const contentArea        = document.getElementById('contentArea'+'-'+this.widget.widgetId);
+    const waveformArea       = document.getElementById('waveformArea'+'-'+this.widget.widgetId);
+    const scrollbar          = document.getElementById('scrollbar'+'-'+this.widget.widgetId);
+    const scrollbarContainer = document.getElementById('scrollbarContainer'+'-'+this.widget.widgetId);
+    const scrollbarCanvas    = document.getElementById('scrollbarAreaCanvas'+'-'+this.widget.widgetId);
+    const rulerCanvas        = document.getElementById('rulerCanvas'+'-'+this.widget.widgetId);
+    const markerElement      = document.getElementById('main-marker'+'-'+this.widget.widgetId);
+    const altMarkerElement   = document.getElementById('alt-marker'+'-'+this.widget.widgetId);
 
     if (scrollArea === null || contentArea === null || scrollbar === null || 
       scrollbarContainer === null || scrollbarCanvas === null || 
@@ -265,6 +265,7 @@ export class Viewport {
   }
 
   handleScrollAreaMouseDown(event: MouseEvent) {
+
     if (event.button === 1) {
       this.handleScrollAreaClick(event, 1);
     } else if (event.button === 0) {
@@ -408,8 +409,8 @@ export class Viewport {
       this.scrollbarMoved = e.clientX !== this.scrollbarStartX;
       if (!this.scrollbarMoved) {return;}
     }
-    const newPosition   = Math.min(Math.max(0, e.clientX - this.scrollbarStartX + this.scrollbarPosition), this.maxScrollbarPosition);
-    this.scrollbarStartX = e.clientX;
+    const newPosition   = Math.min(Math.max(0, e.clientX - this.scrollbarContainer.getBoundingClientRect().left - this.scrollbarStartX + this.scrollbarPosition), this.maxScrollbarPosition);
+    this.scrollbarStartX = e.clientX - this.scrollbarContainer.getBoundingClientRect().left;;
     const newScrollLeft = Math.round((newPosition / this.maxScrollbarPosition) * this.maxScrollLeft);
     this.handleScrollEvent(newScrollLeft);
   }
@@ -629,7 +630,7 @@ export class Viewport {
     this.redrawViewport();
   }
 
-  redrawViewport() {
+  public redrawViewport() {
     this.updatePending = true;
     this.updateMarker();
     this.updateRuler();
@@ -644,7 +645,7 @@ export class Viewport {
     this.renderWaveform(this.widget.dataManager.netlistData[netlistId]);
   }
 
-  updateViewportWidth() {
+  public updateViewportWidth() {
 
     this.pixelRatio       = window.devicePixelRatio || 1;
     this.scrollbarCanvasElement.setAttribute("width",  `0`);

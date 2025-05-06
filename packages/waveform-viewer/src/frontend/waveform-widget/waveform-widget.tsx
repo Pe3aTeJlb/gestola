@@ -2,24 +2,26 @@ import * as React from 'react';
 import { injectable, postConstruct, inject} from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { MessageService } from '@theia/core';
-import { Message } from '@theia/core/lib/browser';
+import { Message, Widget } from '@theia/core/lib/browser';
 import { ActionType, EventHandler, NetlistId, ViewerState } from './waveform/helper';
 import { WaveformDataManager } from './waveform/data_manager';
 import { LabelsPanels } from './waveform/labels';
 import { NetlistTreeWidget, CheckedChangedEvent } from './netlist-tree-widget';
 import { IWaveformDumpDoc, TransactionPackage, WaveformTopMetadata } from '../../common/waveform-doc-dto';
-import { waitForRevealed } from '@theia/core/lib/browser';
 import { Viewport } from './waveform/viewport';
 import { ControlBar } from './waveform/control_bar';
 import { VaporviewWebview } from './waveform/vaporview';
 import { NavigatableWaveformViewerOptions } from '../tree-editor-widget/navigatable-waveform-viewer-widget';
 import { WaveformViewerBackendService } from '../../common/protocol';
+import { v4 } from 'uuid';
 
 @injectable()
 export class WaveformWidget extends ReactWidget {
 
     @inject(MessageService)
     protected readonly messageService!: MessageService;
+
+    widgetId: string;
 
     doc: IWaveformDumpDoc;
     viewerState: ViewerState;
@@ -41,31 +43,13 @@ export class WaveformWidget extends ReactWidget {
     ){
       super();
 
-      waitForRevealed(this).then(() => {
+      this.widgetId = v4();
 
-        this.viewerState = {
-          markerTime: null,
-          altMarkerTime: null,
-          selectedSignal: null,
-          selectedSignalIndex: -1,
-          displayedSignals: [],
-          zoomRatio: 1,
-          scrollLeft: 0,
-          touchpadScrolling: false,
-          autoTouchpadScrolling: false,
-          mouseupEventType: null
-        };
-
-        this.events = new EventHandler();
-        this.dataManager = new WaveformDataManager(this);
-        this.labelsPanel = new LabelsPanels(this);
-        this.viewport = new Viewport(this);
-        this.controlBar = new ControlBar(this);
-        this.vp = new VaporviewWebview(this);
-
-      });
+      console.log('crearte waveform widget');
 
       this.netlistWidget.onDidChangeCheckedState((event: CheckedChangedEvent) => {
+
+        console.log('tree trigger in', options.uri.path.fsPath());
         
         if(event.change){
 
@@ -103,6 +87,36 @@ export class WaveformWidget extends ReactWidget {
 
     }
 
+    public async configure(){
+
+      console.log('configureing waveform widget');
+
+      this.viewerState = {
+        markerTime: null,
+        altMarkerTime: null,
+        selectedSignal: null,
+        selectedSignalIndex: -1,
+        displayedSignals: [],
+        zoomRatio: 1,
+        scrollLeft: 0,
+        touchpadScrolling: false,
+        autoTouchpadScrolling: false,
+        mouseupEventType: null
+      };
+
+      this.events = new EventHandler();
+      this.dataManager = new WaveformDataManager(this);
+      this.labelsPanel = new LabelsPanels(this);
+      this.viewport = new Viewport(this);
+      this.controlBar = new ControlBar(this);
+      this.vp = new VaporviewWebview(this);
+
+    }
+
+    public setData(doc: IWaveformDumpDoc){
+      this.doc = doc;
+    }
+
     public setMetadata(metadata: WaveformTopMetadata){
       this.viewport.init(metadata);
     }
@@ -114,28 +128,22 @@ export class WaveformWidget extends ReactWidget {
   
     @postConstruct()
     protected init(): void {
-        this.doInit()
+      this.update();
     }
-
-    protected async doInit(): Promise <void> {
-        //this.id = WaveformWidget.ID;
-        //this.title.label = WaveformWidget.LABEL;
-        //this.title.caption = WaveformWidget.LABEL;
-        //this.title.closable = true;
-        //this.title.iconClass = '';
-        this.update();
-    }
-
-    public setData(doc: IWaveformDumpDoc){
-      this.doc = doc;
+    
+    protected override onResize(msg: Widget.ResizeMessage): void {
+      super.onResize(msg);
+      if(this.viewport){
+        this.viewport.updateViewportWidth();
+      }
     }
 
     render(): React.ReactElement {
-        return<div id="vaporview-top">
-            <div id="control-bar">
-              <svg xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <symbol id="binary-edge" viewBox="0 0 16 16">
+      return<div id={`vaporview-top-${this.widgetId}`} className="vaporview-top">
+          <div id={`control-bar-${this.widgetId}`} className="control-bar">
+            <svg xmlns="http://www.w3.org/2000/svg">
+              <defs>
+              <symbol id="binary-edge" viewBox="0 0 16 16">
                     <path d="M 2 14 L 2 14 L 8 14 L 8 3 C 8 1 8 1 10 1 L 14 1 L 14 2 L 9 2 L 9 13 C 9 15 9 15 7 15 L 2 15 L 2 14"/>
                   </symbol>
                   <symbol id="bus-edge" viewBox="0 0 16 16">
@@ -175,7 +183,7 @@ export class WaveformWidget extends ReactWidget {
                     <text x="8" y="8" className="icon-text">t=</text>
                   </symbol>
                   <symbol id="search-hex" viewBox="0 0 16 16">
-                    <text id="search-symbol" x="8" y="8" className="icon-text">hex</text>
+                    <text id={`search-symbol-${this.widgetId}`} x="8" y="8" className="icon-text">hex</text>
                   </symbol>
                   <symbol id="touchpad" viewBox="0 0 16 16">
                     <path d="M 1 2 L 1 10 C 1 11 2 11 2 11 L 3 11 L 3 10 L 2 10 L 2 2 L 14 2 L 14 10 L 12 10 L 12 11 L 14 11 C 14 11 15 11 15 10 L 15 2 C 15 2 15 1 14 1 L 2 1 C 1 1 1 2 1 2 M 4 14 L 5 14 L 5 11 C 5 10 5 9 6 9 C 7 9 7 10 7 11 L 7 14 L 8 14 L 8 9 C 8 8 8 7 9 7 C 10 7 10 8 10 9 L 10 14 L 11 14 L 11 9 C 11 7 10.5 6 9 6 C 7.5 6 7 7 7 8 L 7 8.5 C 6.917 8.261 6.671 8.006 6 8 C 4.5 8 4 9 4 11 L 4 14"/>
@@ -186,93 +194,93 @@ export class WaveformWidget extends ReactWidget {
                   <symbol id="auto" viewBox="0 0 16 16">
                     <text x="8" y="8" className="icon-text">auto</text>
                   </symbol>
-                </defs>
-              </svg>
-              <div className="control-bar-group">
-                <div className="control-bar-button" title="Zoom Out (Ctrl + scroll down)" id="zoom-out-button">
-                  <div className='codicon codicon-zoom-out'></div>
-                </div>
-                <div className="control-bar-button" title="Zoom In (Ctrl + scroll up)" id="zoom-in-button">
-                  <div className='codicon codicon-zoom-in'></div>
-                </div>
+              </defs>
+            </svg>
+            <div className="control-bar-group">
+              <div className="control-bar-button" title="Zoom Out (Ctrl + scroll down)" id={`zoom-out-button-${this.widgetId}`}>
+                <div className='codicon codicon-zoom-out'></div>
               </div>
-              <div className="control-bar-group">
-                <div className="control-bar-button" title="Go To Previous Negative Edge Transition" id="previous-negedge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-negedge"/></svg>
-                </div>
-                <div className="control-bar-button" title="Go To Previous Positive Edge Transition" id="previous-posedge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-posedge"/></svg>
-                </div>
-                <div className="control-bar-button" title="Go To Previous Transition (Ctrl + &#8678;)" id="previous-edge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-edge"/></svg>
-                </div>
-                <div className="control-bar-button" title="Go To Next Transition (Ctrl + &#8680;)" id="next-edge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-edge"/></svg>
-                </div>
-                <div className="control-bar-button" title="Go To Next Positive Edge Transition" id="next-posedge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-posedge"/></svg>
-                </div>
-                <div className="control-bar-button" title="Go To Next Negative Edge Transition" id="next-negedge-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-negedge"/></svg>
-                </div>
-              </div>
-              <div className="control-bar-group">
-                <div id="search-container">
-                  <textarea id="search-bar" className="search-input" wrap="off" aria-label="Find" placeholder="Search" title="Find"></textarea>
-                  <div className="search-button selected-button" title="Go to Time specified" id="time-equals-button">
-                    <svg className="custom-icon" viewBox="0 0 16 16"><use href="#time-equals"/></svg>
-                  </div>
-                  <div className="search-button" title="Search by hex value" id="value-equals-button">
-                    <svg className="custom-icon" viewBox="0 0 16 16"><use id="value-icon-reference" href="#search-hex"/></svg>
-                  </div>
-                </div>
-                <div className="control-bar-button" title="Previous" id="previous-button">
-                  <div className='codicon codicon-arrow-left' ></div>
-                </div>
-                <div className="control-bar-button" title="Next" id="next-button">
-                  <div className='codicon codicon-arrow-right'></div>
-                </div>
-              </div>
-              <div className="control-bar-group">
-                <div className="format-button" title="Enable Mouse Scrolling" id="mouse-scroll-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#mouse"/></svg>
-                </div>
-                <div className="format-button" title="Enable Touchpad Scrolling" id="touchpad-scroll-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#touchpad"/></svg>
-                </div>
-                <div className="format-button" title="Auto Detect Mouse/Touchpad" id="auto-scroll-button">
-                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#auto"/></svg>
-                </div>
+              <div className="control-bar-button" title="Zoom In (Ctrl + scroll up)" id={`zoom-in-button-${this.widgetId}`}>
+                <div className='codicon codicon-zoom-in'></div>
               </div>
             </div>
-            <div id="viewer-container">
-              <div id="resize-1" className="resize-bar is-idle"></div>
-              <div id="resize-2" className="resize-bar is-idle"></div>
-            </div>
-            <div id="waveform-labels-container" className="labels-container">
-              <div id="waveform-labels-spacer" className="ruler-spacer"> </div>
-              <div id="waveform-labels">               </div>
-            </div>
-            <div id="transition-display-container" className="labels-container">
-              <div className="ruler-spacer"></div>
-              <div id="transition-display"></div>
-            </div>
-            <div id="scrollArea">
-              <div id="contentArea">
-                <svg id="main-marker" className="time-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
-                <svg id="alt-marker" className="time-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
-                <div id="ruler">
-                  <canvas id="rulerCanvas" height="40"></canvas>
-                </div>
-                <div id="waveformArea"></div>
+            <div className="control-bar-group">
+              <div className="control-bar-button" title="Go To Previous Negative Edge Transition" id={`previous-negedge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-negedge"/></svg>
+              </div>
+              <div className="control-bar-button" title="Go To Previous Positive Edge Transition" id={`previous-posedge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-posedge"/></svg>
+              </div>
+              <div className="control-bar-button" title="Go To Previous Transition (Ctrl + &#8678;)" id={`previous-edge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#previous-edge"/></svg>
+              </div>
+              <div className="control-bar-button" title="Go To Next Transition (Ctrl + &#8680;)" id={`next-edge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-edge"/></svg>
+              </div>
+              <div className="control-bar-button" title="Go To Next Positive Edge Transition" id={`next-posedge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-posedge"/></svg>
+              </div>
+              <div className="control-bar-button" title="Go To Next Negative Edge Transition" id={`next-negedge-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#next-negedge"/></svg>
               </div>
             </div>
-            <div id="scrollbarContainer">
-              <canvas id="scrollbarAreaCanvas"></canvas>
-              <div id="scrollbar"></div>
+            <div className="control-bar-group">
+              <div id={`search-container-${this.widgetId}`} className="search-container">
+                <textarea id={`search-bar-${this.widgetId}`} className="search-input" wrap="off" aria-label="Find" placeholder="Search" title="Find"></textarea>
+                <div className="search-button selected-button" title="Go to Time specified" id={`time-equals-button-${this.widgetId}`}>
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use href="#time-equals"/></svg>
+                </div>
+                <div className="search-button" title="Search by hex value" id={`value-equals-button-${this.widgetId}`}>
+                  <svg className="custom-icon" viewBox="0 0 16 16"><use id={`value-icon-reference-${this.widgetId}`} href="#search-hex"/></svg>
+                </div>
+              </div>
+              <div className="control-bar-button" title="Previous" id={`previous-button-${this.widgetId}`}>
+                <div className='codicon codicon-arrow-left' ></div>
+              </div>
+              <div className="control-bar-button" title="Next" id={`next-button-${this.widgetId}`}>
+                <div className='codicon codicon-arrow-right'></div>
+              </div>
+            </div>
+            <div className="control-bar-group">
+              <div className="format-button" title="Enable Mouse Scrolling" id={`mouse-scroll-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#mouse"/></svg>
+              </div>
+              <div className="format-button" title="Enable Touchpad Scrolling" id={`touchpad-scroll-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#touchpad"/></svg>
+              </div>
+              <div className="format-button" title="Auto Detect Mouse/Touchpad" id={`auto-scroll-button-${this.widgetId}`}>
+                <svg className="custom-icon" viewBox="0 0 16 16"><use href="#auto"/></svg>
+              </div>
             </div>
           </div>
-    }
+          <div id={`viewer-container-${this.widgetId}`} className="viewer-container">
+            <div id={`resize-1-${this.widgetId}`} className="resize-bar is-idle resize-1"></div>
+            <div id={`resize-2-${this.widgetId}`} className="resize-bar is-idle resize-2"></div>
+          </div>
+          <div id={`waveform-labels-container-${this.widgetId}`} className="labels-container waveform-labels-container">
+            <div id={`waveform-labels-spacer-${this.widgetId}`} className="ruler-spacer waveform-labels-spacer"> </div>
+            <div id={`waveform-labels-${this.widgetId}`} className="waveform-labels">               </div>
+          </div>
+          <div id={`transition-display-container-${this.widgetId}`} className="labels-container transition-display-container">
+            <div className="ruler-spacer"></div>
+            <div id={`transition-display-${this.widgetId}`} className="transition-display"></div>
+          </div>
+          <div id={`scrollArea-${this.widgetId}`} className="scrollArea">
+            <div id={`contentArea-${this.widgetId}`} className="contentArea">
+              <svg id={`main-marker-${this.widgetId}`} className="time-marker main-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
+              <svg id={`alt-marker-${this.widgetId}`} className="time-marker alt-marker" ><line x1="0" y1="0" x2="0" y2="100%"></line></svg>
+              <div id={`ruler-${this.widgetId}`} className="ruler">
+                <canvas id={`rulerCanvas-${this.widgetId}`} className="rulerCanvas" height="40"></canvas>
+              </div>
+              <div id={`waveformArea-${this.widgetId}`} className="waveformArea"></div>
+            </div>
+          </div>
+          <div id={`scrollbarContainer-${this.widgetId}`} className="scrollbarContainer">
+            <canvas id={`scrollbarAreaCanvas-${this.widgetId}`} className="scrollbarAreaCanvas"></canvas>
+            <div id={`scrollbar-${this.widgetId}`} className="scrollbar"></div>
+          </div>
+        </div>
+      }
 
     protected displayMessage(): void {
         this.messageService.info('Congratulations: Waveform Viewer Successfully Created!');

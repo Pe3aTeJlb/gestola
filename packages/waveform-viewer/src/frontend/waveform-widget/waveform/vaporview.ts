@@ -23,12 +23,12 @@ export class VaporviewWebview {
   ) {
     this.widget = widget;
     // Assuming you have a reference to the webview element
-    const webview           = document.getElementById('vaporview-top');
-    const labelsScroll      = document.getElementById('waveform-labels-container');
-    const transitionScroll  = document.getElementById('transition-display-container');
-    const scrollArea        = document.getElementById('scrollArea');
-    const contentArea       = document.getElementById('contentArea');
-    const scrollbar         = document.getElementById('scrollbar');
+    const webview           = document.getElementById('vaporview-top'+'-'+this.widget.widgetId);
+    const labelsScroll      = document.getElementById('waveform-labels-container'+'-'+this.widget.widgetId);
+    const transitionScroll  = document.getElementById('transition-display-container'+'-'+this.widget.widgetId);
+    const scrollArea        = document.getElementById('scrollArea'+'-'+this.widget.widgetId);
+    const contentArea       = document.getElementById('contentArea'+'-'+this.widget.widgetId);
+    const scrollbar         = document.getElementById('scrollbar'+'-'+this.widget.widgetId);
 
     if (webview === null || labelsScroll === null || transitionScroll === null ||
       scrollArea === null || contentArea === null || scrollbar === null) {

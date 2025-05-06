@@ -8,7 +8,7 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { WaveformViewerBackendService } from '../../common/protocol';
 import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../../common/waveform-doc-dto';
 import { DocumentWatcher } from '../../common/document-watcher';
-//import { DocumentWatcher } from '../../common/document-watcher';
+import { waitForRevealed } from '@theia/core/lib/browser';
 
 @injectable()
 export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
@@ -41,11 +41,22 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
         );
 
         this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
-            this.waveformWidget.updateWaveformChunk(event);
+            console.log('chunk received for', options.uri.path.fsPath(), event.uri.isEqual(options.uri));
+            if(event.uri.isEqual(options.uri)){
+                this.waveformWidget.updateWaveformChunk(event);
+            }
         });
 
         this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
-            this.waveformWidget.setMetadata(event.metadata);
+            console.log('meta received for', options.uri.path.fsPath(), event.uri.isEqual(options.uri));
+            if(event.uri.isEqual(options.uri)){
+                this.waveformWidget.setMetadata(event.metadata);
+            }
+        });
+
+        waitForRevealed(this).then(async () => {
+            await this.waveformWidget.configure();
+            await this.configure();
         });
         
     }
@@ -53,10 +64,10 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     @postConstruct()
     protected override init() {
         this.configureTitle(this.title);
-        this.configure();
     }
 
     protected async configure(){
+        console.log('configuring widget object');
         let doc: IWaveformDumpDoc = await this.waveformViewerBackendService.load(this.options.uri);
         this.netlistWidget.setData(doc.netlistTree);
         this.waveformWidget.setData(doc);

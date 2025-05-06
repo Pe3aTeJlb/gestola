@@ -30,13 +30,13 @@ export class LabelsPanels {
     this.widget = widget;
     this.events = this.widget.events;
 
-    const webview           = document.getElementById('vaporview-top');
-    const labels            = document.getElementById('waveform-labels');
-    const transitionDisplay = document.getElementById('transition-display');
-    const labelsScroll      = document.getElementById('waveform-labels-container');
-    const transitionScroll  = document.getElementById('transition-display-container');
-    const resize1           = document.getElementById("resize-1");
-    const resize2           = document.getElementById("resize-2");
+    const webview           = document.getElementById('vaporview-top'+'-'+this.widget.widgetId);
+    const labels            = document.getElementById('waveform-labels'+'-'+this.widget.widgetId);
+    const transitionDisplay = document.getElementById('transition-display'+'-'+this.widget.widgetId);
+    const labelsScroll      = document.getElementById('waveform-labels-container'+'-'+this.widget.widgetId);
+    const transitionScroll  = document.getElementById('transition-display-container'+'-'+this.widget.widgetId);
+    const resize1           = document.getElementById("resize-1"+'-'+this.widget.widgetId);
+    const resize2           = document.getElementById("resize-2"+'-'+this.widget.widgetId);
 
     if (webview === null || labels === null || transitionDisplay === null || labelsScroll === null || transitionScroll === null || resize1 === null || resize2 === null) {
       throw new Error("Could not find all required elements");
