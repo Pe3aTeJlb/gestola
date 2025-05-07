@@ -26,12 +26,16 @@ export class WaveformWidget extends ReactWidget {
     doc: IWaveformDumpDoc;
     viewerState: ViewerState;
 
+    metadata: WaveformTopMetadata;
+
     events: EventHandler;
     dataManager: WaveformDataManager;
     labelsPanel: LabelsPanels;
     viewport: Viewport;
     controlBar: ControlBar;
     vp: VaporviewWebview;
+
+    initialized: boolean = false;;
 
     constructor(
       @inject(NetlistTreeWidget)
@@ -45,7 +49,12 @@ export class WaveformWidget extends ReactWidget {
 
       this.widgetId = v4();
 
-      this.netlistWidget.onDidChangeCheckedState((event: CheckedChangedEvent) => {
+      this.netlistWidget.onDidChangeCheckedState(async (event: CheckedChangedEvent) => {
+
+        if(!this.initialized){
+          this.initialized = true;
+          await this.configure();
+        }
 
         if(event.change){
 
@@ -83,7 +92,7 @@ export class WaveformWidget extends ReactWidget {
 
     }
 
-    public configure(){
+    public async configure(){
 
       this.viewerState = {
         markerTime: null,
@@ -105,6 +114,8 @@ export class WaveformWidget extends ReactWidget {
       this.labelsPanel = new LabelsPanels(this);
       this.vp = new VaporviewWebview(this);
 
+      this.viewport.init(this.metadata);
+
     }
 
     public setData(doc: IWaveformDumpDoc){
@@ -112,7 +123,8 @@ export class WaveformWidget extends ReactWidget {
     }
 
     public setMetadata(metadata: WaveformTopMetadata){
-      this.viewport.init(metadata);
+      this.metadata = metadata;
+      //this.viewport.init(metadata);
     }
 
     public updateWaveformChunk(data: TransactionPackage){

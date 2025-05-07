@@ -9,6 +9,7 @@ export interface WaveformViewerBackendService extends RpcServer<WaveformViewerFr
     load(uri: URI): Promise<IWaveformDumpDoc>;
     getSignalData(uri: URI, signalIdList: SignalId[]): void;
     disconnectClient(client: WaveformViewerFrontendService): void;
+    remove(uri: URI): void;
 }
 
 export const WaveformViewerFrontendService = Symbol('WaveformViewerFrontendService');

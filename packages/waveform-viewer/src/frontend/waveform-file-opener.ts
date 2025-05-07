@@ -38,6 +38,22 @@ export class WaveformFileOpener extends WidgetOpenHandler<WaveformViewerWidget> 
         };
     }
 
+    protected override async doOpen(widget: WaveformViewerWidget, options?: WidgetOpenerOptions): Promise<void> {
+        const op: WidgetOpenerOptions = {
+            mode: 'reveal',
+            ...options
+        };
+        if (!widget.isAttached) {
+            await this.shell.addWidget(widget, op.widgetOptions || { area: 'main' });
+        }
+        if (op.mode === 'activate') {
+            await this.shell.activateWidget(widget.id);
+        } else if (op.mode === 'reveal') {
+            await this.shell.revealWidget(widget.id);
+        }
+    }
+
+
     canHandle(uri: URI, _options?: WidgetOpenerOptions | undefined): number {
         for (const extension of this.fileExtensions) {
             if (uri.path && uri.path.toString().endsWith(extension)) {

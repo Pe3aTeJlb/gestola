@@ -268,6 +268,7 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
     }
   
     dispose(): void {
+      console.log('back dispose');
       this.unload();
       this._wasmWorker.terminate();
     }

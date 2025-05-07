@@ -45,7 +45,7 @@ export class NodeRedIntegrationWidget extends ReactWidget {
     }
 
     render(): React.ReactElement {
-        return <div id='widget-container'>``
+        return <div id='node-red-widget-container'>
             <iframe src={this.src} id='frame'> </iframe>
         </div>
     }

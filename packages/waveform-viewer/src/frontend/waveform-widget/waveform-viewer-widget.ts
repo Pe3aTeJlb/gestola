@@ -1,5 +1,5 @@
 import { inject, injectable, postConstruct } from 'inversify';
-import { Title, Widget } from '@theia/core/lib/browser';
+import { Message, Title, Widget } from '@theia/core/lib/browser';
 import { NavigatableWaveformViewerOptions, NavigatableTreeEditorWidget } from "../tree-editor-widget/navigatable-waveform-viewer-widget";
 import { NetlistTreeWidget } from "./netlist-tree-widget";
 import { WaveformWidget } from './waveform-widget';
@@ -8,7 +8,6 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { WaveformViewerBackendService } from '../../common/protocol';
 import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../../common/waveform-doc-dto';
 import { DocumentWatcher } from '../../common/document-watcher';
-import { waitForRevealed } from '@theia/core/lib/browser';
 
 @injectable()
 export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
@@ -40,28 +39,28 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
             options
         );
 
-        this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
-            if(event.uri.isEqual(options.uri)){
-                this.waveformWidget.updateWaveformChunk(event);
-            }
-        });
+        this.toDispose.push(
+            this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
+                if(event.uri.isEqual(options.uri)){
+                    this.waveformWidget.updateWaveformChunk(event);
+                }
+            })
+        );
 
-        this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
-            if(event.uri.isEqual(options.uri)){
-                this.waveformWidget.setMetadata(event.metadata);
-            }
-        });
-
-        waitForRevealed(this.waveformWidget).then(async () => {
-            this.waveformWidget.configure();
-            await this.configure();
-        });
+        this.toDispose.push(
+            this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
+                if(event.uri.isEqual(options.uri)){
+                    this.waveformWidget.setMetadata(event.metadata);
+                }
+            })
+        );
         
     }
 
     @postConstruct()
     protected override init() {
         this.configureTitle(this.title);
+        this.configure();
     }
 
     protected async configure(){
@@ -77,6 +76,11 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     protected override configureTitle(title: Title<Widget>): void {
         super.configureTitle(title);
         //title.iconClass = "waveform-file";
+    }
+
+    protected override onCloseRequest(msg: Message): void {
+        this.waveformViewerBackendService.remove(this.uri);
+        super.onCloseRequest(msg);
     }
 
 }

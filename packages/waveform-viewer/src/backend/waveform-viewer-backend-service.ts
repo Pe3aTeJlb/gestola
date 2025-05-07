@@ -63,4 +63,9 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
         this.documentMap.get(uri.path.fsPath())?.getSignalData(signalIdList);
     }
 
+    remove(uri: URI): void {
+        this.documentMap.get(uri.path.fsPath())?.dispose();
+        this.documentMap.delete(uri.path.fsPath());
+    }
+
 }
