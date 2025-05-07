@@ -28,6 +28,9 @@ export default new ContainerModule(bind => {
     bind(WaveformViewerLabelProviderContribution).toSelf().inSingletonScope();
     bind(LabelProviderContribution).toService(WaveformViewerLabelProviderContribution);
 
+    //bind(WaveformViewerStatusBarContribution).toSelf().inSingletonScope();
+    //bind(WidgetStatusBarContribution).toService(WaveformViewerStatusBarContribution);
+
     bind(WidgetFactory).toDynamicValue(context => ({
         id: WaveformViewerWidget.ID,
         createWidget: (options: NavigatableWidgetOptions) => {

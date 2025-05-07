@@ -31,7 +31,7 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
         this.clients.push(client);
     }
     getClient?(): WaveformViewerFrontendService | undefined {
-        return undefined;
+        return this.clients[0];
         
     }
 
@@ -60,7 +60,6 @@ export class WaveformViewverBackendServiceImpl implements WaveformViewerBackendS
     }
 
     getSignalData(uri: URI, signalIdList: number[]): void {
-        console.log('file path', uri.path.fsPath());
         this.documentMap.get(uri.path.fsPath())?.getSignalData(signalIdList);
     }
 

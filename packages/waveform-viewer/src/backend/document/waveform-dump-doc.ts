@@ -64,15 +64,12 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
         this.netlistIdTable[id] = {netlistItem: varItem, displayedItem: undefined, signalId: signalid};
       },
       setmetadata: (scopecount: number, varcount: number, timescale: number, timeunit: string) => {
-        console.log('wasm meta');
         this.setMetadata(scopecount, varcount, timescale, timeunit);
       },
       setchunksize: (chunksize: bigint, timeend: bigint) => {
-        console.log('wasm chunk size');
         this.setChunkSize(chunksize, timeend);
       },
       sendtransitiondatachunk: (signalid: number, totalchunks: number, chunknum: number, min: number, max: number ,transitionData: string) => {
-        console.log('wasm transaction');
         this.backend.onTransactionReceived({
           uri: this.uri,
           signalId: signalid,

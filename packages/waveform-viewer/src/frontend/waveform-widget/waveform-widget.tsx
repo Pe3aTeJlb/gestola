@@ -39,18 +39,14 @@ export class WaveformWidget extends ReactWidget {
       @inject(NavigatableWaveformViewerOptions)
       readonly options: NavigatableWaveformViewerOptions,
       @inject(WaveformViewerBackendService)
-      readonly waveformViewerBackendService: WaveformViewerBackendService
+      readonly waveformViewerBackendService: WaveformViewerBackendService,
     ){
       super();
 
       this.widgetId = v4();
 
-      console.log('crearte waveform widget');
-
       this.netlistWidget.onDidChangeCheckedState((event: CheckedChangedEvent) => {
 
-        console.log('tree trigger in', options.uri.path.fsPath());
-        
         if(event.change){
 
           const metadata  = this.doc.netlistIdTable[event.node.netlistId]?.netlistItem;
@@ -87,9 +83,7 @@ export class WaveformWidget extends ReactWidget {
 
     }
 
-    public async configure(){
-
-      console.log('configureing waveform widget');
+    public configure(){
 
       this.viewerState = {
         markerTime: null,
@@ -106,9 +100,9 @@ export class WaveformWidget extends ReactWidget {
 
       this.events = new EventHandler();
       this.dataManager = new WaveformDataManager(this);
-      this.labelsPanel = new LabelsPanels(this);
-      this.viewport = new Viewport(this);
       this.controlBar = new ControlBar(this);
+      this.viewport = new Viewport(this);
+      this.labelsPanel = new LabelsPanels(this);
       this.vp = new VaporviewWebview(this);
 
     }
@@ -280,7 +274,7 @@ export class WaveformWidget extends ReactWidget {
             <div id={`scrollbar-${this.widgetId}`} className="scrollbar"></div>
           </div>
         </div>
-      }
+    }
 
     protected displayMessage(): void {
         this.messageService.info('Congratulations: Waveform Viewer Successfully Created!');

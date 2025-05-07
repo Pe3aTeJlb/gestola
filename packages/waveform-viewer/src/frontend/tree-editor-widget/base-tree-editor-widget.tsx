@@ -64,6 +64,7 @@ export abstract class BaseTreeEditorWidget extends BaseWidget {
         this.splitPanel.setRelativeSizes([1, 4]);
         Widget.attach(this.splitPanel, this.node);
         this.treeWidget.activate();
+        this.waveformWidget.activate();
         super.onAfterAttach(msg);
     }
 

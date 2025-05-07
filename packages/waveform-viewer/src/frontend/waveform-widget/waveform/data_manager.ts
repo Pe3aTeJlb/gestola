@@ -14,7 +14,7 @@ export class WaveformDataManager {
   netlistData: NetlistData[]      = [];
   valueChangeDataTemp: any        = [];
 
-  contentArea: HTMLElement = document.getElementById('contentArea'+'-'+this.widget.widgetId)!;
+  contentArea: HTMLElement;
 
   waveDromClock = {
     netlistId: null,
@@ -22,12 +22,18 @@ export class WaveformDataManager {
   };
 
   constructor(private widget: WaveformWidget) {
-    this.contentArea = document.getElementById('contentArea'+'-'+this.widget.widgetId)!;
 
-    if (this.contentArea === null) {throw new Error("Could not find contentArea");}
+    const contentArea       = document.getElementById('contentArea'+'-'+this.widget.widgetId);
+
+    if ( contentArea === null) {
+      throw new Error("Could not find all required elements");
+    }
+
+    this.contentArea      = contentArea;
 
     this.handleColorChange = this.handleColorChange.bind(this);
     this.widget.events.subscribe(ActionType.updateColorTheme, this.handleColorChange);
+    
   }
 
   unload() {

@@ -41,21 +41,19 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
         );
 
         this.documentWatcher.onTransactionReceived((event: TransactionPackage) => {
-            console.log('chunk received for', options.uri.path.fsPath(), event.uri.isEqual(options.uri));
             if(event.uri.isEqual(options.uri)){
                 this.waveformWidget.updateWaveformChunk(event);
             }
         });
 
         this.documentWatcher.onMetadataReceived((event: MetadataPackage) => {
-            console.log('meta received for', options.uri.path.fsPath(), event.uri.isEqual(options.uri));
             if(event.uri.isEqual(options.uri)){
                 this.waveformWidget.setMetadata(event.metadata);
             }
         });
 
-        waitForRevealed(this).then(async () => {
-            await this.waveformWidget.configure();
+        waitForRevealed(this.waveformWidget).then(async () => {
+            this.waveformWidget.configure();
             await this.configure();
         });
         
@@ -67,7 +65,6 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     }
 
     protected async configure(){
-        console.log('configuring widget object');
         let doc: IWaveformDumpDoc = await this.waveformViewerBackendService.load(this.options.uri);
         this.netlistWidget.setData(doc.netlistTree);
         this.waveformWidget.setData(doc);
@@ -80,10 +77,6 @@ export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
     protected override configureTitle(title: Title<Widget>): void {
         super.configureTitle(title);
         //title.iconClass = "waveform-file";
-    }
-
-    override dispose(): void {
-        
     }
 
 }
