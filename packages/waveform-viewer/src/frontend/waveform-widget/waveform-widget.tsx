@@ -2,7 +2,7 @@ import * as React from 'react';
 import { injectable, postConstruct, inject} from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { MessageService } from '@theia/core';
-import { Message, Widget } from '@theia/core/lib/browser';
+import { Message, Widget, ContextMenuRenderer } from '@theia/core/lib/browser';
 import { ActionType, EventHandler, NetlistId, ViewerState } from './waveform/helper';
 import { WaveformDataManager } from './waveform/data_manager';
 import { LabelsPanels } from './waveform/labels';
@@ -14,6 +14,7 @@ import { VaporviewWebview } from './waveform/vaporview';
 import { NavigatableWaveformViewerOptions } from '../tree-editor-widget/navigatable-waveform-viewer-widget';
 import { WaveformViewerBackendService } from '../../common/protocol';
 import { v4 } from 'uuid';
+import { WAVEFORM_VIEWER_CONTEXT_MENU } from './context-menu'
 
 @injectable()
 export class WaveformWidget extends ReactWidget {
@@ -44,6 +45,8 @@ export class WaveformWidget extends ReactWidget {
       readonly options: NavigatableWaveformViewerOptions,
       @inject(WaveformViewerBackendService)
       readonly waveformViewerBackendService: WaveformViewerBackendService,
+      @inject(ContextMenuRenderer) 
+      protected readonly contextMenuRenderer: ContextMenuRenderer,
     ){
       super();
 
@@ -298,6 +301,17 @@ export class WaveformWidget extends ReactWidget {
         if (htmlElement) {
             htmlElement.focus();
         }
+    }
+
+    public handleContextMenu(event: MouseEvent): void {
+        setTimeout(() => this.contextMenuRenderer.render({
+          menuPath: WAVEFORM_VIEWER_CONTEXT_MENU,
+          context: this.node,
+          anchor: event,
+          args: [this]
+        }), 10);
+        event.stopPropagation();
+        event.preventDefault();
     }
 
 }

@@ -111,6 +111,11 @@ export class Viewport {
     // click handler to handle clicking inside the waveform viewer
     // gets the absolute x position of the click relative to the scrollable content
     contentArea.addEventListener('mousedown',        (e) => {this.handleScrollAreaMouseDown(e);});
+    contentArea.addEventListener('contextmenu', (e) => {
+      this.handleScrollAreaClick(e, 0);
+      this.widget.handleContextMenu(e);
+    });
+
     scrollbar.addEventListener('mousedown',          (e) => {this.handleScrollbarDrag(e);});
     scrollbarContainer.addEventListener('mousedown', (e) => {this.handleScrollbarContainerClick(e);});
 
@@ -300,6 +305,7 @@ export class Viewport {
     if (netlistId !== undefined && netlistId !== null) {
 
       if (button === 0) {
+        console.log('shit');
         this.widget.events.dispatch(ActionType.SignalSelect, netlistId);
       }
 

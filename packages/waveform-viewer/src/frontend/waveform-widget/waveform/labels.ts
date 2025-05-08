@@ -67,7 +67,9 @@ export class LabelsPanels {
     labels.addEventListener('mousedown', (e) => {this.dragStart(e);});
     // Event handlers to handle clicking on a waveform label to select a signal
     labels.addEventListener(           'click', (e) => this.clicklabel(e, labels));
+    labels.addEventListener('contextmenu', (e) => {this.handleContextMenu(e, labels)});
     transitionDisplay.addEventListener('click', (e) => this.clicklabel(e, transitionDisplay));
+    transitionDisplay.addEventListener('contextmenu', (e) => {this.handleContextMenu(e, transitionDisplay)});
     // resize handler to handle column resizing
     resize1.addEventListener("mousedown",   (e) => {this.handleResizeMousedown(e, resize1, 1);});
     resize2.addEventListener("mousedown",   (e) => {this.handleResizeMousedown(e, resize2, 2);});
@@ -79,6 +81,11 @@ export class LabelsPanels {
     this.events.subscribe(ActionType.RemoveVariable, this.handleRemoveVariable);
     this.events.subscribe(ActionType.RedrawVariable, this.handleRedrawVariable);
     this.events.subscribe(ActionType.updateColorTheme, this.handleUpdateColor);
+  }
+
+  handleContextMenu(event: MouseEvent, containerElement: HTMLElement){
+    this.clicklabel(event, containerElement);
+    this.widget.handleContextMenu(event);
   }
 
   renderLabelsPanels() {
@@ -106,7 +113,7 @@ export class LabelsPanels {
     const type          = netlistData.variableType;
     const width         = netlistData.signalWidth;
     const encoding      = netlistData.encoding;
-    const tooltip       = "Name: " + fullPath + "\nType: " + type + "\nWidth: " + width + "\nEncoding: " + encoding;
+    const tooltip       = "Name: " + fullPath + "\nType: " + type + "\nWidth: " + width + "\nEncoding: " + encoding; 
     return `<div class="waveform-label is-idle ${selectorClass}" id="label-${netlistId}" title="${tooltip}" data-vscode-context=${vscodeContext}>
               <div class='codicon codicon-grabber'></div>
               <p style="opacity:50%">${modulePath}</p><p>${signalName}</p>

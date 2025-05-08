@@ -18,6 +18,9 @@ import { BaseTreeEditorWidget } from './tree-editor-widget/base-tree-editor-widg
 import { WAVEFROM_VIEWER_BACKEND_PATH, WaveformViewerBackendService } from '../common/protocol';
 import { WebSocketConnectionProvider } from '@theia/core/lib/browser';
 import { DocumentWatcher } from '../common/document-watcher';
+import { CommandContribution } from '@theia/core/lib/common/command';
+import { MenuContribution } from '@theia/core/lib/common/menu';
+import { WaveformViewerContextMenuContribution } from './waveform-widget/context-menu';
 
 export default new ContainerModule(bind => {
 
@@ -27,6 +30,12 @@ export default new ContainerModule(bind => {
 
     bind(WaveformViewerLabelProviderContribution).toSelf().inSingletonScope();
     bind(LabelProviderContribution).toService(WaveformViewerLabelProviderContribution);
+
+
+    bind(WaveformViewerContextMenuContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).to(WaveformViewerContextMenuContribution);
+    bind(MenuContribution).to(WaveformViewerContextMenuContribution);
+
 
     //bind(WaveformViewerStatusBarContribution).toSelf().inSingletonScope();
     //bind(WidgetStatusBarContribution).toService(WaveformViewerStatusBarContribution);
