@@ -15,12 +15,16 @@ import { NavigatableWaveformViewerOptions } from '../tree-editor-widget/navigata
 import { WaveformViewerBackendService } from '../../common/protocol';
 import { v4 } from 'uuid';
 import { WAVEFORM_VIEWER_CONTEXT_MENU } from './context-menu'
+import { ClipboardService } from '@theia/core/lib/browser/clipboard-service';
 
 @injectable()
 export class WaveformWidget extends ReactWidget {
 
     @inject(MessageService)
     protected readonly messageService!: MessageService;
+
+    @inject(ClipboardService)
+    protected readonly clipboard: ClipboardService;
 
     widgetId: string;
 
@@ -95,6 +99,11 @@ export class WaveformWidget extends ReactWidget {
 
     }
 
+    @postConstruct()
+    protected init(): void {
+      this.update();
+    }
+
     public async configure(){
 
       this.viewerState = {
@@ -121,6 +130,15 @@ export class WaveformWidget extends ReactWidget {
 
     }
 
+    protected override onResize(msg: Widget.ResizeMessage): void {
+      super.onResize(msg);
+      if(this.viewport){
+        this.viewport.updateViewportWidth();
+      }
+    }
+
+
+
     public setData(doc: IWaveformDumpDoc){
       this.doc = doc;
     }
@@ -134,18 +152,32 @@ export class WaveformWidget extends ReactWidget {
       this.dataManager.updateWaveformChunk(data);
     }
 
+
+
+    public setValueFormat(id: NetlistId | undefined, format: string | undefined, color: number | undefined, renderType: string | undefined) {
+      
+      if (id === undefined) {return;}
   
-    @postConstruct()
-    protected init(): void {
-      this.update();
+      this.dataManager.setDisplayFormat(
+        {
+          netlistId: id,
+          numberFormat: format,
+          color: color,
+          renderType: renderType,
+        }
+      );
+
     }
-    
-    protected override onResize(msg: Widget.ResizeMessage): void {
-      super.onResize(msg);
-      if(this.viewport){
-        this.viewport.updateViewportWidth();
-      }
+
+    public copyValueAtMarker(netlistId: number){
+      this.clipboard.writeText(this.labelsPanel.copyValueAtMarker(netlistId));
     }
+
+    public removeSignalFromDocument(netlistId: number){
+      this.netlistWidget.uncheckNode(netlistId);
+    }
+  
+
 
     render(): React.ReactElement {
       return<div id={`vaporview-top-${this.widgetId}`} className="vaporview-top">
@@ -308,7 +340,7 @@ export class WaveformWidget extends ReactWidget {
           menuPath: WAVEFORM_VIEWER_CONTEXT_MENU,
           context: this.node,
           anchor: event,
-          args: [this]
+          args: [this, this.viewerState.selectedSignal!, this.dataManager.netlistData[this.viewerState.selectedSignal!]]
         }), 10);
         event.stopPropagation();
         event.preventDefault();

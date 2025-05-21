@@ -305,7 +305,6 @@ export class Viewport {
     if (netlistId !== undefined && netlistId !== null) {
 
       if (button === 0) {
-        console.log('shit');
         this.widget.events.dispatch(ActionType.SignalSelect, netlistId);
       }
 

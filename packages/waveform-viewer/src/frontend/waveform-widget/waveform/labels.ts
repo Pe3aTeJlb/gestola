@@ -157,18 +157,18 @@ export class LabelsPanels {
     this.events.dispatch(ActionType.SignalSelect, this.widget.viewerState.displayedSignals[itemIndex]);
   }
 
-  copyValueAtMarker(netlistId: NetlistId | undefined) {
+  copyValueAtMarker(netlistId: NetlistId | undefined): string {
 
-    if (netlistId === undefined) {return;}
+    if (netlistId === undefined) {return "";}
     const value = this.valueAtMarker[netlistId];
-    if (value === undefined) {return;}
-//Todo
-   // const formatString   = this.widget.dataManager.netlistData[netlistId].valueFormat.formatString;
-    //const width          = this.widget.dataManager.netlistData[netlistId].signalWidth;
-   // const bitVector      = value[value.length - 1];
-    //const formattedValue = formatString(bitVector, width, true);
+    if (value === undefined) {return "";}
 
-    //vscode.postMessage({command: 'copyToClipboard', text: formattedValue});
+    const formatString   = this.widget.dataManager.netlistData[netlistId].valueFormat.formatString;
+    const width          = this.widget.dataManager.netlistData[netlistId].signalWidth;
+    const bitVector      = value[value.length - 1];
+    const formattedValue = formatString(bitVector, width, true);
+
+    return formattedValue;
   }
 
   updateIdleItemsStateAndPosition() {

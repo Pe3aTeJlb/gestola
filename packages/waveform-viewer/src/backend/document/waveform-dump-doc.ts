@@ -261,14 +261,12 @@ export class WaveformDumpDoc implements IWaveformDumpDoc {
   
   
     public async unload() {
-      //console.log("Reloading document");  
       this.fileReader.close(this.fileReader.fd);
       await this.wasmApi.unload();
 
     }
   
     dispose(): void {
-      console.log('back dispose');
       this.unload();
       this._wasmWorker.terminate();
     }

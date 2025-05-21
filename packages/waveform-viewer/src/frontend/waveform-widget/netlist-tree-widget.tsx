@@ -250,6 +250,29 @@ export class NetlistTreeWidget extends TreeWidget {
 
     }
 
+    public uncheckNode(netlistId: number){
+        console.log('lolxd', netlistId);
+        this.uncheckNodes(netlistId, (this.model.root as CompositeTreeNode).children);
+    }
+
+    private uncheckNodes(netlistId: number, nodes: readonly TreeNode[]){
+
+        let modules = nodes.filter((e: ModuleTreeNode) => e.type == 'module');
+        let target = nodes.filter((e: NetTreeNode) => e.type != 'module').filter((e: NetTreeNode) => e.netlistId == netlistId);
+
+        console.log('lolxd 2', target);
+
+        if(target.length > 0){
+            this.model.markAsChecked(target[0], false);
+            this.update();
+            this.fireCheckedChangedEvent(target[0] as NetTreeNode, false);
+            return;
+        } else {
+            modules.forEach((e: ModuleTreeNode) => this.uncheckNodes(netlistId, e.children));
+        }
+
+    }
+
     protected readonly onDidCheckedChangeEmitter = new Emitter<CheckedChangedEvent>();
     get onDidChangeCheckedState(): Event<CheckedChangedEvent> {
 		return this.onDidCheckedChangeEmitter.event;
