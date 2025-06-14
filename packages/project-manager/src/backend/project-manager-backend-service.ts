@@ -1,5 +1,5 @@
 import { inject, injectable, named } from '@theia/core/shared/inversify';
-import { ProjectManagerBackendService, ProjectTemplate, ProjectTemplateContribution, SolutionTemplate, SolutionTemplateContribution } from '../common/protocol';
+import { ProjectManagerBackendService, ProjectTemplate, ProjectTemplateContribution, RTLModelTemplate, RTLModelTemplateContribution } from '../common/protocol';
 import { ContributionProvider, URI } from '@theia/core';
 import * as fs from 'fs';
 import * as fsextra from 'fs-extra';
@@ -9,7 +9,7 @@ import { TaskConfiguration } from '@theia/task/lib/common';
 import { defProjStruct } from '../common/project';
 import { IProject }  from '../common/project';
 import { ProjectService } from '../common/protocol';
-import { defSolutionStruct } from '../common/solution';
+import { defRTLModelStruct } from '../common/rtl-model';
 
 @injectable()
 export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService, ProjectService {
@@ -20,8 +20,8 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
     @inject(ContributionProvider) @named(ProjectTemplateContribution)
     protected readonly projectTempaltesProvider: ContributionProvider<ProjectTemplateContribution>;
 
-    @inject(ContributionProvider) @named(SolutionTemplateContribution)
-    protected readonly solutionTempaltesProvider: ContributionProvider<SolutionTemplateContribution>;
+    @inject(ContributionProvider) @named(RTLModelTemplateContribution)
+    protected readonly rtlModelTempaltesProvider: ContributionProvider<RTLModelTemplateContribution>;
 
     async getProjectTemplates(): Promise<ProjectTemplate[]> {
         const contributions = this.projectTempaltesProvider.getContributions();
@@ -60,25 +60,25 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
 
     }
 
-    async getSolutionTemplates(): Promise<SolutionTemplate[]> {
-        const contributions = this.solutionTempaltesProvider.getContributions();
+    async getRTLModelTemplates(): Promise<RTLModelTemplate[]> {
+        const contributions = this.rtlModelTempaltesProvider.getContributions();
         return contributions.flatMap(contribution => contribution.templates);
     }
 
-    async createSolutionFromTemplate(templateId: string, solutionUri: URI): Promise<void> {
+    async createRTLModelFromTemplate(templateId: string, modelUri: URI): Promise<void> {
 
-        fs.mkdirSync(solutionUri.path.fsPath());
+        fs.mkdirSync(modelUri.path.fsPath());
         
-        await this.createDirStructure(solutionUri, defSolutionStruct);
+        await this.createDirStructure(modelUri, defRTLModelStruct);
         
-        const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-solution-empty-template");
+        const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-rtl-model-empty-template");
         if(defaultTemplate !== undefined){
             const templateUri = new URI(defaultTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
-            this.copyFiles(FileUri.fsPath(solutionUri), templatePath);
+            this.copyFiles(FileUri.fsPath(modelUri), templatePath);
         }
 
-        if(templateId === "gestola-empty-solution-template"){
+        if(templateId === "gestola-rtl-model-empty-template"){
             return;
         }
 
@@ -87,13 +87,13 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
 
             const templateUri = new URI(resolvedTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
-            this.copyFiles(FileUri.fsPath(solutionUri), templatePath);
+            this.copyFiles(FileUri.fsPath(modelUri), templatePath);
 
             if (resolvedTemplate.tasks || resolvedTemplate.launches) {
-                const configFolder = FileUri.fsPath(solutionUri.resolve('.theia'));
+                const configFolder = FileUri.fsPath(modelUri.resolve('.theia'));
                 fsextra.ensureDirSync(configFolder);
-                this.createOrAmendTasksJson(resolvedTemplate, solutionUri);
-                this.createOrAmendLaunchJson(resolvedTemplate, solutionUri);
+                this.createOrAmendTasksJson(resolvedTemplate, modelUri);
+                this.createOrAmendLaunchJson(resolvedTemplate, modelUri);
             }
         }
 

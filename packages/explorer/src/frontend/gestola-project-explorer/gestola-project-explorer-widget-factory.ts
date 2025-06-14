@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common/nls';
 import { ProjectExplorerWidget } from './project-explorer/project-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-explorer/file-navigator-widget';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { SolutionExplorerWidget } from './solution-explorer/solution-explorer-widget';
+import { RTLModelExplorerWidget } from './rtl-model-explorer/rtl-model-explorer-widget';
 import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
@@ -53,7 +53,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.setTitleOptions(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS);
     
         const projectExplorerWidget = await this.widgetManager.getOrCreateWidget(ProjectExplorerWidget.ID);
-        const solutionExplorerWidget = await this.widgetManager.getOrCreateWidget(SolutionExplorerWidget.ID);
+        const rtlModelExplorerWidget = await this.widgetManager.getOrCreateWidget(RTLModelExplorerWidget.ID);
 
         const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
 
@@ -64,7 +64,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         const otherFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-other"});
         
         viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions1);
-        viewContainer.addWidget(solutionExplorerWidget, this.projectsNavigatorWidgetOptions1);
+        viewContainer.addWidget(rtlModelExplorerWidget, this.projectsNavigatorWidgetOptions1);
 
         viewContainer.addWidget(moduleHierarchyWidget, this.projectsNavigatorWidgetOptions1);
 

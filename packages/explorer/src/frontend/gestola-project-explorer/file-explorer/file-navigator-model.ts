@@ -104,7 +104,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             this.updateRoot(); 
             //this.refresh()
         }));
-        this.toDispose.push(this.projManager.onDidChangeSolution(() => {
+        this.toDispose.push(this.projManager.onDidChangeRTLModel(() => {
             this.updateRoot(); 
             //this.refresh()
         }));
@@ -177,7 +177,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async createRoot(): Promise<TreeNode | undefined> {
         let proj = this.projManager.getCurrProject();
-        let sol = this.projManager.getCurrProject()?.getCurrSolution();
+        let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(proj){
 
             if(this.rootId === "file-navigator-system"){

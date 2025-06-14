@@ -8,9 +8,9 @@ export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
 export interface ProjectManagerBackendService {
     getProjectTemplates(): Promise<ProjectTemplate[]>;
-    getSolutionTemplates(): Promise<SolutionTemplate[]>;
+    getRTLModelTemplates(): Promise<RTLModelTemplate[]>;
     createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
-    createSolutionFromTemplate(templateId: string, uri: URI): Promise<void>;
+    createRTLModelFromTemplate(templateId: string, uri: URI): Promise<void>;
     updateCurrProject(proj: IProject): void;
     updateOpenedProjects(projs: IProject[]): void;
 }
@@ -47,12 +47,12 @@ export interface ProjectTemplateOptions {
 
 
 
-export const SolutionTemplateContribution = Symbol('SolutionTemplateContribution');
-export interface SolutionTemplateContribution {
-    readonly templates: SolutionTemplate[];
+export const RTLModelTemplateContribution = Symbol('RTLModelTemplateContribution');
+export interface RTLModelTemplateContribution {
+    readonly templates: RTLModelTemplate[];
 }
 
-export interface SolutionTemplate {
+export interface RTLModelTemplate {
     id: string;
     label: string;
     resourcesPath: string;

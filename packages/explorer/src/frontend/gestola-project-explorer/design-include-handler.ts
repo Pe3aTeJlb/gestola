@@ -3,7 +3,7 @@ import URI from '@theia/core/lib/common/uri';
 import { UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
 
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/solution';
+import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
 export class DesignFilesIncludeHandler implements UriCommandHandler<URI[]> {
@@ -28,15 +28,15 @@ export class DesignFilesIncludeHandler implements UriCommandHandler<URI[]> {
 
     isEnabled(uris: URI[]): boolean {
 
-        let sol = this.projManager.getCurrProject()?.getCurrSolution();
+        let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(!sol) return false;
         if(uris.filter(e => sol?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
-        return uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.designIncludedHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
+        return uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designIncludedHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
 
     }
     
     execute(uris: URI[]){
-        this.projManager.includeFilesIntoDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrSolution()?.designIncludedHDLFiles.find(i => e.isEqual(i)) === undefined));
+        this.projManager.includeFilesIntoDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designIncludedHDLFiles.find(i => e.isEqual(i)) === undefined));
     }
 
 

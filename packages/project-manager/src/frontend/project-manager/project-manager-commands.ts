@@ -17,11 +17,11 @@ export namespace ProjectManagerCommands {
 
 
 
-    export const CREATE_SOLUTION = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.create-solution',
-        label: 'Create Solution',
+    export const CREATE_RTL_MODEL = Command.toLocalizedCommand({
+        id: 'gestola-project-manager.create-rtl-model',
+        label: 'Create RTL Model',
         iconClass: codicon('file-directory-create')
-    }, 'gestola/project-manager/create-solution');
+    }, 'gestola/project-manager/create-rtl-model');
 
 
 

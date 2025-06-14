@@ -14,7 +14,7 @@ import { WorkspaceNode } from '@theia/navigator/lib/browser/navigator-tree';
 import { WorkspaceCommands, WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
 import { FileNavigatorCommands } from '@theia/navigator/lib/browser/file-navigator-commands';
 import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
-import { SolutionExplorerWidget } from './solution-explorer/solution-explorer-widget';
+import { RTLModelExplorerWidget } from './rtl-model-explorer/rtl-model-explorer-widget';
 import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
 import { DesignFilesExcludeHandler } from './design-exclude-handler';
 import { DesignFilesIncludeHandler } from './design-include-handler';
@@ -165,8 +165,8 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         return false;
     }
 
-    protected withSolutionExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: SolutionExplorerWidget) => T): T | false {
-        if (widget instanceof SolutionExplorerWidget) {
+    protected withRTLModelExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: RTLModelExplorerWidget) => T): T | false {
+        if (widget instanceof RTLModelExplorerWidget) {
             return cb(widget);
         }
         return false;
@@ -205,10 +205,10 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
 
 
 
-        commands.registerCommand(ProjectManagerCommands.CREATE_SOLUTION, {
-            isEnabled: widget => this.withSolutionExplorerWidget(widget, () => true),
-            isVisible: widget => this.withSolutionExplorerWidget(widget, () => true),
-            execute: () => this.projManager.createSolution()
+        commands.registerCommand(ProjectManagerCommands.CREATE_RTL_MODEL, {
+            isEnabled: widget => this.withRTLModelExplorerWidget(widget, () => true),
+            isVisible: widget => this.withRTLModelExplorerWidget(widget, () => true),
+            execute: () => this.projManager.createRTLModel()
         });
 
 
@@ -339,9 +339,9 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         });
 
         registry.registerItem({
-            id: ProjectManagerCommands.CREATE_SOLUTION.id,
-            command: ProjectManagerCommands.CREATE_SOLUTION.id,
-            tooltip: nls.localize('gestola/project-manager/create-solution', 'Create Solution'),
+            id: ProjectManagerCommands.CREATE_RTL_MODEL.id,
+            command: ProjectManagerCommands.CREATE_RTL_MODEL.id,
+            tooltip: nls.localize('gestola/project-manager/create-rtl-model', 'Create RTL Model'),
             priority: 0,
         });
 

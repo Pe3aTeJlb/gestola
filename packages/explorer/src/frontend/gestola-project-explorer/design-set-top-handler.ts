@@ -3,7 +3,7 @@ import URI from '@theia/core/lib/common/uri';
 import { UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
 
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { hdlExtWtHeaders } from '@gestola/project-manager/lib/frontend/project-manager/solution';
+import { hdlExtWtHeaders } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
 export class DesignSetTopModuleHandler implements UriCommandHandler<URI> {
@@ -21,7 +21,7 @@ export class DesignSetTopModuleHandler implements UriCommandHandler<URI> {
     }
 
     isEnabled(uri: URI): boolean {
-        let sol = this.projManager.getCurrProject()?.getCurrSolution();
+        let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(sol) {
             return (sol.designIncludedHDLFiles.find(e => uri.isEqual(e)) !== undefined && !sol.topLevelModule?.uri.isEqual(uri) && sol.rtlUri.isEqualOrParent(uri));
         } else {

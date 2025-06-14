@@ -8,8 +8,8 @@ import  { Project }  from './project';
 import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, SolutionTemplate } from '../../common/protocol';
-import { Solution, TopLevelModule } from './solution';
+import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, RTLModelTemplate } from '../../common/protocol';
+import { RTLModel, TopLevelModule } from './rtl-model';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 
 export interface ProjectChangeEvent {
@@ -20,12 +20,12 @@ export interface ProjectsListChangeEvent {
     readonly projects: Project[];
 }
 
-export interface SolutionChangeEvent {
-    readonly solution: Solution;
+export interface RTLModelChangeEvent {
+    readonly model: RTLModel;
 }
 
-export interface SolutionsListChangeEvent {
-    readonly solutions: Solution[];
+export interface RTLModelListChangeEvent {
+    readonly models: RTLModel[];
 }
 
 export interface ProjectFavoriteStatusChangeEvent {
@@ -116,14 +116,14 @@ export class ProjectManager implements FrontendApplicationContribution {
         });
 
         this.onDidChangeProject((event: ProjectChangeEvent) => {
-            let sol = event.proj.getCurrSolution();
+            let sol = event.proj.getCurrRTLModel();
             if(sol){
-                this.fireSolutionChangeEvent(sol);
+                this.fireRTLModelChangeEvent(sol);
             }
         });
-        this.onDidChangeSolution((event: SolutionChangeEvent) => {
-            this.veriblePrefsManager.setFilelistPath(event.solution.veribleFilelistUri.path.fsPath());
-            this.fireDesignTopModuleChangeEvent(event.solution.topLevelModule);
+        this.onDidChangeRTLModel((event: RTLModelChangeEvent) => {
+            this.veriblePrefsManager.setFilelistPath(event.model.veribleFilelistUri.path.fsPath());
+            this.fireDesignTopModuleChangeEvent(event.model.topLevelModule);
         });
     
         //await this.refreshProjectsList();
@@ -270,9 +270,9 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    /*  Solution */
+    /*  RTL Model */
 
-    async createSolution() {
+    async createRTLModel() {
 
         if(!this.currProj) return;
 
@@ -282,55 +282,55 @@ export class ProjectManager implements FrontendApplicationContribution {
             return;
         }
 
-        if(this.currProj.solutions.map(e => e.solutionName).includes(quickInputResult)){
-            this.messageService.error(`Solution ${quickInputResult} already exists`);
+        if(this.currProj.rtlModels.map(e => e.rtlModelName).includes(quickInputResult)){
+            this.messageService.error(`RTL Model ${quickInputResult} already exists`);
             return;
         }
 
-        const templates = await this.projManagerBackendService.getSolutionTemplates();
-        const items: QuickPickValue<SolutionTemplate>[] = templates.map((e: SolutionTemplate) => <QuickPickValue<SolutionTemplate>>{ label: e.label, value: e });
+        const templates = await this.projManagerBackendService.getRTLModelTemplates();
+        const items: QuickPickValue<RTLModelTemplate>[] = templates.map((e: RTLModelTemplate) => <QuickPickValue<RTLModelTemplate>>{ label: e.label, value: e });
         let quickPickResult = await this.quickPickService.show(items);
         if(!quickPickResult){
             return;
         }
 
-        let solUri = this.currProj.rootUri.resolve(quickInputResult);
-        await this.projManagerBackendService.createSolutionFromTemplate(quickPickResult.value.id, solUri);
-        await this.addSolution(solUri);
+        let modelUri = this.currProj.rootUri.resolve(quickInputResult);
+        await this.projManagerBackendService.createRTLModelFromTemplate(quickPickResult.value.id, modelUri);
+        await this.addRTLModel(modelUri);
 
     }
 
 
-    async addSolution(solUri: URI){
+    async addRTLModel(modelUri: URI){
         if(this.currProj){
-            let sol = new Solution(this, solUri);
-            this.currProj.addSolution(sol);
-            this.fireSolutionListChangeEvent();
-            this.setSolution(sol);
+            let model = new RTLModel(this, modelUri);
+            this.currProj.addRTLModel(model);
+            this.fireRTLModelListChangeEvent();
+            this.setRTLModel(model);
         }
     }
 
-    async removeSolution(sol: Solution[]){
+    async removeRTLModel(model: RTLModel[]){
 
         if(this.currProj){
 
             const shouldDelete = await new ConfirmDialog({
                 title: 'Delete confirmation',
-                msg: sol.length > 1 ? `Confirm the deletion of multiple solutions` : `Confirm the deletion of ${sol[0].solutionName}`,
+                msg: model.length > 1 ? `Confirm the deletion of multiple rtl models` : `Confirm the deletion of ${model[0].rtlModelName}`,
                 ok: Dialog.YES,
                 cancel: Dialog.CANCEL,
             }).open();
 
             if(shouldDelete){
 
-                this.currProj.removeSolution(sol);
-                for(let s of sol){
-                    await this.fileService.delete(s.solutionUri, {
+                this.currProj.removeRTLModel(model);
+                for(let s of model){
+                    await this.fileService.delete(s.rtlModelUri, {
                         recursive: true,
                         useTrash: true
                     });
                 }
-                this.fireSolutionListChangeEvent();
+                this.fireRTLModelListChangeEvent();
 
             }
 
@@ -338,10 +338,10 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     }
 
-    setSolution(solution: Solution): void {
+    setRTLModel(model: RTLModel): void {
         if(this.currProj){
-            this.currProj.setCurrSolution(solution);
-            this.fireSolutionChangeEvent(solution)
+            this.currProj.setCurrRTLModel(model);
+            this.fireRTLModelChangeEvent(model)
         }
     }
 
@@ -355,8 +355,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public async setTopModule(uri: URI | undefined){
-        if(uri && this.currProj?.curSolution){
-            let descriptions = this.currProj.curSolution.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
+        if(uri && this.currProj?.curRTLModel){
+            let descriptions = this.currProj.curRTLModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
             if(descriptions.length > 0){
                 if(descriptions.length > 1){
                     let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
@@ -407,21 +407,21 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    protected readonly onDidChangeSolutionEmitter = new Emitter<SolutionChangeEvent>();
-    get onDidChangeSolution(): Event<SolutionChangeEvent> {
-        return this.onDidChangeSolutionEmitter.event;
+    protected readonly onDidChangeRTLModelEmitter = new Emitter<RTLModelChangeEvent>();
+    get onDidChangeRTLModel(): Event<RTLModelChangeEvent> {
+        return this.onDidChangeRTLModelEmitter.event;
     }
-    private fireSolutionChangeEvent(sol: Solution){
-        this.onDidChangeSolutionEmitter.fire({solution: sol} as SolutionChangeEvent);
+    private fireRTLModelChangeEvent(model: RTLModel){
+        this.onDidChangeRTLModelEmitter.fire({model: model} as RTLModelChangeEvent);
     }
 
 
-    protected readonly onDidChangeSolutionListEmitter = new Emitter<SolutionsListChangeEvent>();
-    get onDidChangeSoltionList(): Event<SolutionsListChangeEvent> {
-		return this.onDidChangeSolutionListEmitter.event;
+    protected readonly onDidChangeRTLModelListEmitter = new Emitter<RTLModelListChangeEvent>();
+    get onDidChangeRTLModelList(): Event<RTLModelListChangeEvent> {
+		return this.onDidChangeRTLModelListEmitter.event;
 	}
-    private fireSolutionListChangeEvent(){
-        this.onDidChangeSolutionListEmitter.fire({solutions: this.currProj?.solutions} as SolutionsListChangeEvent);
+    private fireRTLModelListChangeEvent(){
+        this.onDidChangeRTLModelListEmitter.fire({models: this.currProj?.rtlModels} as RTLModelListChangeEvent);
     }
 
 
@@ -458,7 +458,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireDesignTopModuleChangeEvent(module: TopLevelModule | undefined){
         this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
-            this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrSolution()?.topLevelModule)
+            this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrRTLModel()?.topLevelModule)
         }} as DesignTopModuleChangeEvent);
     }
 

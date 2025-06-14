@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode, ExpandableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { HDLFileDescription } from "@gestola/project-manager/src/frontend/project-manager/solution";
+import { HDLFileDescription } from "@gestola/project-manager/src/frontend/project-manager/rtl-model";
 
 @injectable()
 export class ModuleHierarchyTreeImpl extends TreeImpl {
@@ -12,7 +12,7 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
   protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> { 
 
     if (ModuleTreeRootNode.is(parent)) {
-      let sol = this.projManager.getCurrProject()?.getCurrSolution();
+      let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
       if(sol && sol.topLevelModule){
         return Promise.resolve(
           sol.hdlFilesDescription.filter(e => sol?.topLevelModule?.uri.isEqual(e.uri) && sol.topLevelModule.name == e.module.name).map(e => this.makeTreeNode(e))
@@ -21,7 +21,7 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
     }
 
     if (ModuleTreeNode.is(parent)) {
-      let sol = this.projManager.getCurrProject()?.getCurrSolution();
+      let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
       if(sol){
         return Promise.resolve(
           sol.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies?.includes(e.module.name)).filter(e => sol?.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).map(i => this.makeTreeNode(i))

@@ -13,7 +13,7 @@ export class VerilatorFrontendService {
 
     public runVerilator(){
 
-        let sol = this.projManager.getCurrProject()?.getCurrSolution();
+        let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(sol && sol.topLevelModule){
             
             this.verilatorBackendService.runVerilator(

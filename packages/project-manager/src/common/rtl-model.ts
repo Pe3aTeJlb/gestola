@@ -1,19 +1,19 @@
 import { URI } from '@theia/core/lib/common/uri';
 
-export const defSolutionStruct = ['rtl', 'fpga', 'topology', 'other', '.config'];
+export const defRTLModelStruct = ['rtl', 'fpga', 'topology', 'other', '.config'];
 
-export const defSolutionStructRegexp =  [
+export const defRTLModelStructRegexp =  [
     new RegExp('rtl'), 
     new RegExp('fpga'), 
     new RegExp('topology'), 
     new RegExp('other')
 ];
 
-export interface ISolution {
+export interface IRTLModel {
 
-    solutionName: string;
+    rtlModelName: string;
 
-    solutionUri: URI;
+    rtlModelUri: URI;
     rtlUri: URI;
     fpgaUri: URI;
     topologyUri: URI;

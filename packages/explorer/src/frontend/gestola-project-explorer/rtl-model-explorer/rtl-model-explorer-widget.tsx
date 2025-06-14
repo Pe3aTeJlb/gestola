@@ -3,10 +3,10 @@ import { injectable, inject, interfaces, Container } from '@theia/core/shared/in
 import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
-import { SolutionExplorerTreeImpl, SolutionTreeNode } from './solution-explorer-tree-impl';
+import { RTLModelExplorerTreeImpl, RTLModelTreeNode } from './rtl-model-explorer-tree-impl';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
-export const SOLUTION_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
+export const RTL_MODEL_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
     virtualized: false,
     multiSelect: false,
@@ -15,10 +15,10 @@ export const SOLUTION_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 };
 
 @injectable()
-export class SolutionExplorerWidget extends TreeWidget {
+export class RTLModelExplorerWidget extends TreeWidget {
 
-    static readonly ID = 'gestola-project-manager:solution-explorer';
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/solution-explorer-view-title", "Solution Explorer");
+    static readonly ID = 'gestola-project-manager:rtl-model-explorer';
+    static readonly VIEW_LABEL = nls.localize("gestola/explorer/rtl-model-explorer-view-title", "RTL Models Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
@@ -29,8 +29,8 @@ export class SolutionExplorerWidget extends TreeWidget {
     
         super(props, model, contextMenuRenderer);
 
-        this.id = SolutionExplorerWidget.ID;
-        this.title.label = SolutionExplorerWidget.VIEW_LABEL;
+        this.id = RTLModelExplorerWidget.ID;
+        this.title.label = RTLModelExplorerWidget.VIEW_LABEL;
 
         const root: CompositeTreeNode = {
             id: "dummy-root",
@@ -41,12 +41,12 @@ export class SolutionExplorerWidget extends TreeWidget {
         }
         this.model.root = root;
 
-        this.projManager.onDidChangeSoltionList(() => this.model.refresh());
-		this.projManager.onDidChangeSolution((event) => {
-			if(event.solution){
-				this.title.label = SolutionExplorerWidget.VIEW_LABEL + ": " + event.solution.solutionName;
+        this.projManager.onDidChangeRTLModelList(() => this.model.refresh());
+		this.projManager.onDidChangeRTLModel((event) => {
+			if(event.model){
+				this.title.label = RTLModelExplorerWidget.VIEW_LABEL + ": " + event.model.rtlModelName;
 			} else {
-				this.title.label = SolutionExplorerWidget.VIEW_LABEL;
+				this.title.label = RTLModelExplorerWidget.VIEW_LABEL;
 			}
             this.model.refresh();
 		});
@@ -58,25 +58,25 @@ export class SolutionExplorerWidget extends TreeWidget {
         const widget = createTreeContainer(container);
 
         widget.unbind(TreeImpl);
-        widget.bind(SolutionExplorerTreeImpl).toSelf();
-        widget.rebind(Tree).toService(SolutionExplorerTreeImpl);
+        widget.bind(RTLModelExplorerTreeImpl).toSelf();
+        widget.rebind(Tree).toService(RTLModelExplorerTreeImpl);
 
         widget.unbind(TreeWidget);
-        widget.bind(SolutionExplorerWidget).toSelf();
+        widget.bind(RTLModelExplorerWidget).toSelf();
 
-        widget.rebind(TreeProps).toConstantValue(SOLUTION_EXPLORER_WIDGET_TREE_PROPS);
+        widget.rebind(TreeProps).toConstantValue(RTL_MODEL_EXPLORER_WIDGET_TREE_PROPS);
 
         return widget;
 
     }
 
-    static createWidget(ctx: interfaces.Container): SolutionExplorerWidget {
-        return SolutionExplorerWidget.createContainer(ctx).get(SolutionExplorerWidget);
+    static createWidget(ctx: interfaces.Container): RTLModelExplorerWidget {
+        return RTLModelExplorerWidget.createContainer(ctx).get(RTLModelExplorerWidget);
     }
 
-    protected override tapNode(node?: SolutionTreeNode | undefined): void {
+    protected override tapNode(node?: RTLModelTreeNode | undefined): void {
         if(node){
-            this.projManager.setSolution(node?.solution)
+            this.projManager.setRTLModel(node?.model)
         }
     }
 
@@ -85,19 +85,19 @@ export class SolutionExplorerWidget extends TreeWidget {
     }
 
 
-    protected override renderTailDecorations(node: SolutionTreeNode, props: NodeProps): React.ReactNode {
+    protected override renderTailDecorations(node: RTLModelTreeNode, props: NodeProps): React.ReactNode {
         return  <div className='result-node-buttons-prebuffer'>
                     {this.renderRemoveButton(node)}
                     {this.renderCurrentProjectPointer(node)}
                 </div>;
     }
 
-    protected renderRemoveButton(node: SolutionTreeNode): React.ReactNode {
-        return <span className={`result-node-buttons1 ${codicon('trash')}`} onClick={() => this.projManager.removeSolution([node.solution])}></span>;
+    protected renderRemoveButton(node: RTLModelTreeNode): React.ReactNode {
+        return <span className={`result-node-buttons1 ${codicon('trash')}`} onClick={() => this.projManager.removeRTLModel([node.model])}></span>;
     }
 
-    protected renderCurrentProjectPointer(node: SolutionTreeNode): React.ReactNode {
-        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.getCurrSolution()?.getRootUri() === node.solution.getRootUri()){
+    protected renderCurrentProjectPointer(node: RTLModelTreeNode): React.ReactNode {
+        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.getCurrRTLModel()?.getRootUri() === node.model.getRootUri()){
             return <span className={`result-node-buttons2 ${codicon('arrow-left')}`}></span>;
         } else {
             return '';

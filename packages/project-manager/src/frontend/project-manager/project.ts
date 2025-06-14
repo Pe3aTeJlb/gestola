@@ -1,6 +1,6 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { IProject } from '../../common/project';
-import { Solution, regexp as SolutionRegexp } from './solution';
+import { RTLModel, regexp as RTLModelRegexp } from './rtl-model';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { ProjectManager } from './project-manager';
@@ -20,9 +20,9 @@ export class Project implements IProject {
     theiaUri: URI;
     configUri: URI;
 
-    curSolution: Solution | undefined;
-    solutions: Solution[] = [];
-    solutionDepTree: undefined;
+    curRTLModel: RTLModel | undefined;
+    rtlModels: RTLModel[] = [];
+    rtlModelDepTree: undefined;
 
     isFavorite: boolean = false;
 
@@ -48,15 +48,15 @@ export class Project implements IProject {
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
 
-        await this.getSolutionList(this.rootUri);
+        await this.getRTLModelList(this.rootUri);
 
-        this.curSolution = this.solutions[0];
+        this.curRTLModel = this.rtlModels[0];
 
         return Promise.resolve(this);
 
     }
 
-    private async getSolutionList(projRoot: URI) {
+    private async getRTLModelList(projRoot: URI) {
 
         let dirs = Array.from((await this.readDir(projRoot)).values());
 
@@ -66,19 +66,19 @@ export class Project implements IProject {
 
         for(let dir of dirs){
             let uri = new URI(projRoot.path.join(dir[0]).fsPath());
-            if(await this.checkSolutionStruct(uri)){
-                this.solutions.push(new Solution(this.projManager, uri));
+            if(await this.checkRTLModelStruct(uri)){
+                this.rtlModels.push(new RTLModel(this.projManager, uri));
             }
         }
 
     }
 
-    private async checkSolutionStruct(path: URI){
+    private async checkRTLModelStruct(path: URI){
 
         let dirs = Array.from((await this.readDir(path)).values());
         let check = true;
 
-        for (let regexp of SolutionRegexp) {
+        for (let regexp of RTLModelRegexp) {
             if (dirs.filter( i => i[0].match(regexp)).length !== 1) {check = false; break;}
         }
 
@@ -92,24 +92,24 @@ export class Project implements IProject {
 
 
     public async saveMetadata(){
-        this.solutions.forEach(async e => await e.saveMetadata());
+        this.rtlModels.forEach(async e => await e.saveMetadata());
     }
 
 
-    public getCurrSolution(): Solution | undefined{
-        return this.curSolution;
+    public getCurrRTLModel(): RTLModel | undefined{
+        return this.curRTLModel;
     }
 
-    public setCurrSolution(solution: Solution){
-        this.curSolution = solution;
+    public setCurrRTLModel(rtlModel: RTLModel){
+        this.curRTLModel = rtlModel;
     }
 
-    public removeSolution(solutions: Solution[]){
-        this.solutions = this.solutions.filter(i => !solutions.includes(i));
+    public removeRTLModel(models: RTLModel[]){
+        this.rtlModels = this.rtlModels.filter(i => !models.includes(i));
     }
 
-    public addSolution(sol: Solution){
-        this.solutions.push(sol);
+    public addRTLModel(model: RTLModel){
+        this.rtlModels.push(model);
     }
 
 

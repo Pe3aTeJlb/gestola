@@ -1,7 +1,7 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
-import { ISolution } from '../../common/solution';
+import { IRTLModel } from '../../common/rtl-model';
 import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager } from './project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
@@ -40,26 +40,26 @@ export interface TopLevelModule {
     uri: URI
 }
 
-export interface SolutionDescription{
+export interface RTLModelDescription {
     name: string,
     relPath: string
 }
 
-export class Solution implements ISolution {
+export class RTLModel implements IRTLModel {
 
     projManager: ProjectManager;
     fileService: FileService;
 
-    solutionName: string;
+    rtlModelName: string;
 
-    solutionUri: URI;
+    rtlModelUri: URI;
     rtlUri: URI;
     fpgaUri: URI;
     topologyUri: URI;
     otherUri: URI;
     configUri: URI;
 
-    solutionDesctiptionUri: URI;
+    rtlModelDesctiptionUri: URI;
     veribleFilelistUri: URI;
 
     target: string = 'zybo';
@@ -74,22 +74,22 @@ export class Solution implements ISolution {
 
     hdlFilesDescription: HDLFileDescription[] = [];                            
     
-    constructor(projManager: ProjectManager, solutionRoot: URI){
+    constructor(projManager: ProjectManager, rtlModelRoot: URI){
 
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
-        let a = solutionRoot.path.fsPath().split('/').pop();
-        if(a) this.solutionName = a;
+        let a = rtlModelRoot.path.fsPath().split('/').pop();
+        if(a) this.rtlModelName = a;
 
-        this.solutionUri = solutionRoot.normalizePath();
-        this.rtlUri = this.solutionUri.resolve('rtl');
-        this.fpgaUri = this.solutionUri.resolve('fpga');
-        this.topologyUri = this.solutionUri.resolve('topology');
-        this.otherUri = this.solutionUri.resolve('other');
-        this.configUri = this.solutionUri.resolve('.config');
+        this.rtlModelUri = rtlModelRoot.normalizePath();
+        this.rtlUri = this.rtlModelUri.resolve('rtl');
+        this.fpgaUri = this.rtlModelUri.resolve('fpga');
+        this.topologyUri = this.rtlModelUri.resolve('topology');
+        this.otherUri = this.rtlModelUri.resolve('other');
+        this.configUri = this.rtlModelUri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
-        this.solutionDesctiptionUri = this.configUri.resolve('solution_description.json');
+        this.rtlModelDesctiptionUri = this.configUri.resolve('rtlmodel_description.json');
 
         this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
             if(this.rtlUri.isEqualOrParent(i.resource)){
@@ -131,15 +131,15 @@ export class Solution implements ISolution {
             }
         }));
 
-        this.projManager.onDidChangeSolution(async (event) => {
-            if(event.solution == this && !(await this.fileService.exists(this.veribleFilelistUri))){
+        this.projManager.onDidChangeRTLModel(async (event) => {
+            if(event.model == this && !(await this.fileService.exists(this.veribleFilelistUri))){
                 this.updateVeribleMetaFile();
             }
         });
 
         this.projManager.onDidDesignFilesInclude((event: DesignFilesExcludeEvent) => {
             
-            if(this.projManager.getCurrProject()?.getCurrSolution() == this){
+            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.concat(event.uris);
                 this.updateVeribleMetaFile();
@@ -149,7 +149,7 @@ export class Solution implements ISolution {
 
         this.projManager.onDidDesignFilesExclude((event: DesignFilesExcludeEvent) => {
 
-            if(this.projManager.getCurrProject()?.getCurrSolution() == this){
+            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
                 this.checkTopLevelModuleRelevance();
@@ -170,12 +170,12 @@ export class Solution implements ISolution {
     private async indexHDLFiles(): Promise<void>{
         this.indexedHDLFiles = [];
         await this.processDir(this.rtlUri);
-        if(await this.fileService.exists(this.solutionDesctiptionUri)){
-            const data = JSON.parse((await this.fileService.read(this.solutionDesctiptionUri)).value);
+        if(await this.fileService.exists(this.rtlModelDesctiptionUri)){
+            const data = JSON.parse((await this.fileService.read(this.rtlModelDesctiptionUri)).value);
             if(data.top_module){
-                this.topLevelModule = {name: data.top_module.name, uri:this.solutionUri.resolve(data.top_module.relPath)} as TopLevelModule;
+                this.topLevelModule = {name: data.top_module.name, uri:this.rtlModelUri.resolve(data.top_module.relPath)} as TopLevelModule;
             }
-            this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.solutionUri.resolve(e));
+            this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.rtlModelUri.resolve(e));
         }
         this.designIncludedHDLFiles = this.indexedHDLFiles.filter(e => this.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined);
 
@@ -270,19 +270,19 @@ export class Solution implements ISolution {
             top_module:  this.topLevelModule 
                         ? {
                             name: this.topLevelModule.name, 
-                            relPath: this.solutionUri.relative(this.topLevelModule.uri)?.toString()
-                            } as SolutionDescription 
+                            relPath: this.rtlModelUri.relative(this.topLevelModule.uri)?.toString()
+                            } as RTLModelDescription 
                         : undefined,
-            design_exclude: this.designExcludedHDLFiles.map(e => this.solutionUri.relative(e)?.toString())
+            design_exclude: this.designExcludedHDLFiles.map(e => this.rtlModelUri.relative(e)?.toString())
        });
-       this.fileService.write(this.solutionDesctiptionUri, string);
+       this.fileService.write(this.rtlModelDesctiptionUri, string);
     }
 
 
     //Getters
 
     public getRootUri(): URI{ 
-        return this.solutionUri;
+        return this.rtlModelUri;
     }
     
     public getRTLUri(): URI{
@@ -319,8 +319,8 @@ export class Solution implements ISolution {
 
     public getConfig(): Object {
         return {
-            name: this.solutionName,
-            root: this.solutionUri,
+            name: this.rtlModelName,
+            root: this.rtlModelUri,
             rtlUri: this.rtlUri,
             fpgaUri: this.fpgaUri,
             topologyUri: this.topologyUri,
