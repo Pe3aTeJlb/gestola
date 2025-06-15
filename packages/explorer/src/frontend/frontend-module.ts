@@ -12,6 +12,9 @@ import { DesignFilesExcludeHandler } from "./gestola-project-explorer/design-exc
 import { DesignFilesIncludeHandler } from "./gestola-project-explorer/design-include-handler";
 import { DesignSetTopModuleHandler } from "./gestola-project-explorer/design-set-top-handler";
 import { ModuleHierarchyTreeWidget } from "./gestola-project-explorer/module-hierarchy/module-hierarchy-widget";
+import { TestbenchesExplorerWidget } from "./gestola-project-explorer/testbenches-explorer/testbenches-explorer-widget";
+import { TestbenchesAddHandler } from "./gestola-project-explorer/testbenches-add-handler";
+import { TestbenchesRemoveHandler } from "./gestola-project-explorer/testbenches-remove-handler";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -33,6 +36,9 @@ export default new ContainerModule((bind, _unbind) => {
     bind(DesignFilesExcludeHandler).toSelf().inSingletonScope();
     bind(DesignSetTopModuleHandler).toSelf().inSingletonScope();
 
+    bind(TestbenchesAddHandler).toSelf().inSingletonScope();
+    bind(TestbenchesRemoveHandler).toSelf().inSingletonScope();
+
     bind(ProjectExplorerWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: ProjectExplorerWidget.ID,
@@ -49,6 +55,12 @@ export default new ContainerModule((bind, _unbind) => {
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
         id: ModuleHierarchyTreeWidget.ID,
         createWidget: () => ModuleHierarchyTreeWidget.createWidget(container)
+    })).inSingletonScope();
+
+    bind(TestbenchesExplorerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+        id: TestbenchesExplorerWidget.ID,
+        createWidget: () => TestbenchesExplorerWidget.createWidget(container)
     })).inSingletonScope();
 
   

@@ -6,6 +6,7 @@ import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-e
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { RTLModelExplorerWidget } from './rtl-model-explorer/rtl-model-explorer-widget';
 import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
+import { TestbenchesExplorerWidget } from './testbenches-explorer/testbenches-explorer-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -56,6 +57,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         const rtlModelExplorerWidget = await this.widgetManager.getOrCreateWidget(RTLModelExplorerWidget.ID);
 
         const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
+        const testbenchesExplorerWidget = await this.widgetManager.getOrCreateWidget(TestbenchesExplorerWidget.ID);
 
         const systemFollderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system"});
         const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl"});
@@ -67,6 +69,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.addWidget(rtlModelExplorerWidget, this.projectsNavigatorWidgetOptions1);
 
         viewContainer.addWidget(moduleHierarchyWidget, this.projectsNavigatorWidgetOptions1);
+        viewContainer.addWidget(testbenchesExplorerWidget, this.projectsNavigatorWidgetOptions1);
 
         viewContainer.addWidget(systemFollderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(rtlFolderFileNavigator, this.projectsNavigatorWidgetOptions2);

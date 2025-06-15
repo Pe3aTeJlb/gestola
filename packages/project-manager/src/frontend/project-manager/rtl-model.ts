@@ -2,7 +2,7 @@ import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
 import { IRTLModel } from '../../common/rtl-model';
-import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager } from './project-manager';
+import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager, TestBenchesChangeEvent } from './project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
@@ -72,7 +72,9 @@ export class RTLModel implements IRTLModel {
     designIncludedHDLFiles: URI[] = [];
     designExcludedHDLFiles: URI[] = [];
 
-    hdlFilesDescription: HDLFileDescription[] = [];                            
+    hdlFilesDescription: HDLFileDescription[] = [];
+    testbenchesFiles: URI[] = [];
+    contrainsFiles: [URI[]] = [[]];
     
     constructor(projManager: ProjectManager, rtlModelRoot: URI){
 
@@ -151,6 +153,7 @@ export class RTLModel implements IRTLModel {
 
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.projManager.removeTestBench(event.uris);
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
                 this.checkTopLevelModuleRelevance();
                 this.updateVeribleMetaFile();
@@ -159,9 +162,36 @@ export class RTLModel implements IRTLModel {
         });
 
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            this.topLevelModule = event.module;
-            event.complete();
+            console.log('change top level', event.module);
+            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+                this.topLevelModule = event.module;
+                if(event.module && event.module.uri && (this.testbenchesFiles.find(i => i.isEqual(event.module!.uri)) === undefined)) {
+                    this.projManager.addTestBench([event.module.uri]);
+                }
+                event.complete();
+            }
         });
+
+        this.projManager.onDidAddTestBench((event: TestBenchesChangeEvent) => {
+
+            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+                this.testbenchesFiles = this.testbenchesFiles.concat(event.uris);
+            }
+            event.complete();
+
+        });
+
+        this.projManager.onDidRemoveTestBench((event: TestBenchesChangeEvent) => {
+
+            console.log('kek lol', event);
+
+            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+                this.testbenchesFiles = this.testbenchesFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+            }
+            event.complete();
+
+        });
+        
 
         this.indexHDLFiles();
 
@@ -174,6 +204,7 @@ export class RTLModel implements IRTLModel {
             const data = JSON.parse((await this.fileService.read(this.rtlModelDesctiptionUri)).value);
             if(data.top_module){
                 this.topLevelModule = {name: data.top_module.name, uri:this.rtlModelUri.resolve(data.top_module.relPath)} as TopLevelModule;
+                this.testbenchesFiles.push(this.topLevelModule.uri);
             }
             this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.rtlModelUri.resolve(e));
         }

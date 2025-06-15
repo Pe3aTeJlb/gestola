@@ -20,6 +20,9 @@ import { DesignFilesExcludeHandler } from './design-exclude-handler';
 import { DesignFilesIncludeHandler } from './design-include-handler';
 import { DesignSetTopModuleHandler } from './design-set-top-handler';
 import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
+import { TestbenchesAddHandler } from './testbenches-add-handler';
+import { TestbenchesRemoveHandler } from './testbenches-remove-handler';
+import { TestbenchesExplorerWidget } from './testbenches-explorer/testbenches-explorer-widget';
 
 export const PROJECT_EXPLORER_TOGGLE_COMMAND: Command = {
     id: "project-explorer:toggle",
@@ -112,6 +115,12 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
     @inject(DesignSetTopModuleHandler) 
     protected readonly designSetTopModuleHandler: DesignSetTopModuleHandler;
 
+    @inject(TestbenchesAddHandler) 
+    protected readonly testbenchesAddHandler: TestbenchesAddHandler;
+
+    @inject(TestbenchesRemoveHandler) 
+    protected readonly testbenchesRemoveHandler: TestbenchesRemoveHandler;
+
     constructor(
         @inject(FileNavigatorPreferences) protected readonly fileNavigatorPreferences: FileNavigatorPreferences,
     ) {
@@ -179,6 +188,13 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         return false;
     }
 
+    protected withTestBenchesExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: TestbenchesExplorerWidget) => T): T | false {
+        if (widget instanceof TestbenchesExplorerWidget) {
+            return cb(widget);
+        }
+        return false;
+    }
+
     protected withFileNavigatorWidget<T>(widget: Widget | undefined, cb: (navigator: GestolaFileNavigatorWidget) => T): T | false {
         if (widget instanceof GestolaFileNavigatorWidget) {
             return cb(widget);
@@ -218,12 +234,21 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             execute: widget => this.withModulesHierarchyWidget(widget, (widget) => widget.model.refresh()),
         });
 
+        commands.registerCommand(ProjectManagerCommands.REFRESH_TESTBENCHES, {
+            isEnabled: widget => this.withTestBenchesExplorerWidget(widget, () => true),
+            isVisible: widget => this.withTestBenchesExplorerWidget(widget, () => true),
+            execute: widget => this.withTestBenchesExplorerWidget(widget, (widget) => widget.model.refresh()),
+        });
+
 
 
 
         commands.registerCommand(ProjectManagerCommands.DESIGN_FILES_INCLUDE, this.newMultiUriAwareCommandHandler(this.designFilesIncludeHandler));
         commands.registerCommand(ProjectManagerCommands.DESIGN_FILES_EXCLUDE, this.newMultiUriAwareCommandHandler(this.designFilesExcludeHandler));
         commands.registerCommand(ProjectManagerCommands.DESIGN_SET_TOP_MODULE, this.newUriAwareCommandHandler(this.designSetTopModuleHandler));
+
+        commands.registerCommand(ProjectManagerCommands.TESTBENCHES_ADD, this.newMultiUriAwareCommandHandler(this.testbenchesAddHandler));
+        commands.registerCommand(ProjectManagerCommands.TESTBENCHES_REMOVE, this.newMultiUriAwareCommandHandler(this.testbenchesRemoveHandler));
 
 
 
@@ -294,6 +319,16 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
             commandId: ProjectManagerCommands.DESIGN_FILES_EXCLUDE.id,
             order: 'c'
+        });
+
+        menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: ProjectManagerCommands.TESTBENCHES_ADD.id,
+            order: 'd'
+        });
+
+        menus.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: ProjectManagerCommands.TESTBENCHES_REMOVE.id,
+            order: 'e'
         });
 
 
@@ -374,6 +409,13 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
         registry.registerItem({
             id: ProjectManagerCommands.REFRESH_MODULES_HIERARCHY.id,
             command: ProjectManagerCommands.REFRESH_MODULES_HIERARCHY.id,
+            tooltip: 'Refresh',
+            priority: 1,
+        });
+
+        registry.registerItem({
+            id: ProjectManagerCommands.REFRESH_TESTBENCHES.id,
+            command: ProjectManagerCommands.REFRESH_TESTBENCHES.id,
             tooltip: 'Refresh',
             priority: 1,
         });

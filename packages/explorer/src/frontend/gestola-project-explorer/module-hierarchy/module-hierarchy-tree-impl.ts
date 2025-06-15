@@ -17,6 +17,8 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
         return Promise.resolve(
           sol.hdlFilesDescription.filter(e => sol?.topLevelModule?.uri.isEqual(e.uri) && sol.topLevelModule.name == e.module.name).map(e => this.makeTreeNode(e))
         );
+      } else {
+        return Promise.resolve([]);
       }
     }
 

@@ -45,6 +45,12 @@ export interface DesignTopModuleChangeEvent {
     complete: () => void
 }
 
+export interface TestBenchesChangeEvent {
+    readonly uris: URI[];
+    complete: () => void
+}
+
+
 
 @injectable()
 export class ProjectManager implements FrontendApplicationContribution {
@@ -347,7 +353,6 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     async selectModule(items: string[]): Promise<string | undefined> {
 
-        
         const qitems: QuickPickValue<string>[] = items.map((e: string) => <QuickPickValue<string>>{ label: e, value: e });
         let quickPickResult = await this.quickPickService.show(qitems);
         return quickPickResult ? quickPickResult.value : undefined; 
@@ -376,6 +381,14 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     public excludeFilesFromDesign(uris: URI[]){
         this.fireDesignFilesExcludeEvent(uris);
+    }
+
+    public addTestBench(uris: URI[]){
+        this.fireAddTestBench(uris);
+    }
+
+    public removeTestBench(uris: URI[]){
+        this.fireRemoveTestBench(uris);
     }
 
 
@@ -470,7 +483,33 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.onDidChangedDesignTopModuleEmitter.fire({module: module} as DesignTopModuleChangeEvent);
     }
 
-    
+    protected readonly onDidAddTestBenchEmitter = new Emitter<TestBenchesChangeEvent>();
+    get onDidAddTestBench(): Event<TestBenchesChangeEvent> {
+        return this.onDidAddTestBenchEmitter.event;
+    }
+    private fireAddTestBench(uris: URI[]){
+        this.onDidAddTestBenchEmitter.fire({uris: uris, complete: () => {
+            this.fireTestBenchesChangedEvent(uris)
+        }} as TestBenchesChangeEvent);
+    }
+
+    protected readonly onDidRemoveTestBenchEmitter = new Emitter<TestBenchesChangeEvent>();
+    get onDidRemoveTestBench(): Event<TestBenchesChangeEvent> {
+        return this.onDidRemoveTestBenchEmitter.event;
+    }
+    private fireRemoveTestBench(uris: URI[]){
+        this.onDidRemoveTestBenchEmitter.fire({uris: uris, complete: () => {
+            this.fireTestBenchesChangedEvent(uris)
+        }} as TestBenchesChangeEvent);
+    }
+
+    protected readonly onDidTestBenchesChangedEmitter = new Emitter<URI[]>();
+    get onDidChangedTestBenches(): Event<URI[]> {
+        return this.onDidTestBenchesChangedEmitter.event;
+    }
+    private fireTestBenchesChangedEvent(uris: URI[]){
+        this.onDidTestBenchesChangedEmitter.fire(uris);
+    }
 
 
 

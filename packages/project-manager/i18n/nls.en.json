@@ -17,6 +17,7 @@
             "view-container-title": "Gestola: Project Explorer",
             "project-explorer-view-title": "Project Explorer",
             "rtl-model-explorer-view-title": "RTL Models Explorer",
+            "testbenches-explorer-view-title": "TestBenches Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL", 
             "file-explorer-topologyLvl": "Topology", 

@@ -32,6 +32,7 @@
             "open-project": "Открыть проект",
             "project-explorer-view-title": "Обозреватель проектов",
             "rtl-model-explorer-view-title": "Обозреватель RTL моделей",
+            "testbenches-explorer-view-title": "Обозреватель тестовых окружений",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-fpgaLvl": "FPGA",
