@@ -46,13 +46,17 @@ export class RTLLevelWidgetFactory implements WidgetFactory {
         });
         viewContainer.setTitleOptions(RTL_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS);
     
-        const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
+        const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
 
         const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
+        const simResultsFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "simresults", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
         const testbenchesExplorerWidget = await this.widgetManager.getOrCreateWidget(TestbenchesExplorerWidget.ID);
 
         viewContainer.addWidget(moduleHierarchyWidget, this.widgetOptions);
         viewContainer.addWidget(testbenchesExplorerWidget, this.widgetOptions);
+        viewContainer.addWidget(simResultsFileNavigator, this.widgetOptions);
         viewContainer.addWidget(rtlFolderFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));

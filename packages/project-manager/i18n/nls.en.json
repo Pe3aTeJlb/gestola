@@ -31,7 +31,8 @@
         "rtl-level":{
             "view-container-title": "Gestola: RTl Level",
             "testbenches-explorer-view-title": "TestBenches Explorer",
-            "module-hierarchy": "Module Hierarchy"
+            "module-hierarchy": "Module Hierarchy",
+            "simulation-results": "Simulation Results"
         },
 
         "topology-level-fpga":{

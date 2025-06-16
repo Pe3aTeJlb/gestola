@@ -59,6 +59,8 @@ export class RTLModel implements IRTLModel {
     otherUri: URI;
     configUri: URI;
 
+    simResultsUri: URI;
+
     rtlModelDesctiptionUri: URI;
     veribleFilelistUri: URI;
 
@@ -86,6 +88,7 @@ export class RTLModel implements IRTLModel {
 
         this.rtlModelUri = rtlModelRoot.normalizePath();
         this.rtlUri = this.rtlModelUri.resolve('rtl');
+        this.simResultsUri = this.rtlUri.resolve('simresults');
         this.fpgaUri = this.rtlModelUri.resolve('fpga');
         this.vlsiUri = this.rtlModelUri.resolve('vlsi');
         this.otherUri = this.rtlModelUri.resolve('other');
@@ -333,6 +336,10 @@ export class RTLModel implements IRTLModel {
 
     public async rtlFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.rtlUri);
+    }
+
+    public async simuResultsFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.simResultsUri);
     }
     
     public async fpgaFolderFStat(): Promise<FileStat> {

@@ -46,7 +46,8 @@
         "rtl-level":{
             "view-container-title": "Гестола: RTl уровень",
             "module-hierarchy": "Иерархия модуля",
-            "testbenches-explorer-view-title": "Обозреватель тестовых окружений"
+            "testbenches-explorer-view-title": "Обозреватель тестовых окружений",
+            "simulation-results": "Результаты симуляции"
         },
 
         "topology-level-fpga":{

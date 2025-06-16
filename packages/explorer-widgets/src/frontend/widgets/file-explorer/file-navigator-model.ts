@@ -215,6 +215,9 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                     case "file-navigator-other": 
                         rootFolder = await sol.otherFolderFStat();
                         break;
+                    case "simresults": 
+                        rootFolder = await sol.simuResultsFolderFStat();
+                        break;
                 
                 }
 
