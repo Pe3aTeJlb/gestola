@@ -209,8 +209,8 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                     case "file-navigator-fpga": 
                         rootFolder = await sol.fpgaFolderFStat();
                         break;
-                    case "file-navigator-topology": 
-                        rootFolder = await sol.topologyFolderFStat();
+                    case "file-navigator-vlsi": 
+                        rootFolder = await sol.vlsiFolderFStat();
                         break;
                     case "file-navigator-other": 
                         rootFolder = await sol.otherFolderFStat();

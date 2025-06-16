@@ -23,6 +23,8 @@ import { FileNavigatorCommandsContribution } from "./widgets/file-explorer/file-
 import { ProjectExplorerCommandsContribution } from "./widgets/project-explorer/project-explorer-commands-contribution";
 import { ModuleHierarchyCommandsContribution } from "./widgets/module-hierarchy/module-hierarchy-commands-contribution";
 import { TestBenchesExplorerCommandsContribution } from "./widgets/testbenches-explorer/testbenches-explorer-commands-contribution";
+import { RTLLevelWidgetFactory } from "./views/rtl-model-view/rtl-level-view-widget-factory";
+import { RTLLevelViewContribution } from "./views/rtl-model-view/rtl-level-view-contribution";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -107,14 +109,20 @@ export default new ContainerModule((bind, _unbind) => {
 
     // Gestola Project Explorer
 
-
     bind(GestolaProjectExplorerWidgetFactory).toSelf().inSingletonScope();
     bind(WidgetFactory).toService(GestolaProjectExplorerWidgetFactory);
 
     bind(GestolaExplorerContextKeyService).toSelf().inSingletonScope();
     bindViewContribution(bind, GestolaProjectExplorerViewContribution);
     bind(FrontendApplicationContribution).toService(GestolaProjectExplorerViewContribution);
+
+    // RTL Level View
   
+    bind(RTLLevelWidgetFactory).toSelf().inSingletonScope();
+    bind(WidgetFactory).toService(RTLLevelWidgetFactory);
+
+    bindViewContribution(bind, RTLLevelViewContribution);
+    bind(FrontendApplicationContribution).toService(RTLLevelViewContribution);
 
     /*
     *   HANDLERS

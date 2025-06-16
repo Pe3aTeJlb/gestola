@@ -35,11 +35,16 @@
             "testbenches-explorer-view-title": "Обозреватель тестовых окружений",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
-            "file-navigator-fpgaLvl": "FPGA",
-            "file-navigator-topologyLvl": "Топология", 
+            "file-navigator-fpgaLvl": "ПЛИС",
+            "file-navigator-vlsi": "СБИС", 
             "file-navigator-otherFiles": "Другие файлы",
             "module-hierarchy": "Иерархия модуля"
         },
+
+        "rtl-level":{
+            "view-container-title": "Гестола: RTL уровень"
+        },
+
 
         "branding":{
             "report-issue": "Сообщить о проблеме",

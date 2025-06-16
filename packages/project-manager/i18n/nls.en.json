@@ -19,11 +19,17 @@
             "rtl-model-explorer-view-title": "RTL Models Explorer",
             "testbenches-explorer-view-title": "TestBenches Explorer",
             "file-explorer-systemLvl": "System Model", 
-            "file-explorer-rtlLvl": "RTL", 
-            "file-explorer-topologyLvl": "Topology", 
+            "file-explorer-rtlLvl": "RTL",
+            "file-explorer-fpga": "FPGA",
+            "file-explorer-vlsi": "VLSI", 
             "file-explorer-otherFiles": "Other Files",
             "module-hierarchy": "Module Hierarchy"
+        },
+
+        "rtl-level":{
+            "view-container-title": "Gestola: RTl Level"
         }
+
     }
 
 }

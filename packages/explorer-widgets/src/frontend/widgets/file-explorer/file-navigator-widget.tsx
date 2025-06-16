@@ -32,6 +32,7 @@ export const GESTOLA_FILE_NAVIGATOR_PROPS: TreeProps = {
 export const GestolaFileNavigatorOptions = Symbol('GestolaFileNavigatorOptions');
 export interface GestolaFileNavigatorOptions {
     readonly navigatorID: string;
+    readonly viewContainerID: string;
 }
 
 @injectable()
@@ -66,14 +67,14 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-system": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model"); 
                 break;
-            case "file-navigator-rtl":   
+            case "file-navigator-rtl":
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
             case "file-navigator-fpga": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-vlsi", "FPGA"); 
                 break;
-            case "file-navigator-topology": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology"); 
+            case "file-navigator-vlsi": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
                 break;
             case "file-navigator-other": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
@@ -110,8 +111,8 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-fpga": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
                 break;
-            case "file-navigator-topology": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl", "Topology"); 
+            case "file-navigator-vlsi": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
                 break;
             case "file-navigator-other": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 

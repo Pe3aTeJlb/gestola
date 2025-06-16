@@ -10,7 +10,7 @@ export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
 export const regexp =  [
     new RegExp('rtl'), 
     new RegExp('fpga'), 
-    new RegExp('topology'), 
+    new RegExp('vlsi'), 
     new RegExp('other'),
     new RegExp('.config')
 ];
@@ -55,7 +55,7 @@ export class RTLModel implements IRTLModel {
     rtlModelUri: URI;
     rtlUri: URI;
     fpgaUri: URI;
-    topologyUri: URI;
+    vlsiUri: URI;
     otherUri: URI;
     configUri: URI;
 
@@ -87,7 +87,7 @@ export class RTLModel implements IRTLModel {
         this.rtlModelUri = rtlModelRoot.normalizePath();
         this.rtlUri = this.rtlModelUri.resolve('rtl');
         this.fpgaUri = this.rtlModelUri.resolve('fpga');
-        this.topologyUri = this.rtlModelUri.resolve('topology');
+        this.vlsiUri = this.rtlModelUri.resolve('vlsi');
         this.otherUri = this.rtlModelUri.resolve('other');
         this.configUri = this.rtlModelUri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
@@ -319,12 +319,12 @@ export class RTLModel implements IRTLModel {
         return this.rtlUri;
     }
 
-    public getFPGAtUri(): URI{
+    public getFPGAUri(): URI{
         return this.fpgaUri;
     }
 
-    public getTopologyUri(): URI{
-        return this.topologyUri;
+    public getVLSIUri(): URI{
+        return this.vlsiUri;
     }
 
     public getOthertUri(): URI{
@@ -339,8 +339,8 @@ export class RTLModel implements IRTLModel {
         return await this.fileService.resolve(this.fpgaUri);
     }
 
-    public async topologyFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.topologyUri);
+    public async vlsiFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.vlsiUri);
     }
 
     public async otherFolderFStat(): Promise<FileStat> {
@@ -353,7 +353,7 @@ export class RTLModel implements IRTLModel {
             root: this.rtlModelUri,
             rtlUri: this.rtlUri,
             fpgaUri: this.fpgaUri,
-            topologyUri: this.topologyUri,
+            vlsiUri: this.vlsiUri,
             otherUri: this.otherUri
         };
     }
