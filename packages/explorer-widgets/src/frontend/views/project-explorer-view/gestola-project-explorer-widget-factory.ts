@@ -1,12 +1,12 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, WidgetManager } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common/nls';
-import { ProjectExplorerWidget } from './project-explorer/project-explorer-widget';
-import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from './file-explorer/file-navigator-widget';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { RTLModelExplorerWidget } from './rtl-model-explorer/rtl-model-explorer-widget';
-import { ModuleHierarchyTreeWidget } from './module-hierarchy/module-hierarchy-widget';
-import { TestbenchesExplorerWidget } from './testbenches-explorer/testbenches-explorer-widget';
+import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-explorer-widget';
+import { RTLModelExplorerWidget } from '../../widgets/rtl-model-explorer/rtl-model-explorer-widget';
+import { ModuleHierarchyTreeWidget } from '../../widgets/module-hierarchy/module-hierarchy-widget';
+import { TestbenchesExplorerWidget } from '../../widgets/testbenches-explorer/testbenches-explorer-widget';
+import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {

@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { RTLModel } from "@gestola/project-manager/src/frontend/project-manager/rtl-model";
+import { RTLModel } from "@gestola/project-manager/lib/frontend/project-manager/rtl-model";
 
 @injectable()
 export class RTLModelExplorerTreeImpl extends TreeImpl {

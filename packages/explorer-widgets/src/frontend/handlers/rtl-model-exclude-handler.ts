@@ -6,7 +6,7 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
-export class DesignFilesIncludeHandler implements UriCommandHandler<URI[]> {
+export class RTLModelFilesExcludeHandler implements UriCommandHandler<URI[]> {
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;
@@ -31,12 +31,12 @@ export class DesignFilesIncludeHandler implements UriCommandHandler<URI[]> {
         let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(!sol) return false;
         if(uris.filter(e => sol?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
-        return uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designIncludedHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
+        return uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined).length > 0;
 
     }
     
     execute(uris: URI[]){
-        this.projManager.includeFilesIntoDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designIncludedHDLFiles.find(i => e.isEqual(i)) === undefined));
+        this.projManager.excludeFilesFromDesign(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => e.isEqual(i)) === undefined));
     }
 
 

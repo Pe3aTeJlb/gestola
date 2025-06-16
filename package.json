@@ -50,7 +50,7 @@
     "rebuild:electron": "yarn --cwd electron-app rebuild",
     "rebuild:launcher": "yarn --cwd packages/launcher rebuild",
     "rebuild:project-manager": "yarn --cwd packages/project-manager rebuild",
-    "rebuild:explorer": "yarn --cwd packages/explorer rebuild",
+    "rebuild:explorer": "yarn --cwd packages/explorer-widgets rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
     "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",

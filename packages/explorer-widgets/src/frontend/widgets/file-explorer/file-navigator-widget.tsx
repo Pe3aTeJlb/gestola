@@ -14,8 +14,8 @@ import { createFileTreeContainer } from '@theia/filesystem/lib/browser';
 import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GestolaFileNavigatorModel } from './file-navigator-model';
-import { GestolaExplorerContextKeyService } from '../gestola-explorer-context-key-service';
-import { NAVIGATOR_CONTEXT_MENU } from '../gestola-project-explorer-contribution';
+import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
+import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-commands-contribution';
 
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-project-manager:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');

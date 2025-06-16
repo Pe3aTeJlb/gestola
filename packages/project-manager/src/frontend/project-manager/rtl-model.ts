@@ -162,7 +162,6 @@ export class RTLModel implements IRTLModel {
         });
 
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            console.log('change top level', event.module);
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.topLevelModule = event.module;
                 if(event.module && event.module.uri && (this.testbenchesFiles.find(i => i.isEqual(event.module!.uri)) === undefined)) {

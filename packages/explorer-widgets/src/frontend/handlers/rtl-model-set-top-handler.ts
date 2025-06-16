@@ -6,7 +6,7 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 import { hdlExtWtHeaders } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
-export class DesignSetTopModuleHandler implements UriCommandHandler<URI> {
+export class RTLModelSetTopModuleHandler implements UriCommandHandler<URI> {
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;
