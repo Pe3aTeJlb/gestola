@@ -6,9 +6,9 @@ import { ModuleHierarchyTreeWidget } from '../../widgets/module-hierarchy/module
 import { TestbenchesExplorerWidget } from '../../widgets/testbenches-explorer/testbenches-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
-export const RTL_LEVEL_VIEW_CONTAINER_ID = 'gestole-rtl-model-view-container';
+export const RTL_LEVEL_VIEW_CONTAINER_ID = 'gestole-rtl-level-view-container';
 export const RTL_LEVEL_VIEW_MENU_LABEL = nls.localize("gestola/rtl-level/view-container-title", "Gestola: RTL Level")
-export const RTL_LEVEL_VIEW_LABEL = nls.localize("gestola/rtl-level/project-explorer-view-title", "Project Explorer");
+export const RTL_LEVEL_VIEW_LABEL = nls.localize("gestola/rtl-level/project-explorer-view-title", "Gestola: RTL Level");
 export const RTL_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
     label: nls.localize("gestola/rtl-level/view-container-title", "RTL Level"),
     iconClass: codicon('files'),

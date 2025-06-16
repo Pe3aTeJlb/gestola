@@ -32,7 +32,7 @@ export class GestolaProjectExplorerViewContribution extends AbstractViewContribu
             viewContainerId: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
             widgetId: ProjectExplorerWidget.ID,
             widgetName: ProjectExplorerWidget.MENU_LABEL,
-            defaultWidgetOptions: { area: 'left' },
+            defaultWidgetOptions: { area: 'right' },
             toggleCommandId: PROJECT_EXPLORER_TOGGLE_COMMAND.id,
         });
     }

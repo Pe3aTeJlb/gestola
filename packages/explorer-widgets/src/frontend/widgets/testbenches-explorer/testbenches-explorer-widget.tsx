@@ -18,7 +18,7 @@ export const TESTBENCHS_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 export class TestbenchesExplorerWidget extends TreeWidget {
 
     static readonly ID = 'gestola-project-manager:testbenches-explorer';
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/testbenches-explorer-view-title", "TestBenches");
+    static readonly VIEW_LABEL = nls.localize("gestola/rtl-level/testbenches-explorer-view-title", "TestBenches");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,

@@ -19,7 +19,7 @@ export const MODULES_HIERARCHY_WIDGET_TREE_PROPS: TreeProps = {
 export class ModuleHierarchyTreeWidget extends TreeWidget {
 
     static readonly ID = 'gestola-project-manager:module-hierarchy';
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/module-hierarchy", "Module Hierarchy");
+    static readonly VIEW_LABEL = nls.localize("gestola/rtl-level/module-hierarchy", "Module Hierarchy");
 
     @inject(OpenerService) readonly openerService: OpenerService;
 

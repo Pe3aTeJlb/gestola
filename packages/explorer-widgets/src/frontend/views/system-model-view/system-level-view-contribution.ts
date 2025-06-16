@@ -5,16 +5,16 @@ import { Command } from "@theia/core";
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
-import { RTL_LEVEL_VIEW_CONTAINER_ID, RTL_LEVEL_VIEW_MENU_LABEL } from './rtl-level-view-widget-factory';
+import { SYSTEM_LEVEL_VIEW_CONTAINER_ID, SYSTEM_LEVEL_VIEW_MENU_LABEL } from './system-level-view-widget-factory';
 import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-explorer-widget';
 
-export const RTL_LEVEL_VIEW_TOGGLE_COMMAND: Command = {
-    id: "rtl-level:toggle",
-    label: RTL_LEVEL_VIEW_MENU_LABEL
+export const SYSTEM_LEVEL_VIEW_TOGGLE_COMMAND: Command = {
+    id: "system-level:toggle",
+    label: SYSTEM_LEVEL_VIEW_MENU_LABEL
 };
 
 @injectable()
-export class RTLLevelViewContribution extends AbstractViewContribution<ProjectExplorerWidget> implements FrontendApplicationContribution {
+export class SystemLevelViewContribution extends AbstractViewContribution<ProjectExplorerWidget> implements FrontendApplicationContribution {
 
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
@@ -24,11 +24,11 @@ export class RTLLevelViewContribution extends AbstractViewContribution<ProjectEx
         @inject(FileNavigatorPreferences) protected readonly fileNavigatorPreferences: FileNavigatorPreferences,
     ) {
         super({
-            viewContainerId: RTL_LEVEL_VIEW_CONTAINER_ID,
+            viewContainerId: SYSTEM_LEVEL_VIEW_CONTAINER_ID,
             widgetId: ProjectExplorerWidget.ID,
-            widgetName: RTL_LEVEL_VIEW_MENU_LABEL,
+            widgetName: SYSTEM_LEVEL_VIEW_MENU_LABEL,
             defaultWidgetOptions: { area: 'left' },
-            toggleCommandId: RTL_LEVEL_VIEW_TOGGLE_COMMAND.id,
+            toggleCommandId: SYSTEM_LEVEL_VIEW_TOGGLE_COMMAND.id,
         });
     }
 

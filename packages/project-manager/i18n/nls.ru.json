@@ -32,17 +32,29 @@
             "open-project": "Открыть проект",
             "project-explorer-view-title": "Обозреватель проектов",
             "rtl-model-explorer-view-title": "Обозреватель RTL моделей",
-            "testbenches-explorer-view-title": "Обозреватель тестовых окружений",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
-            "file-navigator-fpgaLvl": "ПЛИС",
-            "file-navigator-vlsi": "СБИС", 
-            "file-navigator-otherFiles": "Другие файлы",
-            "module-hierarchy": "Иерархия модуля"
+            "file-navigator-topologyLvl-fpga": "ПЛИС",
+            "file-navigator-topologyLvl-vlsi": "СБИС", 
+            "file-navigator-otherFiles": "Другие файлы"
+        },
+
+        "system-level":{
+            "view-container-title": "Гестола: Системный уровень"
         },
 
         "rtl-level":{
-            "view-container-title": "Гестола: RTL уровень"
+            "view-container-title": "Гестола: RTl уровень",
+            "module-hierarchy": "Иерархия модуля",
+            "testbenches-explorer-view-title": "Обозреватель тестовых окружений"
+        },
+
+        "topology-level-fpga":{
+            "view-container-title": "Гестола: Топологический уровень - FPGA"
+        },
+
+        "topology-level-vlsi":{
+            "view-container-title": "Гестола: Топологический уровень - VLSI"
         },
 
 

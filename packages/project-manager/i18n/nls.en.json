@@ -17,18 +17,31 @@
             "view-container-title": "Gestola: Project Explorer",
             "project-explorer-view-title": "Project Explorer",
             "rtl-model-explorer-view-title": "RTL Models Explorer",
-            "testbenches-explorer-view-title": "TestBenches Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL",
-            "file-explorer-fpga": "FPGA",
-            "file-explorer-vlsi": "VLSI", 
-            "file-explorer-otherFiles": "Other Files",
-            "module-hierarchy": "Module Hierarchy"
+            "file-explorer-topologyLvl-fpga": "FPGA",
+            "file-explorer-topologyLvl-vlsi": "VLSI", 
+            "file-explorer-otherFiles": "Other Files"
+        },
+
+        "system-level":{
+            "view-container-title": "Gestola: System Level"
         },
 
         "rtl-level":{
-            "view-container-title": "Gestola: RTl Level"
+            "view-container-title": "Gestola: RTl Level",
+            "testbenches-explorer-view-title": "TestBenches Explorer",
+            "module-hierarchy": "Module Hierarchy"
+        },
+
+        "topology-level-fpga":{
+            "view-container-title": "Gestola: Topology Level - FPGA"
+        },
+
+        "topology-level-vlsi":{
+            "view-container-title": "Gestola: Topology Level - VLSI"
         }
+
 
     }
 

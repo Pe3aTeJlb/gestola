@@ -71,10 +71,10 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
             case "file-navigator-fpga": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-vlsi", "FPGA"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "FPGA"); 
                 break;
             case "file-navigator-vlsi": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "VLSI"); 
                 break;
             case "file-navigator-other": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
