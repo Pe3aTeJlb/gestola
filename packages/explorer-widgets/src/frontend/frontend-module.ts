@@ -10,7 +10,7 @@ import { RTLModelFilesExcludeHandler } from "./handlers/rtl-model-exclude-handle
 import { RTLModelFilesIncludeHandler } from "./handlers/rtl-model-include-handler";
 import { RTLModelSetTopModuleHandler } from "./handlers/rtl-model-set-top-handler";
 import { ModuleHierarchyTreeWidget } from "./widgets/module-hierarchy/module-hierarchy-widget";
-import { TestbenchesExplorerWidget } from "./widgets/testbenches-explorer/testbenches-explorer-widget";
+import { TestBenchExplorerWidget } from "./widgets/testbenches-explorer/testbenches-explorer-widget";
 import { TestbenchesAddHandler } from "./handlers/testbenches-add-handler";
 import { TestbenchesRemoveHandler } from "./handlers/testbenches-remove-handler";
 import { ProjectExplorerWidget } from "./widgets/project-explorer/project-explorer-widget";
@@ -20,7 +20,7 @@ import { TabBarToolbarContribution } from "@theia/core/lib/browser/shell/tab-bar
 import { FileNavigatorCommandsContribution } from "./widgets/file-explorer/file-navigator-commands-contribution";
 import { ProjectExplorerCommandsContribution } from "./widgets/project-explorer/project-explorer-commands-contribution";
 import { ModuleHierarchyCommandsContribution } from "./widgets/module-hierarchy/module-hierarchy-commands-contribution";
-import { TestBenchesExplorerCommandsContribution } from "./widgets/testbenches-explorer/testbenches-explorer-commands-contribution";
+import { TestBenchExplorerCommandsContribution } from "./widgets/testbenches-explorer/testbenches-explorer-commands-contribution";
 import { RTLLevelWidgetFactory } from "./views/rtl-model-view/rtl-level-view-widget-factory";
 import { RTLLevelViewContribution } from "./views/rtl-model-view/rtl-level-view-contribution";
 import { SystemLevelViewContribution } from "./views/system-model-view/system-level-view-contribution";
@@ -96,15 +96,16 @@ export default new ContainerModule((bind, _unbind) => {
 
     // TestBenches Explorer
 
-    bind(TestBenchesExplorerCommandsContribution).toSelf().inSingletonScope();
+    bind(TestBenchExplorerCommandsContribution).toSelf().inSingletonScope();
 
-    bind(CommandContribution).toService(TestBenchesExplorerCommandsContribution);
-    bind(TabBarToolbarContribution).toService(TestBenchesExplorerCommandsContribution);
+    bind(CommandContribution).toService(TestBenchExplorerCommandsContribution);
+    bind(TabBarToolbarContribution).toService(TestBenchExplorerCommandsContribution);
+    bind(MenuContribution).toService(TestBenchExplorerCommandsContribution);
 
-    bind(TestbenchesExplorerWidget).toSelf();
+    bind(TestBenchExplorerWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
-        id: TestbenchesExplorerWidget.ID,
-        createWidget: () => TestbenchesExplorerWidget.createWidget(container)
+        id: TestBenchExplorerWidget.ID,
+        createWidget: () => TestBenchExplorerWidget.createWidget(container)
     })).inSingletonScope();
 
     /*

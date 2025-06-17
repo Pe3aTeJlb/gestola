@@ -6,35 +6,36 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
-export class TestbenchesAddHandler implements UriCommandHandler<URI[]> {
+export class TestbenchesAddHandler implements UriCommandHandler<URI> {
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;
 
 
-    isVisible(uris: URI[]): boolean{
+    isVisible(uri: URI): boolean{
 
         let check = true;
 
         if(!this.projManager.getCurrProject()) return false;
         
-        for (let uri of uris) {
-            if(!hdlExt.includes(uri.path.ext)){check = false; break;}
+        if(!hdlExt.includes(uri.path.ext)){
+            check = false;
         }
 
         return check;
 
     }
 
-    isEnabled(uris: URI[]): boolean {
+    isEnabled(uri: URI): boolean {
 
         let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+
         if(!rtlModel) return false;
-        if(uris.filter(e => rtlModel?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
-        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) !== undefined).length > 0){
+        if(!rtlModel?.rtlUri.isEqualOrParent(uri)) return false;
+        if(this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(uri)) !== undefined){
             return false;
         }  
-        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.isEqual(e)) !== undefined).length > 0) {
+        if(this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(uri)) !== undefined) {
             return false;
         } else {
             return true;
@@ -42,8 +43,8 @@ export class TestbenchesAddHandler implements UriCommandHandler<URI[]> {
 
     }
     
-    execute(uris: URI[]){
-        this.projManager.addTestBench(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => e.isEqual(i)) === undefined));
+    execute(uri: URI){
+        this.projManager.addTestBenchByUri(uri);
     }
 
 

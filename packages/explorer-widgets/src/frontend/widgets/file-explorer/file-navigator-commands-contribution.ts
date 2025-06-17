@@ -144,12 +144,12 @@ export class FileNavigatorCommandsContribution implements CommandContribution, T
 
 
         menus.registerMenuAction(MODIFICATION, {
-            commandId: TestbenchesExplorerCommands.TESTBENCHES_ADD.id,
+            commandId: TestbenchesExplorerCommands.TESTBENCHES_ADD_BY_URI.id,
             order: 'd'
         });
 
         menus.registerMenuAction(MODIFICATION, {
-            commandId: TestbenchesExplorerCommands.TESTBENCHES_REMOVE.id,
+            commandId: TestbenchesExplorerCommands.TESTBENCHES_REMOVE_BY_URI.id,
             order: 'e'
         });
 

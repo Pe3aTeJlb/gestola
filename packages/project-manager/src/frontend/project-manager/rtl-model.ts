@@ -2,7 +2,7 @@ import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
 import { IRTLModel } from '../../common/rtl-model';
-import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager, TestBenchesChangeEvent } from './project-manager';
+import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager, TestBenchesAddEvent, TestBenchesRemoveEvent } from './project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
@@ -35,12 +35,14 @@ export interface ModuleDescription {
     dependencies: string[] | undefined
 }
 
-export interface TopLevelModule {
+export interface HDLModuleRef {
     name: string,
     uri: URI
 }
 
-export interface RTLModelDescription {
+// Meta file
+
+export interface TopModuleMetaDescription {
     name: string,
     relPath: string
 }
@@ -65,7 +67,7 @@ export class RTLModel implements IRTLModel {
     veribleFilelistUri: URI;
 
     target: string = 'zybo';
-    topLevelModule: TopLevelModule | undefined = undefined;
+    topLevelModule: HDLModuleRef | undefined = undefined;
 
     isFavorite: boolean = false;
 
@@ -75,7 +77,7 @@ export class RTLModel implements IRTLModel {
     designExcludedHDLFiles: URI[] = [];
 
     hdlFilesDescription: HDLFileDescription[] = [];
-    testbenchesFiles: URI[] = [];
+    testbenchesFiles: HDLModuleRef[] = [];
     contrainsFiles: [URI[]] = [[]];
     
     constructor(projManager: ProjectManager, rtlModelRoot: URI){
@@ -156,7 +158,7 @@ export class RTLModel implements IRTLModel {
 
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
-                this.projManager.removeTestBench(event.uris);
+                this.projManager.removeTestBenchByUri(event.uris);
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
                 this.checkTopLevelModuleRelevance();
                 this.updateVeribleMetaFile();
@@ -167,28 +169,28 @@ export class RTLModel implements IRTLModel {
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.topLevelModule = event.module;
-                if(event.module && event.module.uri && (this.testbenchesFiles.find(i => i.isEqual(event.module!.uri)) === undefined)) {
-                    this.projManager.addTestBench([event.module.uri]);
+                if(this.topLevelModule && this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined)) {
+                    this.projManager.addTestBenchByHDLModuleRef(this.topLevelModule);
                 }
                 event.complete();
             }
         });
 
-        this.projManager.onDidAddTestBench((event: TestBenchesChangeEvent) => {
+        this.projManager.onDidAddTestBench((event: TestBenchesAddEvent) => {
 
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
-                this.testbenchesFiles = this.testbenchesFiles.concat(event.uris);
+                this.testbenchesFiles = this.testbenchesFiles.concat(event.module);
             }
             event.complete();
 
         });
 
-        this.projManager.onDidRemoveTestBench((event: TestBenchesChangeEvent) => {
+        this.projManager.onDidRemoveTestBench((event: TestBenchesRemoveEvent) => {
 
             console.log('kek lol', event);
 
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
-                this.testbenchesFiles = this.testbenchesFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
+                this.testbenchesFiles = this.testbenchesFiles.filter(e => event.modules.find(i => i.uri.isEqual(e.uri)) === undefined);
             }
             event.complete();
 
@@ -205,8 +207,8 @@ export class RTLModel implements IRTLModel {
         if(await this.fileService.exists(this.rtlModelDesctiptionUri)){
             const data = JSON.parse((await this.fileService.read(this.rtlModelDesctiptionUri)).value);
             if(data.top_module){
-                this.topLevelModule = {name: data.top_module.name, uri:this.rtlModelUri.resolve(data.top_module.relPath)} as TopLevelModule;
-                this.testbenchesFiles.push(this.topLevelModule.uri);
+                this.topLevelModule = {name: data.top_module.name, uri:this.rtlModelUri.resolve(data.top_module.relPath)} as HDLModuleRef;
+                this.testbenchesFiles.push(this.topLevelModule);
             }
             this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.rtlModelUri.resolve(e));
         }
@@ -266,7 +268,7 @@ export class RTLModel implements IRTLModel {
         return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => this.topLevelModule?.uri.isEqual(e.uri) && e.module.name == this.topLevelModule.name));
     }
 
-    public collectDependencyHDLFilesFor(node: TopLevelModule): URI[] {
+    public collectDependencyHDLFilesFor(node: HDLModuleRef): URI[] {
         return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => node.uri.isEqual(e.uri) && e.module.name == node.name));
     }
 
@@ -304,7 +306,7 @@ export class RTLModel implements IRTLModel {
                         ? {
                             name: this.topLevelModule.name, 
                             relPath: this.rtlModelUri.relative(this.topLevelModule.uri)?.toString()
-                            } as RTLModelDescription 
+                            } as TopModuleMetaDescription 
                         : undefined,
             design_exclude: this.designExcludedHDLFiles.map(e => this.rtlModelUri.relative(e)?.toString())
        });

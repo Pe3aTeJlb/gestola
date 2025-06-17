@@ -18,6 +18,8 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
 
         if(!this.projManager.getCurrProject()) return false;
         
+        if(uris.length < 1) return false;
+
         for (let uri of uris) {
             if(!hdlExt.includes(uri.path.ext)){check = false; break;}
         }
@@ -34,7 +36,7 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
         if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) !== undefined).length > 0){
             return false;
         }  
-        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.isEqual(e)) === undefined).length > 0) {
+        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(e)) === undefined).length > 0) {
             return false;
         } else {
             return true;
@@ -43,7 +45,7 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
     }
     
     execute(uris: URI[]){
-        this.projManager.removeTestBench(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => e.isEqual(i)) !== undefined));
+        this.projManager.removeTestBenchByUri(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => e.isEqual(i.uri)) !== undefined));
     }
 
 

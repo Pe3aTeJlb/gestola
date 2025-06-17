@@ -9,7 +9,7 @@ import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribu
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, RTLModelTemplate } from '../../common/protocol';
-import { RTLModel, TopLevelModule } from './rtl-model';
+import { RTLModel, HDLModuleRef } from './rtl-model';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 
 export interface ProjectChangeEvent {
@@ -41,12 +41,17 @@ export interface DesignFilesExcludeEvent {
 }
 
 export interface DesignTopModuleChangeEvent {
-    readonly module: TopLevelModule | undefined;
+    readonly module: HDLModuleRef | undefined;
     complete: () => void
 }
 
-export interface TestBenchesChangeEvent {
-    readonly uris: URI[];
+export interface TestBenchesAddEvent {
+    readonly module: HDLModuleRef;
+    complete: () => void
+}
+
+export interface TestBenchesRemoveEvent {
+    readonly modules: HDLModuleRef[];
     complete: () => void
 }
 
@@ -351,6 +356,14 @@ export class ProjectManager implements FrontendApplicationContribution {
         }
     }
 
+    public includeFilesIntoDesign(uris: URI[]){
+        this.fireDesignFilesIncludeEvent(uris);
+    };
+
+    public excludeFilesFromDesign(uris: URI[]){
+        this.fireDesignFilesExcludeEvent(uris);
+    }
+
     async selectModule(items: string[]): Promise<string | undefined> {
 
         const qitems: QuickPickValue<string>[] = items.map((e: string) => <QuickPickValue<string>>{ label: e, value: e });
@@ -375,20 +388,39 @@ export class ProjectManager implements FrontendApplicationContribution {
         }
     }
 
-    public includeFilesIntoDesign(uris: URI[]){
-        this.fireDesignFilesIncludeEvent(uris);
-    };
+    public async addTestBenchByUri(uri: URI){
 
-    public excludeFilesFromDesign(uris: URI[]){
-        this.fireDesignFilesExcludeEvent(uris);
+        if(uri && this.currProj?.curRTLModel){
+            let descriptions = this.currProj.curRTLModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
+            if(descriptions.length > 0){
+                if(descriptions.length > 1){
+                    let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
+                    if(moduleName) this.addTestBenchByHDLModuleRef({name: moduleName, uri: descriptions[0].uri});
+                } else {
+                    this.addTestBenchByHDLModuleRef({name: descriptions[0].module.name, uri: descriptions[0].uri});
+                }
+            }
+        } 
+
     }
 
-    public addTestBench(uris: URI[]){
-        this.fireAddTestBench(uris);
+    public addTestBenchByHDLModuleRef(module: HDLModuleRef){
+        if(module && this.currProj?.curRTLModel){
+            this.fireTestBenchAddEvent(module);
+        }
     }
 
-    public removeTestBench(uris: URI[]){
-        this.fireRemoveTestBench(uris);
+    public removeTestBenchByUri(uris: URI[]){
+
+        if(uris && this.currProj?.curRTLModel){
+            let modules = this.currProj?.curRTLModel?.testbenchesFiles.filter(e => uris.find(i => i.isEqual(e.uri)) !== undefined);
+            this.fireTestBenchRemoveEvent(modules);
+        }
+        
+    }
+
+    public removeTestBenchByHDLModuleRef(modules: HDLModuleRef[]){
+        this.fireTestBenchRemoveEvent(modules);
     }
 
 
@@ -469,7 +501,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     get onDidChangeDesignTopModule(): Event<DesignTopModuleChangeEvent> {
         return this.onDidChangeDesignTopModuleEmitter.event;
     }
-    private fireDesignTopModuleChangeEvent(module: TopLevelModule | undefined){
+    private fireDesignTopModuleChangeEvent(module: HDLModuleRef | undefined){
         this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
             this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrRTLModel()?.topLevelModule)
         }} as DesignTopModuleChangeEvent);
@@ -479,38 +511,49 @@ export class ProjectManager implements FrontendApplicationContribution {
     get onDidChangedDesignTopModule(): Event<DesignTopModuleChangeEvent> {
         return this.onDidChangedDesignTopModuleEmitter.event;
     }
-    private fireDesignTopModuleChangedEvent(module: TopLevelModule | undefined){
+    private fireDesignTopModuleChangedEvent(module: HDLModuleRef | undefined){
         this.onDidChangedDesignTopModuleEmitter.fire({module: module} as DesignTopModuleChangeEvent);
     }
 
-    protected readonly onDidAddTestBenchEmitter = new Emitter<TestBenchesChangeEvent>();
-    get onDidAddTestBench(): Event<TestBenchesChangeEvent> {
+    // Add Testbench
+
+    protected readonly onDidAddTestBenchEmitter = new Emitter<TestBenchesAddEvent>();
+    get onDidAddTestBench(): Event<TestBenchesAddEvent> {
         return this.onDidAddTestBenchEmitter.event;
     }
-    private fireAddTestBench(uris: URI[]){
-        this.onDidAddTestBenchEmitter.fire({uris: uris, complete: () => {
-            this.fireTestBenchesChangedEvent(uris)
-        }} as TestBenchesChangeEvent);
+    private fireTestBenchAddEvent(module: HDLModuleRef){
+        this.onDidAddTestBenchEmitter.fire({module: module, complete: () => {
+            this.fireTestBenchAddedEvent(module)
+        }} as TestBenchesAddEvent);
     }
 
-    protected readonly onDidRemoveTestBenchEmitter = new Emitter<TestBenchesChangeEvent>();
-    get onDidRemoveTestBench(): Event<TestBenchesChangeEvent> {
+    protected readonly onDidAddedTestBenchEmitter = new Emitter<HDLModuleRef>();
+    get onDidAddedTestBench(): Event<HDLModuleRef> {
+        return this.onDidAddedTestBenchEmitter.event;
+    }
+    private fireTestBenchAddedEvent(module: HDLModuleRef){
+        this.onDidAddedTestBenchEmitter.fire(module);this.fileService.onDidChangeFileSystemProviderCapabilities
+    }
+
+    // Remove Testbenches
+
+    protected readonly onDidRemoveTestBenchEmitter = new Emitter<TestBenchesRemoveEvent>();
+    get onDidRemoveTestBench(): Event<TestBenchesRemoveEvent> {
         return this.onDidRemoveTestBenchEmitter.event;
     }
-    private fireRemoveTestBench(uris: URI[]){
-        this.onDidRemoveTestBenchEmitter.fire({uris: uris, complete: () => {
-            this.fireTestBenchesChangedEvent(uris)
-        }} as TestBenchesChangeEvent);
+    private fireTestBenchRemoveEvent(modules: HDLModuleRef[]){
+        this.onDidRemoveTestBenchEmitter.fire({modules: modules, complete: () => {
+            this.fireTestBenchRemovedEvent(modules)
+        }} as TestBenchesRemoveEvent);
     }
 
-    protected readonly onDidTestBenchesChangedEmitter = new Emitter<URI[]>();
-    get onDidChangedTestBenches(): Event<URI[]> {
-        return this.onDidTestBenchesChangedEmitter.event;
+    protected readonly onDidTestBenchRemovedEmitter = new Emitter<HDLModuleRef[]>();
+    get onDidRemovedTestBench(): Event<HDLModuleRef[]> {
+        return this.onDidTestBenchRemovedEmitter.event;
     }
-    private fireTestBenchesChangedEvent(uris: URI[]){
-        this.onDidTestBenchesChangedEmitter.fire(uris);
+    private fireTestBenchRemovedEvent(module: HDLModuleRef[]){
+        this.onDidTestBenchRemovedEmitter.fire(module);
     }
-
 
 
     //Utils

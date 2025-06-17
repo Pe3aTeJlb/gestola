@@ -3,7 +3,7 @@ import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, Widge
 import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { ModuleHierarchyTreeWidget } from '../../widgets/module-hierarchy/module-hierarchy-widget';
-import { TestbenchesExplorerWidget } from '../../widgets/testbenches-explorer/testbenches-explorer-widget';
+import { TestBenchExplorerWidget } from '../../widgets/testbenches-explorer/testbenches-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const RTL_LEVEL_VIEW_CONTAINER_ID = 'gestole-rtl-level-view-container';
@@ -52,7 +52,7 @@ export class RTLLevelWidgetFactory implements WidgetFactory {
         const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
         const simResultsFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "simresults", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
-        const testbenchesExplorerWidget = await this.widgetManager.getOrCreateWidget(TestbenchesExplorerWidget.ID);
+        const testbenchesExplorerWidget = await this.widgetManager.getOrCreateWidget(TestBenchExplorerWidget.ID);
 
         viewContainer.addWidget(moduleHierarchyWidget, this.widgetOptions);
         viewContainer.addWidget(testbenchesExplorerWidget, this.widgetOptions);
