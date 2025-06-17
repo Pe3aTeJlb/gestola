@@ -12,10 +12,10 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
   protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> { 
 
     if (ModuleTreeRootNode.is(parent)) {
-      let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
-      if(sol && sol.topLevelModule){
+      let rtlMode = this.projManager.getCurrProject()?.getCurrRTLModel();
+      if(rtlMode && rtlMode.topLevelModule){
         return Promise.resolve(
-          sol.hdlFilesDescription.filter(e => sol?.topLevelModule?.uri.isEqual(e.uri) && sol.topLevelModule.name == e.module.name).map(e => this.makeTreeNode(e))
+          rtlMode.hdlFilesDescription.filter(e => rtlMode?.topLevelModule?.uri.isEqual(e.uri) && rtlMode.topLevelModule.name == e.module.name).map(e => this.makeTreeNode(e))
         );
       } else {
         return Promise.resolve([]);
@@ -23,10 +23,11 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
     }
 
     if (ModuleTreeNode.is(parent)) {
-      let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
-      if(sol){
+      let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+      if(rtlModel){
         return Promise.resolve(
-          sol.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies?.includes(e.module.name)).filter(e => sol?.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).map(i => this.makeTreeNode(i))
+          rtlModel.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies?.includes(e.module.name))
+          .filter(e => rtlModel?.designIncludedHDLFiles.find(i => i.isEqual(e.uri)) !== undefined).map(i => this.makeTreeNode(i))
         );
       }
     }

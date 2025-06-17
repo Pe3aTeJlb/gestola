@@ -187,8 +187,6 @@ export class RTLModel implements IRTLModel {
 
         this.projManager.onDidRemoveTestBench((event: TestBenchesRemoveEvent) => {
 
-            console.log('kek lol', event);
-
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.testbenchesFiles = this.testbenchesFiles.filter(e => event.modules.find(i => i.uri.isEqual(e.uri)) === undefined);
             }
@@ -243,7 +241,7 @@ export class RTLModel implements IRTLModel {
         for(let i = 0; i < modules.length - 1; i++){
 
             let name = modules[i].match(moduleDeclarationRegexp)?.map(e => e.match(moduleNameFromDeclarationRegexp))[0] as any;
-            let dependencies = modules[i].match(instanceDeclarationRegexp)?.map(e => e.match(verilogModuleNaneRegexp))[0]?.[0] as any;
+            let dependencies = modules[i].match(instanceDeclarationRegexp)?.map(e => e.match(verilogModuleNaneRegexp)![0]) as any;
             this.hdlFilesDescription.push({uri: uri, module: {name: name[0], dependencies: dependencies}});
 
         }
@@ -254,7 +252,7 @@ export class RTLModel implements IRTLModel {
 
     private checkTopLevelModuleRelevance(): void {
 
-        if(this.topLevelModule?.uri
+        if(!this.topLevelModule?.uri
             || this.indexedHDLFiles.find(e => this.topLevelModule?.uri.isEqual(e)) === undefined
             || this.designIncludedHDLFiles.find(e => this.topLevelModule?.uri.isEqual(e)) === undefined){
             this.projManager.setTopModule(undefined);
