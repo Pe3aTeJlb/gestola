@@ -21,7 +21,8 @@
   ],
   "dependencies": {
     "@theia/core": "1.59.0",
-    "@gestola/project-manager": "1.0.0"
+    "@gestola/project-manager": "1.0.0",
+    "@gestola/verilator-wrapper": "1.0.0"
   },
   "devDependencies": {
     "rimraf": "3.0.2"

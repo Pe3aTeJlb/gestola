@@ -10,6 +10,7 @@ import { TestbenchesAddHandler } from '../../handlers/testbenches-add-handler';
 import { TestbenchesRemoveHandler } from '../../handlers/testbenches-remove-handler';
 import { TestbenchTreeNode } from './testbenches-explorer-tree-impl';
 import { TestBenchExplorerWidget } from './testbenches-explorer-widget';
+import { VerilatorFrontendService } from '@gestola/verilator-wrapper/lib/frontend/verilator-service';
 
 export const TESTBENCHES_EXPLORER_CONTEXT_MENU: MenuPath = ['testbenches-explorer-context-menu'];
 
@@ -18,6 +19,9 @@ export class TestBenchExplorerCommandsContribution implements CommandContributio
 
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
+
+    @inject(VerilatorFrontendService)
+    protected readonly verilatorService: VerilatorFrontendService;
 
     @inject(SelectionService) 
     protected readonly selectionService: SelectionService;
@@ -52,7 +56,7 @@ export class TestBenchExplorerCommandsContribution implements CommandContributio
         commands.registerCommand(TestbenchesExplorerCommands.TESTBENCHES_RUN_SIMULATION_SELECTED, {
             isEnabled: widget => this.withTestBenchesExplorerWidget(widget, (widget) => widget.model.selectedNodes.length > 0),
             isVisible: widget => true,
-            execute: widget => {console.log('lolxd')},
+            execute: (widget: TestBenchExplorerWidget) => this.verilatorService.runMultiple(widget.model.selectedNodes.map((e: TestbenchTreeNode) => e.module)),
         });
 
         commands.registerCommand(TestbenchesExplorerCommands.TESTBENCHES_RUN_SIMULATION_ALL, {
@@ -60,7 +64,7 @@ export class TestBenchExplorerCommandsContribution implements CommandContributio
                 return !!model && model.testbenchesFiles.length > 0;
             },
             isVisible: widget => this.withTestBenchesExplorerWidget(widget, () => true),
-            execute: widget => widget.model.refresh(),
+            execute: (widget: TestBenchExplorerWidget) => this.verilatorService.runMultiple(this.projManager.getCurrProject()!.getCurrRTLModel()!.testbenchesFiles),
         });
 
 

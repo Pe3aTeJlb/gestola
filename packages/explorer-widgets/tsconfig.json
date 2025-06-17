@@ -12,6 +12,9 @@
     "references": [
         {
             "path": "../project-manager"
+        },
+        {
+            "path": "../verilator-wrapper"
         }
     ]
 }

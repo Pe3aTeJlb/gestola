@@ -89,6 +89,7 @@ export class RTLModel implements IRTLModel {
         if(a) this.rtlModelName = a;
 
         this.rtlModelUri = rtlModelRoot.normalizePath();
+        
         this.rtlUri = this.rtlModelUri.resolve('rtl');
         this.simResultsUri = this.rtlUri.resolve('simresults');
         this.fpgaUri = this.rtlModelUri.resolve('fpga');
