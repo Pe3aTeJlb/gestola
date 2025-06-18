@@ -40,6 +40,11 @@ export interface HDLModuleRef {
     uri: URI
 }
 
+export interface ConstrainsSet {
+    name: string,
+    files: URI[]
+}
+
 // Meta file
 
 export interface TopModuleMetaDescription {
@@ -69,8 +74,6 @@ export class RTLModel implements IRTLModel {
     target: string = 'zybo';
     topLevelModule: HDLModuleRef | undefined = undefined;
 
-    isFavorite: boolean = false;
-
     indexedHDLFiles: URI[] = [];
 
     designIncludedHDLFiles: URI[] = [];
@@ -78,7 +81,7 @@ export class RTLModel implements IRTLModel {
 
     hdlFilesDescription: HDLFileDescription[] = [];
     testbenchesFiles: HDLModuleRef[] = [];
-    contrainsFiles: [URI[]] = [[]];
+    contrainsSet: ConstrainsSet[] = [];
     
     constructor(projManager: ProjectManager, rtlModelRoot: URI){
 
@@ -263,11 +266,11 @@ export class RTLModel implements IRTLModel {
 
 
 
-    public collectDependencyHDLFiles(): URI[] {
+    public collectSimSetForTop(): URI[] {
         return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => this.topLevelModule?.uri.isEqual(e.uri) && e.module.name == this.topLevelModule.name));
     }
 
-    public collectDependencyHDLFilesFor(node: HDLModuleRef): URI[] {
+    public collectSimSetFor(node: HDLModuleRef): URI[] {
         return this.collectModuleDependencyHDLFiles(this.hdlFilesDescription.find(e => node.uri.isEqual(e.uri) && e.module.name == node.name));
     }
 

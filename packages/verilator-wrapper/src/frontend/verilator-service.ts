@@ -41,7 +41,7 @@ export class VerilatorFrontendService {
                 rtlModel.getRTLUri(),
                 resultUri,
                 testbench.name,
-                rtlModel.collectDependencyHDLFilesFor(testbench),
+                rtlModel.collectSimSetFor(testbench),
                 true
             );
         }
