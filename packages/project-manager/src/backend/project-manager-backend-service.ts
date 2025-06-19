@@ -6,10 +6,9 @@ import * as fsextra from 'fs-extra';
 import { FileUri } from '@theia/core/lib/common/file-uri';
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskConfiguration } from '@theia/task/lib/common';
-import { defProjStruct } from '../common/project';
+//import { defProjStruct } from '../common/project';
 import { IProject }  from '../common/project';
 import { ProjectService } from '../common/protocol';
-import { defRTLModelStruct } from '../common/rtl-model';
 
 @injectable()
 export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendService, ProjectService {
@@ -30,7 +29,7 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
 
     async createProjectFromTemplate(templateId: string, projectUri: URI): Promise<void> {
 
-        await this.createDirStructure(projectUri, defProjStruct);
+        //await this.createDirStructure(projectUri, defProjStruct);
         
         const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-project-empty-template");
         if(defaultTemplate !== undefined){
@@ -69,7 +68,7 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
 
         fs.mkdirSync(modelUri.path.fsPath());
         
-        await this.createDirStructure(modelUri, defRTLModelStruct);
+        //await this.createDirStructure(modelUri, defRTLModelStruct);
         
         const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-rtl-model-empty-template");
         if(defaultTemplate !== undefined){

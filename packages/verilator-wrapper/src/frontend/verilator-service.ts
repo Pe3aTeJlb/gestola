@@ -38,7 +38,7 @@ export class VerilatorFrontendService {
             await fileService.createFolder(tempDataUri);
 
             this.verilatorBackendService.runVerilator(
-                rtlModel.getRTLUri(),
+                rtlModel.getModelUri(),
                 resultUri,
                 testbench.name,
                 rtlModel.collectSimSetFor(testbench),

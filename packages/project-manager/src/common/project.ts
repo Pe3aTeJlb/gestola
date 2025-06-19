@@ -1,5 +1,4 @@
 import { URI } from '@theia/core/lib/common/uri';
-import { IRTLModel } from './rtl-model';
 
 export const defProjStruct = ['.theia', 'database', 'system', '.config'];
 
@@ -17,9 +16,6 @@ export interface IProject {
     systemUri: URI;
     databesUri: URI;
     theiaUri: URI;
-
-    rtlModels: IRTLModel[];
-    rtlModelDepTree: undefined;
 
     isFavorite: boolean;
 

@@ -16,6 +16,7 @@ export class Project implements IProject {
     rootUri: URI;
 
     systemUri: URI;
+    lldsRootUri: URI;
     miscUri: URI;
     databesUri: URI;
     theiaUri: URI;
@@ -29,6 +30,7 @@ export class Project implements IProject {
 
     public static regexp =  [
                                 new RegExp('system'),
+                                new RegExp('low_level_design'),
                                 new RegExp('misc'),  
                                 new RegExp('database'),
                                 new RegExp('\.theia'),
@@ -46,12 +48,13 @@ export class Project implements IProject {
 
         this.rootUri = this.rootFStat.resource.normalizePath();
         this.systemUri = this.rootUri.resolve('system');
+        this.lldsRootUri = this.rootUri.resolve('low_level_design');
         this.miscUri = this.rootUri.resolve('misc');
         this.databesUri = this.rootUri.resolve('database');
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
 
-        await this.getRTLModelList(this.rootUri);
+        await this.getLowLevelDesignList(this.lldsRootUri);
 
         this.curRTLModel = this.rtlModels[0];
 
@@ -59,24 +62,20 @@ export class Project implements IProject {
 
     }
 
-    private async getRTLModelList(projRoot: URI) {
+    private async getLowLevelDesignList(lldsRoot: URI) {
 
-        let dirs = Array.from((await this.readDir(projRoot)).values());
-
-        for (let regexp of Project.regexp) {
-            dirs = dirs.filter(i => !i[0].match(regexp));
-        }
+        let dirs = Array.from((await this.readDir(lldsRoot)).values());
 
         for(let dir of dirs){
-            let uri = new URI(projRoot.path.join(dir[0]).fsPath());
-            if(await this.checkRTLModelStruct(uri)){
+            let uri = new URI(lldsRoot.path.join(dir[0]).fsPath());
+            if(await this.checkLLDStruct(uri)){
                 this.rtlModels.push(new RTLModel(this.projManager, uri));
             }
         }
 
     }
 
-    private async checkRTLModelStruct(path: URI){
+    private async checkLLDStruct(path: URI){
 
         let dirs = Array.from((await this.readDir(path)).values());
         let check = true;

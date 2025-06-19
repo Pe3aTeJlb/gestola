@@ -211,7 +211,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 switch(this.rootId){      
                     
                     case "file-navigator-rtl":
-                        rootFolder = await lld.rtlFolderFStat();
+                        rootFolder = await lld.rtlModelFolderFStat();
                         break;
                     case "file-navigator-fpga": 
                         rootFolder = await lld.fpgaFolderFStat();

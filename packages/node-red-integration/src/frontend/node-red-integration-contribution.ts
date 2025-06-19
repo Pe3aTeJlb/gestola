@@ -54,7 +54,7 @@ export class NodeRedIntegrationContribution extends AbstractViewContribution<Nod
                 }
                 return true;
             },
-            reason: 'Designe editor opened',
+            reason: 'Design editor opened',
             priority: 1000
         };
 

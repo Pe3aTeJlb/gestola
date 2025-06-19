@@ -1,14 +1,12 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
-import { IRTLModel } from '../../common/rtl-model';
 import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager, TestBenchesAddEvent, TestBenchesRemoveEvent } from './project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
 
 export const regexp =  [
-    new RegExp('.config'),
     new RegExp('rtl'),
     new RegExp('topology'),
 ];
@@ -50,19 +48,19 @@ export interface TopModuleMetaDescription {
     relPath: string
 }
 
-export class RTLModel implements IRTLModel {
+export class RTLModel {
 
     projManager: ProjectManager;
     fileService: FileService;
 
+
     rtlModelName: string;
 
     rtlModelUri: URI;
-    rtlUri: URI;
-    fpgaUri: URI;
-    vlsiUri: URI;
-    configUri: URI;
 
+    rtlUri: URI;
+    configUri: URI;
+    modelUri: URI;
     simResultsUri: URI;
 
     rtlModelDesctiptionUri: URI;
@@ -78,28 +76,36 @@ export class RTLModel implements IRTLModel {
 
     hdlFilesDescription: HDLFileDescription[] = [];
     testbenchesFiles: HDLModuleRef[] = [];
+
+
+
+    topologyUri: URI;
+    fpgaUri: URI;
+    vlsiUri: URI;
+
     contrainsSet: ConstrainsSet[] = [];
     
-    constructor(projManager: ProjectManager, rtlModelRoot: URI){
+    constructor(projManager: ProjectManager, lldRoot: URI){
 
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
-        let a = rtlModelRoot.path.fsPath().split('/').pop();
-        if(a) this.rtlModelName = a;
-
-        this.rtlModelUri = rtlModelRoot.normalizePath();
+        this.rtlModelName = lldRoot.path.name;
+        this.rtlModelUri = lldRoot.normalizePath();
         
         this.rtlUri = this.rtlModelUri.resolve('rtl');
+        this.modelUri = this.rtlUri.resolve('model');
         this.simResultsUri = this.rtlUri.resolve('simresults');
-        this.fpgaUri = this.rtlModelUri.resolve('fpga');
-        this.vlsiUri = this.rtlModelUri.resolve('vlsi');
-        this.configUri = this.rtlModelUri.resolve('.config');
+        this.configUri = this.rtlUri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
         this.rtlModelDesctiptionUri = this.configUri.resolve('rtlmodel_description.json');
 
+        this.topologyUri = this.rtlModelUri.resolve('topology');
+        this.fpgaUri = this.topologyUri.resolve('fpga');
+        this.vlsiUri = this.topologyUri.resolve('vlsi');
+
         this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
-            if(this.rtlUri.isEqualOrParent(i.resource)){
+            if(this.modelUri.isEqualOrParent(i.resource)){
                 if(hdlExt.includes(i.resource.path.ext)){
 
                     if(i.type == FileChangeType.ADDED){
@@ -169,7 +175,7 @@ export class RTLModel implements IRTLModel {
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
             if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
                 this.topLevelModule = event.module;
-                if(this.topLevelModule && this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined)) {
+                if(this.topLevelModule && (this.testbenchesFiles.length == 0 || this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined))) {
                     this.projManager.addTestBenchByHDLModuleRef(this.topLevelModule);
                 }
                 event.complete();
@@ -201,14 +207,14 @@ export class RTLModel implements IRTLModel {
 
     private async indexHDLFiles(): Promise<void>{
         this.indexedHDLFiles = [];
-        await this.processDir(this.rtlUri);
+        await this.processDir(this.modelUri);
         if(await this.fileService.exists(this.rtlModelDesctiptionUri)){
             const data = JSON.parse((await this.fileService.read(this.rtlModelDesctiptionUri)).value);
             if(data.top_module){
-                this.topLevelModule = {name: data.top_module.name, uri:this.rtlModelUri.resolve(data.top_module.relPath)} as HDLModuleRef;
+                this.topLevelModule = {name: data.top_module.name, uri:this.modelUri.resolve(data.top_module.relPath)} as HDLModuleRef;
                 this.testbenchesFiles.push(this.topLevelModule);
             }
-            this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.rtlModelUri.resolve(e));
+            this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.modelUri.resolve(e));
         }
         this.designIncludedHDLFiles = this.indexedHDLFiles.filter(e => this.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined);
 
@@ -303,10 +309,10 @@ export class RTLModel implements IRTLModel {
             top_module:  this.topLevelModule 
                         ? {
                             name: this.topLevelModule.name, 
-                            relPath: this.rtlModelUri.relative(this.topLevelModule.uri)?.toString()
+                            relPath: this.modelUri.relative(this.topLevelModule.uri)?.toString()
                             } as TopModuleMetaDescription 
                         : undefined,
-            design_exclude: this.designExcludedHDLFiles.map(e => this.rtlModelUri.relative(e)?.toString())
+            design_exclude: this.designExcludedHDLFiles.map(e => this.modelUri.relative(e)?.toString())
        });
        this.fileService.write(this.rtlModelDesctiptionUri, string);
     }
@@ -318,8 +324,8 @@ export class RTLModel implements IRTLModel {
         return this.rtlModelUri;
     }
     
-    public getRTLUri(): URI{
-        return this.rtlUri;
+    public getModelUri(): URI{
+        return this.modelUri;
     }
 
     public getFPGAUri(): URI{
@@ -330,8 +336,8 @@ export class RTLModel implements IRTLModel {
         return this.vlsiUri;
     }
 
-    public async rtlFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.rtlUri);
+    public async rtlModelFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.modelUri);
     }
 
     public async simuResultsFolderFStat(): Promise<FileStat> {
@@ -350,7 +356,7 @@ export class RTLModel implements IRTLModel {
         return {
             name: this.rtlModelName,
             root: this.rtlModelUri,
-            rtlUri: this.rtlUri,
+            modelUri: this.modelUri,
             fpgaUri: this.fpgaUri,
             vlsiUri: this.vlsiUri
         };
