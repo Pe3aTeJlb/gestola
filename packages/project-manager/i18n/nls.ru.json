@@ -36,7 +36,7 @@
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-topologyLvl-fpga": "ПЛИС",
             "file-navigator-topologyLvl-vlsi": "СБИС", 
-            "file-navigator-otherFiles": "Другие файлы"
+            "file-navigator-miscFiles": "Другие файлы"
         },
 
         "system-level":{

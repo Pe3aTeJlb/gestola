@@ -21,7 +21,7 @@
             "file-explorer-rtlLvl": "RTL",
             "file-explorer-topologyLvl-fpga": "FPGA",
             "file-explorer-topologyLvl-vlsi": "VLSI", 
-            "file-explorer-otherFiles": "Other Files"
+            "file-explorer-miscFiles": "Other Files"
         },
 
         "system-level":{

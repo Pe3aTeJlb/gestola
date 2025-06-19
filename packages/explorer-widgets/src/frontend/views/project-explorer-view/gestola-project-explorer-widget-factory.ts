@@ -59,7 +59,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl"});
         const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga"});
         const vlsiFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-vlsi"});
-        const otherFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-other"});
+        const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID});
         
         viewContainer.addWidget(projectExplorerWidget, this.projectsNavigatorWidgetOptions1);
         viewContainer.addWidget(rtlModelExplorerWidget, this.projectsNavigatorWidgetOptions1);
@@ -68,7 +68,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.addWidget(rtlFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(fpgaFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
         viewContainer.addWidget(vlsiFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
-        viewContainer.addWidget(otherFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
+        viewContainer.addWidget(miscFolderFileNavigator, this.projectsNavigatorWidgetOptions2);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 

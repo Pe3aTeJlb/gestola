@@ -1,12 +1,11 @@
 import { URI } from '@theia/core/lib/common/uri';
 
-export const defRTLModelStruct = ['rtl', 'fpga', 'vlsi', 'other', '.config'];
+export const defRTLModelStruct = ['rtl', 'fpga', 'vlsi'];
 
 export const defRTLModelStructRegexp =  [
     new RegExp('rtl'), 
     new RegExp('fpga'), 
     new RegExp('vlsi'), 
-    new RegExp('other')
 ];
 
 export interface IRTLModel {
@@ -17,7 +16,6 @@ export interface IRTLModel {
     rtlUri: URI;
     fpgaUri: URI;
     vlsiUri: URI;
-    otherUri: URI;
 
     target: string;
 

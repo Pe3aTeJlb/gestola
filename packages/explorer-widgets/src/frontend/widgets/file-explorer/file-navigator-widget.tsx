@@ -76,8 +76,8 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-vlsi": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "VLSI"); 
                 break;
-            case "file-navigator-other": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
+            case "file-navigator-misc": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-miscFiles", "Misc Files"); 
                 break;
             case "simresults":
                 dataset.visibilityCommandLabel = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
@@ -117,8 +117,8 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-vlsi": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
                 break;
-            case "file-navigator-other": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-otherFiles", "Other Files"); 
+            case "file-navigator-misc": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-miscFiles", "Misc Files"); 
                 break;
             case "simresults":
                 this.title.label = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 

@@ -46,8 +46,11 @@ export class TopologyLevelVLSIWidgetFactory implements WidgetFactory {
     
         const vlsiFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-vlsi", viewContainerID: TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_ID});
+        const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_ID});
 
         viewContainer.addWidget(vlsiFolderFileNavigator, this.widgetOptions);
+        viewContainer.addWidget(miscFolderFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 

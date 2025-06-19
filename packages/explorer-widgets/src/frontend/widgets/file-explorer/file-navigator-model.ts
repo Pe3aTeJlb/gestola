@@ -177,15 +177,22 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async createRoot(): Promise<TreeNode | undefined> {
         let proj = this.projManager.getCurrProject();
-        let sol = this.projManager.getCurrProject()?.getCurrRTLModel();
+        let lld = this.projManager.getCurrProject()?.getCurrRTLModel();
         if(proj){
 
-            if(this.rootId === "file-navigator-system"){
+            if(this.rootId === "file-navigator-system" || this.rootId === "file-navigator-misc"){
 
                 const treeRoot = WorkspaceNode.createRoot();
 
                 let rootFolder;
-                rootFolder = await proj.systemFolderFStat();
+                switch(this.rootId){
+                    case "file-navigator-system": 
+                    rootFolder = await proj.systemFolderFStat();
+                    break;
+                    case "file-navigator-misc": 
+                    rootFolder = await proj.miscFolderFStat();
+                    break;
+                }
 
                 if(rootFolder && rootFolder.children){
                     this.rootUri = rootFolder.resource;
@@ -196,7 +203,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
                 return treeRoot;
 
-            } else if (sol){
+            } else if (lld){
 
                 const treeRoot = WorkspaceNode.createRoot();
 
@@ -204,19 +211,16 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 switch(this.rootId){      
                     
                     case "file-navigator-rtl":
-                        rootFolder = await sol.rtlFolderFStat();
+                        rootFolder = await lld.rtlFolderFStat();
                         break;
                     case "file-navigator-fpga": 
-                        rootFolder = await sol.fpgaFolderFStat();
+                        rootFolder = await lld.fpgaFolderFStat();
                         break;
                     case "file-navigator-vlsi": 
-                        rootFolder = await sol.vlsiFolderFStat();
-                        break;
-                    case "file-navigator-other": 
-                        rootFolder = await sol.otherFolderFStat();
+                        rootFolder = await lld.vlsiFolderFStat();
                         break;
                     case "simresults": 
-                        rootFolder = await sol.simuResultsFolderFStat();
+                        rootFolder = await lld.simuResultsFolderFStat();
                         break;
                 
                 }

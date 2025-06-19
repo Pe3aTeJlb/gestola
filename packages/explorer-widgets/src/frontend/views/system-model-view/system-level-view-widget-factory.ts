@@ -46,8 +46,11 @@ export class SystemLevelWidgetFactory implements WidgetFactory {
     
         const systemFollderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system", viewContainerID: SYSTEM_LEVEL_VIEW_CONTAINER_ID});
+        const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: SYSTEM_LEVEL_VIEW_CONTAINER_ID});
 
         viewContainer.addWidget(systemFollderFileNavigator, this.widgetOptions);
+        viewContainer.addWidget(miscFolderFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 

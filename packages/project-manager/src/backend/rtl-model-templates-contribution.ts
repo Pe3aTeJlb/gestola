@@ -9,7 +9,7 @@ export class GestolaRTLModelTemplateContribution implements RTLModelTemplateCont
         {
             id: "gestola-rtl-model-empty-template",
             label: 'Empty Template',
-            resourcesPath: new URI(__dirname).resolve('../../resources/rtlmodel_templates/empty').normalizePath().toString()
+            resourcesPath: new URI(__dirname).resolve('../../resources/lld_templates/empty').normalizePath().toString()
         },
         ];
     }

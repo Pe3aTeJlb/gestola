@@ -46,8 +46,11 @@ export class TopologyLevelFPGAWidgetFactory implements WidgetFactory {
     
         const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
+        const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
 
         viewContainer.addWidget(fpgaFolderFileNavigator, this.widgetOptions);
+        viewContainer.addWidget(miscFolderFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 

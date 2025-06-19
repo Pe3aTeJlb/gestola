@@ -8,11 +8,9 @@ export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
 
 export const regexp =  [
-    new RegExp('rtl'), 
-    new RegExp('fpga'), 
-    new RegExp('vlsi'), 
-    new RegExp('other'),
-    new RegExp('.config')
+    new RegExp('.config'),
+    new RegExp('rtl'),
+    new RegExp('topology'),
 ];
 
 export const comment: RegExp = /\/\*[\s\S\n]*?\*\/|\/\/.*$/gmi;
@@ -63,7 +61,6 @@ export class RTLModel implements IRTLModel {
     rtlUri: URI;
     fpgaUri: URI;
     vlsiUri: URI;
-    otherUri: URI;
     configUri: URI;
 
     simResultsUri: URI;
@@ -97,7 +94,6 @@ export class RTLModel implements IRTLModel {
         this.simResultsUri = this.rtlUri.resolve('simresults');
         this.fpgaUri = this.rtlModelUri.resolve('fpga');
         this.vlsiUri = this.rtlModelUri.resolve('vlsi');
-        this.otherUri = this.rtlModelUri.resolve('other');
         this.configUri = this.rtlModelUri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
         this.rtlModelDesctiptionUri = this.configUri.resolve('rtlmodel_description.json');
@@ -334,10 +330,6 @@ export class RTLModel implements IRTLModel {
         return this.vlsiUri;
     }
 
-    public getOthertUri(): URI{
-        return this.otherUri;
-    }
-
     public async rtlFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.rtlUri);
     }
@@ -354,18 +346,13 @@ export class RTLModel implements IRTLModel {
         return await this.fileService.resolve(this.vlsiUri);
     }
 
-    public async otherFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.otherUri);
-    }
-
     public getConfig(): Object {
         return {
             name: this.rtlModelName,
             root: this.rtlModelUri,
             rtlUri: this.rtlUri,
             fpgaUri: this.fpgaUri,
-            vlsiUri: this.vlsiUri,
-            otherUri: this.otherUri
+            vlsiUri: this.vlsiUri
         };
     }
 }

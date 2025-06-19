@@ -16,6 +16,7 @@ export class Project implements IProject {
     rootUri: URI;
 
     systemUri: URI;
+    miscUri: URI;
     databesUri: URI;
     theiaUri: URI;
     configUri: URI;
@@ -27,7 +28,8 @@ export class Project implements IProject {
     isFavorite: boolean = false;
 
     public static regexp =  [
-                                new RegExp('system'), 
+                                new RegExp('system'),
+                                new RegExp('misc'),  
                                 new RegExp('database'),
                                 new RegExp('\.theia'),
                                 new RegExp('\.config'), 
@@ -44,6 +46,7 @@ export class Project implements IProject {
 
         this.rootUri = this.rootFStat.resource.normalizePath();
         this.systemUri = this.rootUri.resolve('system');
+        this.miscUri = this.rootUri.resolve('misc');
         this.databesUri = this.rootUri.resolve('database');
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
@@ -122,6 +125,10 @@ export class Project implements IProject {
         return this.systemUri;
     }
 
+    public getMiscUri(): URI{
+        return this.miscUri;
+    }
+
     public getDatabesUri(): URI{
         return this.databesUri;
     }
@@ -136,6 +143,10 @@ export class Project implements IProject {
 
     public async systemFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.systemUri);
+    }
+
+    public async miscFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.miscUri);
     }
 
     setFavorite() {
