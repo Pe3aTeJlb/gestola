@@ -104,7 +104,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             this.updateRoot(); 
             //this.refresh()
         }));
-        this.toDispose.push(this.projManager.onDidChangeRTLModel(() => {
+        this.toDispose.push(this.projManager.onDidChangeLLD(() => {
             this.updateRoot(); 
             //this.refresh()
         }));
@@ -177,7 +177,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
     protected async createRoot(): Promise<TreeNode | undefined> {
         let proj = this.projManager.getCurrProject();
-        let lld = this.projManager.getCurrProject()?.getCurrRTLModel();
+        let lld = this.projManager.getCurrProject()?.getCurrLLD();
         if(proj){
 
             if(this.rootId === "file-navigator-system" || this.rootId === "file-navigator-misc"){
@@ -211,7 +211,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 switch(this.rootId){      
                     
                     case "file-navigator-rtl":
-                        rootFolder = await lld.rtlModelFolderFStat();
+                        rootFolder = await lld.getRTLModel().rtlModelFolderFStat();
                         break;
                     case "file-navigator-fpga": 
                         rootFolder = await lld.fpgaFolderFStat();
@@ -220,7 +220,7 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                         rootFolder = await lld.vlsiFolderFStat();
                         break;
                     case "simresults": 
-                        rootFolder = await lld.simuResultsFolderFStat();
+                        rootFolder = await lld.getRTLModel().simResultsFolderFStat();
                         break;
                 
                 }

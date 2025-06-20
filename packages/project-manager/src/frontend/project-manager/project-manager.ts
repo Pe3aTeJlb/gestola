@@ -8,9 +8,10 @@ import  { Project }  from './project';
 import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, RTLModelTemplate } from '../../common/protocol';
-import { RTLModel, HDLModuleRef } from './rtl-model';
+import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, LLDTemplate } from '../../common/protocol';
+import { LowLevelDesign } from './low-level-design';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
+import { HDLModuleRef, RTLModel } from './rtl-model';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -20,12 +21,12 @@ export interface ProjectsListChangeEvent {
     readonly projects: Project[];
 }
 
-export interface RTLModelChangeEvent {
-    readonly model: RTLModel;
+export interface LLDChangeEvent {
+    readonly lld: LowLevelDesign;
 }
 
-export interface RTLModelListChangeEvent {
-    readonly models: RTLModel[];
+export interface LLDListChangeEvent {
+    readonly lld: LowLevelDesign[];
 }
 
 export interface ProjectFavoriteStatusChangeEvent {
@@ -127,14 +128,14 @@ export class ProjectManager implements FrontendApplicationContribution {
         });
 
         this.onDidChangeProject((event: ProjectChangeEvent) => {
-            let sol = event.proj.getCurrRTLModel();
-            if(sol){
-                this.fireRTLModelChangeEvent(sol);
+            let lld = event.proj.getCurrLLD();
+            if(lld){
+                this.fireLLDChangeEvent(lld);
             }
         });
-        this.onDidChangeRTLModel((event: RTLModelChangeEvent) => {
-            this.veriblePrefsManager.setFilelistPath(event.model.veribleFilelistUri.path.fsPath());
-            this.fireDesignTopModuleChangeEvent(event.model.topLevelModule);
+        this.onDidChangeLLD((event: LLDChangeEvent) => {
+            this.veriblePrefsManager.setFilelistPath(event.lld.rtlModel.veribleFilelistUri.path.fsPath());
+            this.fireDesignTopModuleChangeEvent(event.lld.rtlModel.topLevelModule);
         });
     
         //await this.refreshProjectsList();
@@ -281,9 +282,9 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    /*  RTL Model */
+    /*  Low Level Design */
 
-    async createRTLModel() {
+    async createLowLevelDesign() {
 
         if(!this.currProj) return;
 
@@ -293,55 +294,55 @@ export class ProjectManager implements FrontendApplicationContribution {
             return;
         }
 
-        if(this.currProj.rtlModels.map(e => e.rtlModelName).includes(quickInputResult)){
-            this.messageService.error(`RTL Model ${quickInputResult} already exists`);
+        if(this.currProj.LowLevelDesignes.map(e => e.lldName).includes(quickInputResult)){
+            this.messageService.error(`Low Level Design ${quickInputResult} already exists`);
             return;
         }
 
-        const templates = await this.projManagerBackendService.getRTLModelTemplates();
-        const items: QuickPickValue<RTLModelTemplate>[] = templates.map((e: RTLModelTemplate) => <QuickPickValue<RTLModelTemplate>>{ label: e.label, value: e });
+        const templates = await this.projManagerBackendService.getLLDTemplates();
+        const items: QuickPickValue<LLDTemplate>[] = templates.map((e: LLDTemplate) => <QuickPickValue<LLDTemplate>>{ label: e.label, value: e });
         let quickPickResult = await this.quickPickService.show(items);
         if(!quickPickResult){
             return;
         }
 
-        let modelUri = this.currProj.rootUri.resolve(quickInputResult);
-        await this.projManagerBackendService.createRTLModelFromTemplate(quickPickResult.value.id, modelUri);
-        await this.addRTLModel(modelUri);
+        let lld = this.currProj.lldsRootUri.resolve(quickInputResult);
+        await this.projManagerBackendService.createLLDFromTemplate(quickPickResult.value.id, lld);
+        await this.addLowLevelDesign(lld);
 
     }
 
 
-    async addRTLModel(modelUri: URI){
+    async addLowLevelDesign(modelUri: URI){
         if(this.currProj){
-            let model = new RTLModel(this, modelUri);
-            this.currProj.addRTLModel(model);
-            this.fireRTLModelListChangeEvent();
-            this.setRTLModel(model);
+            let model = new LowLevelDesign(this, modelUri);
+            this.currProj.addLLD(model);
+            this.fireLLDListChangeEvent();
+            this.setLowLevelDesign(model);
         }
     }
 
-    async removeRTLModel(model: RTLModel[]){
+    async removeLowLevelDesign(model: LowLevelDesign[]){
 
         if(this.currProj){
 
             const shouldDelete = await new ConfirmDialog({
                 title: 'Delete confirmation',
-                msg: model.length > 1 ? `Confirm the deletion of multiple rtl models` : `Confirm the deletion of ${model[0].rtlModelName}`,
+                msg: model.length > 1 ? `Confirm the deletion of multiple rtl models` : `Confirm the deletion of ${model[0].lldName}`,
                 ok: Dialog.YES,
                 cancel: Dialog.CANCEL,
             }).open();
 
             if(shouldDelete){
 
-                this.currProj.removeRTLModel(model);
+                this.currProj.removeLLD(model);
                 for(let s of model){
-                    await this.fileService.delete(s.rtlModelUri, {
+                    await this.fileService.delete(s.lldUri, {
                         recursive: true,
                         useTrash: true
                     });
                 }
-                this.fireRTLModelListChangeEvent();
+                this.fireLLDListChangeEvent();
 
             }
 
@@ -349,10 +350,10 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     }
 
-    setRTLModel(model: RTLModel): void {
+    setLowLevelDesign(model: LowLevelDesign): void {
         if(this.currProj){
-            this.currProj.setCurrRTLModel(model);
-            this.fireRTLModelChangeEvent(model)
+            this.currProj.setCurrLLD(model);
+            this.fireLLDChangeEvent(model)
         }
     }
 
@@ -373,8 +374,8 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public async setTopModule(uri: URI | undefined){
-        if(uri && this.currProj?.curRTLModel){
-            let descriptions = this.currProj.curRTLModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
+        if(uri && this.currProj?.curLLD?.rtlModel){
+            let descriptions = this.currProj?.curLLD?.rtlModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
             if(descriptions.length > 0){
                 if(descriptions.length > 1){
                     let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
@@ -390,8 +391,8 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     public async addTestBenchByUri(uri: URI){
 
-        if(uri && this.currProj?.curRTLModel){
-            let descriptions = this.currProj.curRTLModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
+        if(uri && this.currProj?.curLLD?.rtlModel){
+            let descriptions = this.currProj?.curLLD?.rtlModel.hdlFilesDescription.filter(e => e.uri.isEqual(uri));
             if(descriptions.length > 0){
                 if(descriptions.length > 1){
                     let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
@@ -405,15 +406,15 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public addTestBenchByHDLModuleRef(module: HDLModuleRef){
-        if(module && this.currProj?.curRTLModel){
+        if(module && this.currProj?.curLLD){
             this.fireTestBenchAddEvent(module);
         }
     }
 
     public removeTestBenchByUri(uris: URI[]){
 
-        if(uris && this.currProj?.curRTLModel){
-            let modules = this.currProj?.curRTLModel?.testbenchesFiles.filter(e => uris.find(i => i.isEqual(e.uri)) !== undefined);
+        if(uris && this.currProj?.curLLD?.rtlModel){
+            let modules = this.currProj.curLLD.rtlModel.testbenchesFiles.filter(e => uris.find(i => i.isEqual(e.uri)) !== undefined);
             this.fireTestBenchRemoveEvent(modules);
         }
         
@@ -452,21 +453,21 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
-    protected readonly onDidChangeRTLModelEmitter = new Emitter<RTLModelChangeEvent>();
-    get onDidChangeRTLModel(): Event<RTLModelChangeEvent> {
-        return this.onDidChangeRTLModelEmitter.event;
+    protected readonly onDidChangeLLDEmitter = new Emitter<LLDChangeEvent>();
+    get onDidChangeLLD(): Event<LLDChangeEvent> {
+        return this.onDidChangeLLDEmitter.event;
     }
-    private fireRTLModelChangeEvent(model: RTLModel){
-        this.onDidChangeRTLModelEmitter.fire({model: model} as RTLModelChangeEvent);
+    private fireLLDChangeEvent(lld: LowLevelDesign){
+        this.onDidChangeLLDEmitter.fire({lld: lld} as LLDChangeEvent);
     }
 
 
-    protected readonly onDidChangeRTLModelListEmitter = new Emitter<RTLModelListChangeEvent>();
-    get onDidChangeRTLModelList(): Event<RTLModelListChangeEvent> {
-		return this.onDidChangeRTLModelListEmitter.event;
+    protected readonly onDidChangeLLDListEmitter = new Emitter<LLDListChangeEvent>();
+    get onDidChangeLLDList(): Event<LLDListChangeEvent> {
+		return this.onDidChangeLLDListEmitter.event;
 	}
-    private fireRTLModelListChangeEvent(){
-        this.onDidChangeRTLModelListEmitter.fire({models: this.currProj?.rtlModels} as RTLModelListChangeEvent);
+    private fireLLDListChangeEvent(){
+        this.onDidChangeLLDListEmitter.fire({lld: this.currProj?.LowLevelDesignes} as LLDListChangeEvent);
     }
 
 
@@ -503,7 +504,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireDesignTopModuleChangeEvent(module: HDLModuleRef | undefined){
         this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
-            this.fireDesignTopModuleChangedEvent(this.getCurrProject()?.getCurrRTLModel()?.topLevelModule)
+            this.fireDesignTopModuleChangedEvent(this.currProj?.curLLD?.rtlModel.topLevelModule)
         }} as DesignTopModuleChangeEvent);
     }
 
@@ -601,6 +602,14 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     public getCurrProject(): Project | undefined {
         return this.currProj;
+    }
+
+    public getCurrLLD(): LowLevelDesign | undefined {
+        return this.currProj?.getCurrLLD();
+    }
+
+    public getCurrRTLModel(): RTLModel | undefined {
+        return this.getCurrLLD()?.getRTLModel();
     }
 
     public getFileSerivce(): FileService {

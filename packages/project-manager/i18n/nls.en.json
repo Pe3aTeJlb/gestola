@@ -5,8 +5,8 @@
         "project-manager":{
             "open-gestola-project": "Open Gestola Project",
             "create-gestola-project": "Create Gestola Project",
-            "create-rtl-model": "Create RTL Model",
-            "delete-rtl-model": "Delete RTL Model",
+            "create-low-level-design": "Create Low Level Design",
+            "delete-low-level-design": "Delete Low Level Design",
             "exclude-from-design": "Exclude from Design",
             "include-into-design": "Include into Design",
             "set-as-top-module": "Set as Top Module"
@@ -16,7 +16,7 @@
         "explorer":{
             "view-container-title": "Gestola: Project Explorer",
             "project-explorer-view-title": "Project Explorer",
-            "rtl-model-explorer-view-title": "RTL Models Explorer",
+            "lld-explorer-view-title": "Low Level Designes Explorer",
             "file-explorer-systemLvl": "System Model", 
             "file-explorer-rtlLvl": "RTL",
             "file-explorer-topologyLvl-fpga": "FPGA",

@@ -60,11 +60,11 @@ export class TestBenchExplorerCommandsContribution implements CommandContributio
         });
 
         commands.registerCommand(TestbenchesExplorerCommands.TESTBENCHES_RUN_SIMULATION_ALL, {
-            isEnabled: widget => { let model = this.projManager.getCurrProject()?.getCurrRTLModel();
+            isEnabled: widget => { let model = this.projManager.getCurrRTLModel();
                 return !!model && model.testbenchesFiles.length > 0;
             },
             isVisible: widget => this.withTestBenchesExplorerWidget(widget, () => true),
-            execute: (widget: TestBenchExplorerWidget) => this.verilatorService.runMultiple(this.projManager.getCurrProject()!.getCurrRTLModel()!.testbenchesFiles),
+            execute: (widget: TestBenchExplorerWidget) => this.verilatorService.runMultiple(this.projManager.getCurrRTLModel()!.testbenchesFiles),
         });
 
 

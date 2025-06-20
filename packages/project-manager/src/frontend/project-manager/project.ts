@@ -1,6 +1,6 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { IProject } from '../../common/project';
-import { RTLModel, regexp as RTLModelRegexp } from './rtl-model';
+import { LowLevelDesign, regexp as RTLModelRegexp } from './low-level-design';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { ProjectManager } from './project-manager';
@@ -22,8 +22,8 @@ export class Project implements IProject {
     theiaUri: URI;
     configUri: URI;
 
-    curRTLModel: RTLModel | undefined;
-    rtlModels: RTLModel[] = [];
+    curLLD: LowLevelDesign | undefined;
+    LowLevelDesignes: LowLevelDesign[] = [];
     rtlModelDepTree: undefined;
 
     isFavorite: boolean = false;
@@ -56,7 +56,7 @@ export class Project implements IProject {
 
         await this.getLowLevelDesignList(this.lldsRootUri);
 
-        this.curRTLModel = this.rtlModels[0];
+        this.curLLD = this.LowLevelDesignes[0];
 
         return Promise.resolve(this);
 
@@ -69,7 +69,7 @@ export class Project implements IProject {
         for(let dir of dirs){
             let uri = new URI(lldsRoot.path.join(dir[0]).fsPath());
             if(await this.checkLLDStruct(uri)){
-                this.rtlModels.push(new RTLModel(this.projManager, uri));
+                this.LowLevelDesignes.push(new LowLevelDesign(this.projManager, uri));
             }
         }
 
@@ -94,24 +94,24 @@ export class Project implements IProject {
 
 
     public async saveMetadata(){
-        this.rtlModels.forEach(async e => await e.saveMetadata());
+        this.LowLevelDesignes.forEach(async e => await e.getRTLModel().saveMetadata());
     }
 
 
-    public getCurrRTLModel(): RTLModel | undefined{
-        return this.curRTLModel;
+    public getCurrLLD(): LowLevelDesign | undefined {
+        return this.curLLD;
     }
 
-    public setCurrRTLModel(rtlModel: RTLModel){
-        this.curRTLModel = rtlModel;
+    public setCurrLLD(lld: LowLevelDesign){
+        this.curLLD = lld;
     }
 
-    public removeRTLModel(models: RTLModel[]){
-        this.rtlModels = this.rtlModels.filter(i => !models.includes(i));
+    public removeLLD(lld: LowLevelDesign[]){
+        this.LowLevelDesignes = this.LowLevelDesignes.filter(i => !lld.includes(i));
     }
 
-    public addRTLModel(model: RTLModel){
-        this.rtlModels.push(model);
+    public addLLD(lld: LowLevelDesign){
+        this.LowLevelDesignes.push(lld);
     }
 
 

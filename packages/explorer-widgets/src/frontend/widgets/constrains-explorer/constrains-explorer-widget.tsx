@@ -44,7 +44,7 @@ export class ConstrainsExplorerWidget extends TreeWidget {
         this.model.root = root;
 
         this.projManager.onDidChangeProject(() => this.model.refresh());
-        this.projManager.onDidChangeRTLModel(() => this.model.refresh());
+        this.projManager.onDidChangeLLD(() => this.model.refresh());
         this.projManager.onDidChangedDesignTopModule(() => this.model.refresh());
         this.projManager.onDidAddTestBench(() => this.model.refresh());
         this.projManager.onDidRemoveTestBench(() => this.model.refresh());

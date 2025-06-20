@@ -2,7 +2,7 @@ import { Widget } from '@theia/core/lib/browser';
 import { inject, injectable } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { RTLModel } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
+import { LowLevelDesign } from '@gestola/project-manager/lib/frontend/project-manager/low-level-design';
 import { SelectComponent, SelectOption } from '@theia/core/lib/browser/widgets/select-component';
 import { ReactTabBarToolbarItem } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 //import { GestolaFileNavigatorWidget } from './file-navigator-widget';
@@ -13,8 +13,8 @@ export interface SolutionSelectProps {
 }
 
 export interface SolutionProviderSelectState {
-    solutions: RTLModel[] | undefined,
-    currentValue: RTLModel | undefined
+    solutions: LowLevelDesign[] | undefined,
+    currentValue: LowLevelDesign | undefined
 }
 
 @injectable()
@@ -59,7 +59,7 @@ export class SolutionSelector extends React.Component<SolutionSelectProps, Solut
             solutions: [],
             currentValue: undefined
         };
-        this.projManager.onDidChangeRTLModelList(() => {
+        this.projManager.onDidChangeLLDList(() => {
             this.refreshDebugConfigurations();
         });
     }
@@ -78,7 +78,7 @@ export class SolutionSelector extends React.Component<SolutionSelectProps, Solut
     override render(): React.ReactNode {
         return <SelectComponent
             options={this.renderOptions()}
-            defaultValue={this.state.currentValue?.rtlModelName}
+            defaultValue={this.state.currentValue?.lldName}
             onChange={option => this.setCurrentSolution(option)}
             onFocus={() => this.refreshDebugConfigurations()}
             onBlur={() => this.refreshDebugConfigurations()}
@@ -95,15 +95,15 @@ export class SolutionSelector extends React.Component<SolutionSelectProps, Solut
         }
     };
 
-    protected get currentValue(): RTLModel | undefined {
+    protected get currentValue(): LowLevelDesign | undefined {
         //return this.projManager.getCurrProject()?.curSolution;
         return undefined;
     }
 
     protected refreshDebugConfigurations = async () => {
-        const solutions = this.projManager.getCurrProject()?.rtlModels;
+        const solutions = this.projManager.getCurrProject()?.LowLevelDesignes;
         const value = this.currentValue;
-        this.selectRef.current!.value = value?.rtlModelName;
+        this.selectRef.current!.value = value?.lldName;
         this.setState({ solutions, currentValue: value });
     };
 
@@ -111,10 +111,10 @@ export class SolutionSelector extends React.Component<SolutionSelectProps, Solut
         const options: SelectOption[] = [];
         let proj = this.projManager.getCurrProject();
         if(proj){
-            for(let sol of proj.rtlModels){
+            for(let sol of proj.LowLevelDesignes){
                 options.push({
-                    value: sol.rtlModelUri.path.fsPath(),
-                    label: sol.rtlModelName
+                    value: sol.lldUri.path.fsPath(),
+                    label: sol.lldName
                 });
             }
         }

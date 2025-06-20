@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { HDLModuleRef } from "@gestola/project-manager/src/frontend/project-manager/rtl-model";
+import { HDLModuleRef } from "@gestola/project-manager/lib/frontend/project-manager/rtl-model";
 
 @injectable()
 export class ConstrainsExplorerTreeImpl extends TreeImpl {
@@ -11,7 +11,7 @@ export class ConstrainsExplorerTreeImpl extends TreeImpl {
 
   protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
 
-    let model = this.projManager.getCurrProject()?.getCurrRTLModel();
+    let model = this.projManager.getCurrRTLModel();
     if(model){
       return Promise.resolve(model.testbenchesFiles.sort((a, b) => {
         return a.uri.path.name.localeCompare(b.uri.path.name);

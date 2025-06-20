@@ -3,10 +3,10 @@ import { injectable, inject, interfaces, Container } from '@theia/core/shared/in
 import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
-import { RTLModelExplorerTreeImpl, RTLModelTreeNode } from './rtl-model-explorer-tree-impl';
+import { LLDExplorerTreeImpl, LLDTreeNode } from './lld-explorer-tree-impl';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
-export const RTL_MODEL_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
+export const LLD_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
     virtualized: false,
     multiSelect: false,
@@ -15,10 +15,10 @@ export const RTL_MODEL_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 };
 
 @injectable()
-export class RTLModelExplorerWidget extends TreeWidget {
+export class LLDExplorerWidget extends TreeWidget {
 
-    static readonly ID = 'gestola-project-manager:rtl-model-explorer';
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/rtl-model-explorer-view-title", "RTL Models Explorer");
+    static readonly ID = 'gestola-project-manager:lld-model-explorer';
+    static readonly VIEW_LABEL = nls.localize("gestola/explorer/lld-explorer-view-title", "Low Level Desgines Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
@@ -29,8 +29,8 @@ export class RTLModelExplorerWidget extends TreeWidget {
     
         super(props, model, contextMenuRenderer);
 
-        this.id = RTLModelExplorerWidget.ID;
-        this.title.label = RTLModelExplorerWidget.VIEW_LABEL;
+        this.id = LLDExplorerWidget.ID;
+        this.title.label = LLDExplorerWidget.VIEW_LABEL;
 
         const root: CompositeTreeNode = {
             id: "dummy-root",
@@ -41,12 +41,12 @@ export class RTLModelExplorerWidget extends TreeWidget {
         }
         this.model.root = root;
 
-        this.projManager.onDidChangeRTLModelList(() => this.model.refresh());
-		this.projManager.onDidChangeRTLModel((event) => {
-			if(event.model){
-				this.title.label = RTLModelExplorerWidget.VIEW_LABEL + ": " + event.model.rtlModelName;
+        this.projManager.onDidChangeLLDList(() => this.model.refresh());
+		this.projManager.onDidChangeLLD((event) => {
+			if(event.lld){
+				this.title.label = LLDExplorerWidget.VIEW_LABEL + ": " + event.lld.lldName;
 			} else {
-				this.title.label = RTLModelExplorerWidget.VIEW_LABEL;
+				this.title.label = LLDExplorerWidget.VIEW_LABEL;
 			}
             this.model.refresh();
 		});
@@ -58,25 +58,25 @@ export class RTLModelExplorerWidget extends TreeWidget {
         const widget = createTreeContainer(container);
 
         widget.unbind(TreeImpl);
-        widget.bind(RTLModelExplorerTreeImpl).toSelf();
-        widget.rebind(Tree).toService(RTLModelExplorerTreeImpl);
+        widget.bind(LLDExplorerTreeImpl).toSelf();
+        widget.rebind(Tree).toService(LLDExplorerTreeImpl);
 
         widget.unbind(TreeWidget);
-        widget.bind(RTLModelExplorerWidget).toSelf();
+        widget.bind(LLDExplorerWidget).toSelf();
 
-        widget.rebind(TreeProps).toConstantValue(RTL_MODEL_EXPLORER_WIDGET_TREE_PROPS);
+        widget.rebind(TreeProps).toConstantValue(LLD_EXPLORER_WIDGET_TREE_PROPS);
 
         return widget;
 
     }
 
-    static createWidget(ctx: interfaces.Container): RTLModelExplorerWidget {
-        return RTLModelExplorerWidget.createContainer(ctx).get(RTLModelExplorerWidget);
+    static createWidget(ctx: interfaces.Container): LLDExplorerWidget {
+        return LLDExplorerWidget.createContainer(ctx).get(LLDExplorerWidget);
     }
 
-    protected override tapNode(node?: RTLModelTreeNode | undefined): void {
+    protected override tapNode(node?: LLDTreeNode | undefined): void {
         if(node){
-            this.projManager.setRTLModel(node?.model)
+            this.projManager.setLowLevelDesign(node?.model)
         }
     }
 
@@ -85,19 +85,19 @@ export class RTLModelExplorerWidget extends TreeWidget {
     }
 
 
-    protected override renderTailDecorations(node: RTLModelTreeNode, props: NodeProps): React.ReactNode {
+    protected override renderTailDecorations(node: LLDTreeNode, props: NodeProps): React.ReactNode {
         return  <div className='result-node-buttons-prebuffer'>
                     {this.renderRemoveButton(node)}
                     {this.renderCurrentProjectPointer(node)}
                 </div>;
     }
 
-    protected renderRemoveButton(node: RTLModelTreeNode): React.ReactNode {
-        return <span className={`result-node-buttons1 ${codicon('trash')}`} onClick={() => this.projManager.removeRTLModel([node.model])}></span>;
+    protected renderRemoveButton(node: LLDTreeNode): React.ReactNode {
+        return <span className={`result-node-buttons1 ${codicon('trash')}`} onClick={() => this.projManager.removeLowLevelDesign([node.model])}></span>;
     }
 
-    protected renderCurrentProjectPointer(node: RTLModelTreeNode): React.ReactNode {
-        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.getCurrRTLModel()?.getRootUri() === node.model.getRootUri()){
+    protected renderCurrentProjectPointer(node: LLDTreeNode): React.ReactNode {
+        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.getCurrLLD()?.getRootUri() === node.model.getRootUri()){
             return <span className={`result-node-buttons2 ${codicon('arrow-left')}`}></span>;
         } else {
             return '';

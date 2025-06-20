@@ -1,5 +1,5 @@
 import { inject, injectable, named } from '@theia/core/shared/inversify';
-import { ProjectManagerBackendService, ProjectTemplate, ProjectTemplateContribution, RTLModelTemplate, RTLModelTemplateContribution } from '../common/protocol';
+import { ProjectManagerBackendService, ProjectTemplate, ProjectTemplateContribution, LLDTemplate, LLDTemplateContribution } from '../common/protocol';
 import { ContributionProvider, URI } from '@theia/core';
 import * as fs from 'fs';
 import * as fsextra from 'fs-extra';
@@ -19,8 +19,8 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
     @inject(ContributionProvider) @named(ProjectTemplateContribution)
     protected readonly projectTempaltesProvider: ContributionProvider<ProjectTemplateContribution>;
 
-    @inject(ContributionProvider) @named(RTLModelTemplateContribution)
-    protected readonly rtlModelTempaltesProvider: ContributionProvider<RTLModelTemplateContribution>;
+    @inject(ContributionProvider) @named(LLDTemplateContribution)
+    protected readonly lldTempaltesProvider: ContributionProvider<LLDTemplateContribution>;
 
     async getProjectTemplates(): Promise<ProjectTemplate[]> {
         const contributions = this.projectTempaltesProvider.getContributions();
@@ -59,25 +59,25 @@ export class ProjectManagerBackendServiceImpl implements ProjectManagerBackendSe
 
     }
 
-    async getRTLModelTemplates(): Promise<RTLModelTemplate[]> {
-        const contributions = this.rtlModelTempaltesProvider.getContributions();
+    async getLLDTemplates(): Promise<LLDTemplate[]> {
+        const contributions = this.lldTempaltesProvider.getContributions();
         return contributions.flatMap(contribution => contribution.templates);
     }
 
-    async createRTLModelFromTemplate(templateId: string, modelUri: URI): Promise<void> {
+    async createLLDFromTemplate(templateId: string, modelUri: URI): Promise<void> {
 
         fs.mkdirSync(modelUri.path.fsPath());
         
         //await this.createDirStructure(modelUri, defRTLModelStruct);
         
-        const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-rtl-model-empty-template");
+        const defaultTemplate = (await this.getProjectTemplates()).find(e => e.id === "gestola-lld-empty-template");
         if(defaultTemplate !== undefined){
             const templateUri = new URI(defaultTemplate.resourcesPath);
             const templatePath = FileUri.fsPath(templateUri);
             this.copyFiles(FileUri.fsPath(modelUri), templatePath);
         }
 
-        if(templateId === "gestola-rtl-model-empty-template"){
+        if(templateId === "gestola-lld-empty-template"){
             return;
         }
 

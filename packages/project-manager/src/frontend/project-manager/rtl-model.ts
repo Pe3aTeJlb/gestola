@@ -36,11 +36,6 @@ export interface HDLModuleRef {
     uri: URI
 }
 
-export interface ConstrainsSet {
-    name: string,
-    files: URI[]
-}
-
 // Meta file
 
 export interface TopModuleMetaDescription {
@@ -54,9 +49,8 @@ export class RTLModel {
     fileService: FileService;
 
 
-    rtlModelName: string;
-
-    rtlModelUri: URI;
+    lldName: string;
+    lldUri: URI;
 
     rtlUri: URI;
     configUri: URI;
@@ -76,33 +70,21 @@ export class RTLModel {
 
     hdlFilesDescription: HDLFileDescription[] = [];
     testbenchesFiles: HDLModuleRef[] = [];
-
-
-
-    topologyUri: URI;
-    fpgaUri: URI;
-    vlsiUri: URI;
-
-    contrainsSet: ConstrainsSet[] = [];
     
     constructor(projManager: ProjectManager, lldRoot: URI){
 
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
-        this.rtlModelName = lldRoot.path.name;
-        this.rtlModelUri = lldRoot.normalizePath();
+        this.lldName = lldRoot.path.name;
+        this.lldUri = lldRoot.normalizePath();
         
-        this.rtlUri = this.rtlModelUri.resolve('rtl');
+        this.rtlUri = this.lldUri.resolve('rtl');
         this.modelUri = this.rtlUri.resolve('model');
         this.simResultsUri = this.rtlUri.resolve('simresults');
         this.configUri = this.rtlUri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
         this.rtlModelDesctiptionUri = this.configUri.resolve('rtlmodel_description.json');
-
-        this.topologyUri = this.rtlModelUri.resolve('topology');
-        this.fpgaUri = this.topologyUri.resolve('fpga');
-        this.vlsiUri = this.topologyUri.resolve('vlsi');
 
         this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
             if(this.modelUri.isEqualOrParent(i.resource)){
@@ -144,15 +126,15 @@ export class RTLModel {
             }
         }));
 
-        this.projManager.onDidChangeRTLModel(async (event) => {
-            if(event.model == this && !(await this.fileService.exists(this.veribleFilelistUri))){
+        this.projManager.onDidChangeLLD(async (event) => {
+            if(event.lld.rtlModel == this && !(await this.fileService.exists(this.veribleFilelistUri))){
                 this.updateVeribleMetaFile();
             }
         });
 
         this.projManager.onDidDesignFilesInclude((event: DesignFilesExcludeEvent) => {
             
-            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+            if(this.projManager.getCurrRTLModel() == this){
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.concat(event.uris);
                 this.updateVeribleMetaFile();
@@ -162,7 +144,7 @@ export class RTLModel {
 
         this.projManager.onDidDesignFilesExclude((event: DesignFilesExcludeEvent) => {
 
-            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+            if(this.projManager.getCurrRTLModel() == this){
                 this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
                 this.projManager.removeTestBenchByUri(event.uris);
                 this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
@@ -173,7 +155,7 @@ export class RTLModel {
         });
 
         this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+            if(this.projManager.getCurrRTLModel() == this){
                 this.topLevelModule = event.module;
                 if(this.topLevelModule && (this.testbenchesFiles.length == 0 || this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined))) {
                     this.projManager.addTestBenchByHDLModuleRef(this.topLevelModule);
@@ -184,7 +166,7 @@ export class RTLModel {
 
         this.projManager.onDidAddTestBench((event: TestBenchesAddEvent) => {
 
-            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+            if(this.projManager.getCurrRTLModel() == this){
                 this.testbenchesFiles = this.testbenchesFiles.concat(event.module);
             }
             event.complete();
@@ -193,7 +175,7 @@ export class RTLModel {
 
         this.projManager.onDidRemoveTestBench((event: TestBenchesRemoveEvent) => {
 
-            if(this.projManager.getCurrProject()?.getCurrRTLModel() == this){
+            if(this.projManager.getCurrRTLModel() == this){
                 this.testbenchesFiles = this.testbenchesFiles.filter(e => event.modules.find(i => i.uri.isEqual(e.uri)) === undefined);
             }
             event.complete();
@@ -321,44 +303,20 @@ export class RTLModel {
     //Getters
 
     public getRootUri(): URI{ 
-        return this.rtlModelUri;
+        return this.rtlUri;
     }
     
     public getModelUri(): URI{
         return this.modelUri;
     }
 
-    public getFPGAUri(): URI{
-        return this.fpgaUri;
-    }
-
-    public getVLSIUri(): URI{
-        return this.vlsiUri;
-    }
-
     public async rtlModelFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.modelUri);
     }
 
-    public async simuResultsFolderFStat(): Promise<FileStat> {
+    public async simResultsFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.simResultsUri);
     }
     
-    public async fpgaFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.fpgaUri);
-    }
 
-    public async vlsiFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.vlsiUri);
-    }
-
-    public getConfig(): Object {
-        return {
-            name: this.rtlModelName,
-            root: this.rtlModelUri,
-            modelUri: this.modelUri,
-            fpgaUri: this.fpgaUri,
-            vlsiUri: this.vlsiUri
-        };
-    }
 }

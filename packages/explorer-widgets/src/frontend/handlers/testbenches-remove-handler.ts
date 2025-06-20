@@ -1,7 +1,6 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import URI from '@theia/core/lib/common/uri';
 import { UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
-
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
@@ -30,13 +29,13 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
 
     isEnabled(uris: URI[]): boolean {
 
-        let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+        let rtlModel = this.projManager.getCurrRTLModel();
         if(!rtlModel) return false;
         if(uris.filter(e => rtlModel?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
-        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) !== undefined).length > 0){
+        if(uris.filter(e => this.projManager.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) !== undefined).length > 0){
             return false;
         }  
-        if(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(e)) === undefined).length > 0) {
+        if(uris.filter(e => this.projManager.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(e)) === undefined).length > 0) {
             return false;
         } else {
             return true;
@@ -45,7 +44,7 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
     }
     
     execute(uris: URI[]){
-        this.projManager.removeTestBenchByUri(uris.filter(e => this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => e.isEqual(i.uri)) !== undefined));
+        this.projManager.removeTestBenchByUri(uris.filter(e => this.projManager.getCurrRTLModel()?.testbenchesFiles.find(i => e.isEqual(i.uri)) !== undefined));
     }
 
 

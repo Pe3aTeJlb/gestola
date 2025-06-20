@@ -5,7 +5,6 @@ import { GestolaProjectExplorerWidgetFactory } from './views/project-explorer-vi
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './widgets/file-explorer/file-navigator-widget';
 import { GestolaExplorerContextKeyService } from './views/project-explorer-view/gestola-explorer-context-key-service';
 import { GestolaProjectExplorerViewContribution } from './views/project-explorer-view/gestola-project-explorer-contribution';
-import { RTLModelExplorerWidget } from "./widgets/rtl-model-explorer/rtl-model-explorer-widget";
 import { RTLModelFilesExcludeHandler } from "./handlers/rtl-model-exclude-handler";
 import { RTLModelFilesIncludeHandler } from "./handlers/rtl-model-include-handler";
 import { RTLModelSetTopModuleHandler } from "./handlers/rtl-model-set-top-handler";
@@ -15,7 +14,6 @@ import { TestbenchesAddHandler } from "./handlers/testbenches-add-handler";
 import { TestbenchesRemoveHandler } from "./handlers/testbenches-remove-handler";
 import { ProjectExplorerWidget } from "./widgets/project-explorer/project-explorer-widget";
 import { CommandContribution, MenuContribution } from "@theia/core";
-import { RTLModelExplorerCommandsContribution } from "./widgets/rtl-model-explorer/rtl-model-commands-contribution";
 import { TabBarToolbarContribution } from "@theia/core/lib/browser/shell/tab-bar-toolbar";
 import { FileNavigatorCommandsContribution } from "./widgets/file-explorer/file-navigator-commands-contribution";
 import { ProjectExplorerCommandsContribution } from "./widgets/project-explorer/project-explorer-commands-contribution";
@@ -29,6 +27,8 @@ import { TopologyLevelVLSIWidgetFactory } from "./views/vlsi-view/vlsi-view-widg
 import { TopologyLevelVLSIViewContribution } from "./views/vlsi-view/vlsi-view-contribution";
 import { TopologyLevelFPGAWidgetFactory } from "./views/fpga-view/fpga-view-widget-factory";
 import { TopologyLevelFPGAViewContribution } from "./views/fpga-view/fpga-view-contribution";
+import { LLDExplorerCommandsContribution } from "./widgets/low-level-design-explorer/lld-commands-contribution";
+import { LLDExplorerWidget } from "./widgets/low-level-design-explorer/lld-explorer-widget";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -70,15 +70,15 @@ export default new ContainerModule((bind, _unbind) => {
 
     // RTL Model Explorer
 
-    bind(RTLModelExplorerCommandsContribution).toSelf().inSingletonScope();
+    bind(LLDExplorerCommandsContribution).toSelf().inSingletonScope();
 
-    bind(CommandContribution).toService(RTLModelExplorerCommandsContribution);
-    bind(TabBarToolbarContribution).toService(RTLModelExplorerCommandsContribution);
+    bind(CommandContribution).toService(LLDExplorerCommandsContribution);
+    bind(TabBarToolbarContribution).toService(LLDExplorerCommandsContribution);
 
-    bind(RTLModelExplorerWidget).toSelf();
+    bind(LLDExplorerWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(({ container }) => ({
-        id: RTLModelExplorerWidget.ID,
-        createWidget: () => RTLModelExplorerWidget.createWidget(container)
+        id: LLDExplorerWidget.ID,
+        createWidget: () => LLDExplorerWidget.createWidget(container)
     })).inSingletonScope();
 
     // Modules Hierarchy 

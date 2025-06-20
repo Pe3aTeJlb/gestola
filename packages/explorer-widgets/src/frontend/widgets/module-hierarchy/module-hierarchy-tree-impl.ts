@@ -12,7 +12,7 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
   protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> { 
 
     if (ModuleTreeRootNode.is(parent)) {
-      let rtlMode = this.projManager.getCurrProject()?.getCurrRTLModel();
+      let rtlMode = this.projManager.getCurrRTLModel();
       if(rtlMode && rtlMode.topLevelModule){
         return Promise.resolve(
           rtlMode.hdlFilesDescription.filter(e => rtlMode?.topLevelModule?.uri.isEqual(e.uri) && rtlMode.topLevelModule.name == e.module.name).map(e => this.makeTreeNode(e))
@@ -23,7 +23,7 @@ export class ModuleHierarchyTreeImpl extends TreeImpl {
     }
 
     if (ModuleTreeNode.is(parent)) {
-      let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+      let rtlModel = this.projManager.getCurrRTLModel();
       if(rtlModel){
         return Promise.resolve(
           rtlModel.hdlFilesDescription.filter(e => parent.fileDesc?.module.dependencies?.includes(e.module.name))

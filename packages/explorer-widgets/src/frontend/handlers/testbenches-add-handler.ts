@@ -1,7 +1,6 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import URI from '@theia/core/lib/common/uri';
 import { UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
-
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { hdlExt } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
@@ -28,14 +27,14 @@ export class TestbenchesAddHandler implements UriCommandHandler<URI> {
 
     isEnabled(uri: URI): boolean {
 
-        let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+        let rtlModel = this.projManager.getCurrRTLModel();
 
         if(!rtlModel) return false;
         if(!rtlModel?.rtlUri.isEqualOrParent(uri)) return false;
-        if(this.projManager.getCurrProject()?.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(uri)) !== undefined){
+        if(this.projManager.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(uri)) !== undefined){
             return false;
         }  
-        if(this.projManager.getCurrProject()?.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(uri)) !== undefined) {
+        if(this.projManager.getCurrRTLModel()?.testbenchesFiles.find(i => i.uri.isEqual(uri)) !== undefined) {
             return false;
         } else {
             return true;

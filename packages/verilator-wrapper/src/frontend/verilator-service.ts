@@ -1,8 +1,8 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import { ProjectManager } from "@gestola/project-manager/lib/frontend/project-manager/project-manager";
 import { VerilatorBackendService } from '../common/protocol';
-import { HDLModuleRef } from '@gestola/project-manager/src/frontend/project-manager/rtl-model';
 import moment = require('moment');
+import { HDLModuleRef } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
 
 @injectable()
 export class VerilatorFrontendService {
@@ -21,7 +21,7 @@ export class VerilatorFrontendService {
 
     public async runVerilator(testbench: HDLModuleRef){
 
-        let rtlModel = this.projManager.getCurrProject()?.getCurrRTLModel();
+        let rtlModel = this.projManager.getCurrRTLModel();
         if(rtlModel && rtlModel.topLevelModule){
 
             let fileService = this.projManager.getFileSerivce();

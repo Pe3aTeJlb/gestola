@@ -1,10 +1,10 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { RTLModel } from "@gestola/project-manager/lib/frontend/project-manager/rtl-model";
+import { LowLevelDesign } from "@gestola/project-manager/lib/frontend/project-manager/low-level-design";
 
 @injectable()
-export class RTLModelExplorerTreeImpl extends TreeImpl {
+export class LLDExplorerTreeImpl extends TreeImpl {
 
   @inject(ProjectManager) 
   protected readonly projManager: ProjectManager;
@@ -13,8 +13,8 @@ export class RTLModelExplorerTreeImpl extends TreeImpl {
     let proj = this.projManager.getCurrProject();
     if(proj){
     
-      return Promise.resolve(proj.rtlModels.sort((a, b) => {
-        return a.rtlModelName.localeCompare(b.rtlModelName);
+      return Promise.resolve(proj.LowLevelDesignes.sort((a, b) => {
+        return a.lldName.localeCompare(b.lldName);
       }).map(i => this.makeTreeNode(i)));
 
     } else {
@@ -23,10 +23,10 @@ export class RTLModelExplorerTreeImpl extends TreeImpl {
 
   }
 
-    makeTreeNode(mdl: RTLModel) {
-      const node: RTLModelTreeNode = {
-        id: mdl.rtlModelName,
-        name: mdl.rtlModelName,
+    makeTreeNode(mdl: LowLevelDesign) {
+      const node: LLDTreeNode = {
+        id: mdl.lldName,
+        name: mdl.lldName,
         parent: undefined,
         selected: false,
         visible: true,
@@ -39,6 +39,6 @@ export class RTLModelExplorerTreeImpl extends TreeImpl {
 
  }
 
-export interface RTLModelTreeNode extends CompositeTreeNode, SelectableTreeNode {
-  model: RTLModel
+export interface LLDTreeNode extends CompositeTreeNode, SelectableTreeNode {
+  model: LowLevelDesign
 }

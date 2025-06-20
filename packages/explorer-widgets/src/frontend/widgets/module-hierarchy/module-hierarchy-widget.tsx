@@ -37,7 +37,7 @@ export class ModuleHierarchyTreeWidget extends TreeWidget {
 
         this.model.root = ModuleTreeRootNode.createRoot();
         
-        this.projManager.onDidChangeRTLModel(() => this.model.refresh());
+        this.projManager.onDidChangeLLD(() => this.model.refresh());
         this.projManager.onDidChangedDesignTopModule(() => this.model.refresh());
         this.projManager.onDidDesignFilesInclude(() => this.model.refresh());
         this.projManager.onDidDesignFilesExclude(() => this.model.refresh());

@@ -3,7 +3,7 @@ import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, Widge
 import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-explorer-widget';
-import { RTLModelExplorerWidget } from '../../widgets/rtl-model-explorer/rtl-model-explorer-widget';
+import { LLDExplorerWidget } from '../../widgets/low-level-design-explorer/lld-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
@@ -53,7 +53,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
         viewContainer.setTitleOptions(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS);
     
         const projectExplorerWidget = await this.widgetManager.getOrCreateWidget(ProjectExplorerWidget.ID);
-        const rtlModelExplorerWidget = await this.widgetManager.getOrCreateWidget(RTLModelExplorerWidget.ID);
+        const rtlModelExplorerWidget = await this.widgetManager.getOrCreateWidget(LLDExplorerWidget.ID);
 
         const systemFollderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-system"});
         const rtlFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl"});

@@ -1,13 +1,13 @@
 import { URI } from '@theia/core';
 import { injectable } from '@theia/core/shared/inversify';
-import { RTLModelTemplate, RTLModelTemplateContribution } from '../common/protocol';
+import { LLDTemplate, LLDTemplateContribution } from '../common/protocol';
 
 @injectable()
-export class GestolaRTLModelTemplateContribution implements RTLModelTemplateContribution {
-    get templates(): RTLModelTemplate[] {
+export class GestolaLLDTemplateContribution implements LLDTemplateContribution {
+    get templates(): LLDTemplate[] {
         return [
         {
-            id: "gestola-rtl-model-empty-template",
+            id: "gestola-lld-empty-template",
             label: 'Empty Template',
             resourcesPath: new URI(__dirname).resolve('../../resources/lld_templates/empty').normalizePath().toString()
         },
