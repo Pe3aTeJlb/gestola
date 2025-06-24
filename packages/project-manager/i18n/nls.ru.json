@@ -51,7 +51,8 @@
         },
 
         "topology-level-fpga":{
-            "view-container-title": "Гестола: Топологический уровень - FPGA"
+            "view-container-title": "Гестола: Топологический уровень - FPGA",
+            "constrains-explorer-view-title": "Обозреватель проектных ограничений"
         },
 
         "topology-level-vlsi":{

@@ -27,8 +27,9 @@ export class LowLevelDesign {
     topologyUri: URI;
     fpgaUri: URI;
     vlsiUri: URI;
+    contrainsURI: URI;
 
-    contrainsSet: ConstrainsSet[] = [];
+    contrainsSetRoots: URI[] = [];
     
     constructor(projManager: ProjectManager, lldRoot: URI){
 
@@ -43,6 +44,19 @@ export class LowLevelDesign {
         this.topologyUri = this.lldUri.resolve('topology');
         this.fpgaUri = this.topologyUri.resolve('fpga');
         this.vlsiUri = this.topologyUri.resolve('vlsi');
+
+        this.contrainsURI = this.fpgaUri.resolve('constrains');
+    
+        this.process();
+
+    }
+
+    private async process() {
+
+        let stats = await this.fileService.resolve(this.contrainsURI);
+
+        let roots: URI[] | undefined = stats.children?.map(i => i.resource);
+        if(roots) this.contrainsSetRoots = roots;
 
     }
 
@@ -68,6 +82,10 @@ export class LowLevelDesign {
     
     public async fpgaFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.fpgaUri);
+    }
+
+    public async constrainsFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.contrainsURI);
     }
 
     public async vlsiFolderFStat(): Promise<FileStat> {

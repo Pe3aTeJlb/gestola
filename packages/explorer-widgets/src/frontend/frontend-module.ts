@@ -29,6 +29,8 @@ import { TopologyLevelFPGAWidgetFactory } from "./views/fpga-view/fpga-view-widg
 import { TopologyLevelFPGAViewContribution } from "./views/fpga-view/fpga-view-contribution";
 import { LLDExplorerCommandsContribution } from "./widgets/low-level-design-explorer/lld-commands-contribution";
 import { LLDExplorerWidget } from "./widgets/low-level-design-explorer/lld-explorer-widget";
+import { ConstrainsExplorerCommandsContribution } from "./widgets/constrains-explorer/constrains-explorer-commands-contribution";
+import { ConstrainsExplorerWidget, createConstrainsExplorerContainer } from "./widgets/constrains-explorer/constrains-explorer-widget";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -107,6 +109,23 @@ export default new ContainerModule((bind, _unbind) => {
         id: TestBenchExplorerWidget.ID,
         createWidget: () => TestBenchExplorerWidget.createWidget(container)
     })).inSingletonScope();
+
+    // Constrains Explorer
+
+    bind(ConstrainsExplorerCommandsContribution).toSelf().inSingletonScope();
+
+    bind(CommandContribution).toService(ConstrainsExplorerCommandsContribution);
+    bind(TabBarToolbarContribution).toService(ConstrainsExplorerCommandsContribution);
+    bind(MenuContribution).toService(ConstrainsExplorerCommandsContribution);
+
+    bind(ConstrainsExplorerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(ctx => ({
+        id: ConstrainsExplorerWidget.ID,
+        createWidget: () => {
+            const child = createConstrainsExplorerContainer(ctx.container);
+            return child.get(ConstrainsExplorerWidget);
+        }
+    }));
 
     /*
     *   VIEWS

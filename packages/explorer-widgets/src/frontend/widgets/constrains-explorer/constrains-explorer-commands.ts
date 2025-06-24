@@ -3,46 +3,28 @@ import { Command } from '@theia/core/lib/common';
 
 export namespace ConstrainsExplorerCommands {
 
-    export const TESTBENCHES_ADD_BY_URI = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.testbenches-add-by-uri',
-        label: 'Add to testbenches',
-        iconClass: codicon('add')
-    }, 'gestola/project-manager/testbenches-add');
 
-    export const TESTBENCHES_REMOVE_BY_URI = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.testbenches-remove-by-uri',
-        label: 'Remove from testbenches',
-        iconClass: codicon('remove')
-    }, 'gestola/project-manager/testbenches-remove');
-
-    
-
-    export const TESTBENCHES_REMOVE = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.testbenches-remove',
-        label: 'Remove from testbenches',
-        iconClass: codicon('remove')
-    }, 'gestola/project-manager/testbenches-remove');
-
-
-
-    export const TESTBENCHES_RUN_SIMULATION_SELECTED = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.testbenches-run-simulation-single',
-        label: 'Run simulation',
-        iconClass: codicon('run')
-    }, 'gestola/project-manager/testbenches-remove');
-
-    export const TESTBENCHES_RUN_SIMULATION_ALL = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.testbenches-run-simulation-all',
-        label: 'Run all',
-        iconClass: codicon('run-all')
-    }, 'gestola/project-manager/testbenches-remove');
-
-
-
-    export const REFRESH_TESTBENCHES = Command.toLocalizedCommand({
-        id: 'gestola-project-manager.refresh-testbenches',
-        label: 'Refrash',
+    export const REFRESH_EXPLORER = Command.toLocalizedCommand({
+        id: 'gestola-constrains-explorer.refresh',
+        label: 'Refresh Explorer',
         iconClass: codicon('refresh')
-    }, 'gestola/project-manager/set-as-top-module');
+    }, 'theia/navigator/refresh');
+
+    export const COLLAPSE_ALL = Command.toDefaultLocalizedCommand({
+        id: 'gestola-constrains-explorer.collapse-all',
+        label: 'Collapse All',
+        iconClass: codicon('collapse-all')
+    });
+
+    export const NEW_CONSTAINS_FILE: Command = {
+        id: `gestola-constrains-explorer.newfile`,
+        iconClass: codicon('new-file')
+    };
+
+    export const NEW_CONSTRAINS_SET: Command = {
+        id: `gestola-constrains-explorer.newfolder`,
+        label: 'New Set',
+        iconClass: codicon('new-folder')
+    };
 
 }

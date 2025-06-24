@@ -10,7 +10,6 @@
             "exclude-from-design": "Exclude from Design",
             "include-into-design": "Include into Design",
             "set-as-top-module": "Set as Top Module"
-
         },
 
         "explorer":{
@@ -36,7 +35,8 @@
         },
 
         "topology-level-fpga":{
-            "view-container-title": "Gestola: Topology Level - FPGA"
+            "view-container-title": "Gestola: Topology Level - FPGA",
+            "constrains-explorer-view-title": "Constrains Explorer"
         },
 
         "topology-level-vlsi":{

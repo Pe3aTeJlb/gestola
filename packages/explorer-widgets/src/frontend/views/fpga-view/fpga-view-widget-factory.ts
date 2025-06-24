@@ -3,6 +3,7 @@ import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, Widge
 import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
+import { ConstrainsExplorerWidget } from '../../widgets/constrains-explorer/constrains-explorer-widget';
 
 export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID = 'gestole-topology-level-fpga-view-container';
 export const TOPOLOGY_LEVEL_FPGA_VIEW_MENU_LABEL = nls.localize("gestola/topology-level-fpga/view-container-title", "Gestola: Topology Level - FPGA")
@@ -43,12 +44,15 @@ export class TopologyLevelFPGAWidgetFactory implements WidgetFactory {
             progressLocationId: 'gestola-fpga-widget-factory'
         });
         viewContainer.setTitleOptions(TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_TITLE_OPTIONS);
+
+        const constrainsExplorer = await this.widgetManager.getOrCreateWidget(ConstrainsExplorerWidget.ID);
     
         const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
         const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
 
+        viewContainer.addWidget(constrainsExplorer, this.widgetOptions);
         viewContainer.addWidget(fpgaFolderFileNavigator, this.widgetOptions);
         viewContainer.addWidget(miscFolderFileNavigator, this.widgetOptions);
 

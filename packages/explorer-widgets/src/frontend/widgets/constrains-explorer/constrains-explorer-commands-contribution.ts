@@ -1,21 +1,61 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
-import { Widget } from '@theia/core/lib/browser';
+import { CommonCommands, CompositeTreeNode, ExpandableTreeNode, LabelProvider, Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { MenuContribution, MenuModelRegistry, MenuPath, SelectionService, URI } from '@theia/core';
+import { MenuContribution, MenuModelRegistry, MenuPath, SelectionService, URI, nls } from '@theia/core';
 import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
-import { ConstrainsExplorerCommands } from './constrains-explorer-commands';
 import { TestbenchesAddHandler } from '../../handlers/testbenches-add-handler';
 import { TestbenchesRemoveHandler } from '../../handlers/testbenches-remove-handler';
-import { TestbenchTreeNode } from './constrains-explorer-tree-impl';
 import { ConstrainsExplorerWidget } from './constrains-explorer-widget';
 import { VerilatorFrontendService } from '@gestola/verilator-wrapper/lib/frontend/verilator-service';
+import { ConstrainsExplorerCommands } from './constrains-explorer-commands';
+import { WorkspaceCommands } from '@theia/workspace/lib/browser';
+import { FileNavigatorCommands } from '@theia/navigator/lib/browser/file-navigator-commands';
+import { NavigatorDiffCommands } from '@theia/navigator/lib/browser/navigator-diff';
+import { FileDownloadCommands } from '@theia/filesystem/lib/browser/download/file-download-command-contribution';
+import { FileSystemCommands } from '@theia/filesystem/lib/browser/filesystem-frontend-contribution';
+import { FileSystemUtils } from '@theia/filesystem/lib/common';
+import { WorkspaceInputDialog } from '@theia/workspace/lib/browser/workspace-input-dialog';
+import { FileService } from '@theia/filesystem/lib/browser/file-service';
+const validFilename: (arg: string) => boolean = require('valid-filename');
+import { FileStat } from '@theia/filesystem/lib/common/files';
 
-export const TESTBENCHES_EXPLORER_CONTEXT_MENU: MenuPath = ['testbenches-explorer-context-menu'];
+export const CONSTRAINS_EXPLORER_CONTEXT_MENU: MenuPath = ['constrains-explorer-context-menu'];
+
+export namespace NavigatorContextMenu {
+    export const NAVIGATION = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, 'navigation'];
+    /** @deprecated use NAVIGATION */
+    export const OPEN = NAVIGATION;
+    /** @deprecated use NAVIGATION */
+    export const NEW = NAVIGATION;
+
+    export const WORKSPACE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '2_workspace'];
+
+    export const COMPARE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '3_compare'];
+    /** @deprecated use COMPARE */
+    export const DIFF = COMPARE;
+
+    export const SEARCH = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '4_search'];
+    export const CLIPBOARD = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '5_cutcopypaste'];
+
+    export const MODIFICATION = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '7_modification'];
+    /** @deprecated use MODIFICATION */
+    export const MOVE = MODIFICATION;
+    /** @deprecated use MODIFICATION */
+    export const ACTIONS = MODIFICATION;
+
+    /** @deprecated use the `FileNavigatorCommands.OPEN_WITH` command */
+    export const OPEN_WITH = [...NAVIGATION, 'open_with'];
+}
 
 @injectable()
 export class ConstrainsExplorerCommandsContribution implements CommandContribution, TabBarToolbarContribution, MenuContribution {
+
+    @inject(LabelProvider)
+    protected readonly labelProvider: LabelProvider;
+
+    @inject(FileService) protected readonly fileService: FileService;
 
     @inject(ProjectManager)
     protected readonly projManager: ProjectManager;
@@ -42,37 +82,61 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 
     registerCommands(commands: CommandRegistry): void {
 
-        commands.registerCommand(ConstrainsExplorerCommands.TESTBENCHES_ADD_BY_URI, this.newUriAwareCommandHandler(this.testbenchesAddHandler));
-        commands.registerCommand(ConstrainsExplorerCommands.TESTBENCHES_REMOVE_BY_URI, this.newMultiUriAwareCommandHandler(this.testbenchesRemoveHandler));
+        commands.registerCommand(ConstrainsExplorerCommands.COLLAPSE_ALL, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => ((widget.model.root) as CompositeTreeNode).children.forEach((i:ExpandableTreeNode) => i.expanded = false)),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
 
-        commands.registerCommand(ConstrainsExplorerCommands.TESTBENCHES_REMOVE, {
-            isEnabled: widget => this.withTestBenchesExplorerWidget(widget, (widget) => widget.model.selectedNodes.length > 0),
-            isVisible: widget => true,
-            execute:  widget => this.projManager.removeTestBenchByHDLModuleRef(widget.model.selectedNodes.map((i:TestbenchTreeNode) => i.module)),
+        commands.registerCommand(ConstrainsExplorerCommands.REFRESH_EXPLORER, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 
 
 
-        commands.registerCommand(ConstrainsExplorerCommands.TESTBENCHES_RUN_SIMULATION_SELECTED, {
-            isEnabled: widget => this.withTestBenchesExplorerWidget(widget, (widget) => widget.model.selectedNodes.length > 0),
-            isVisible: widget => true,
-            execute: (widget: ConstrainsExplorerWidget) => this.verilatorService.runMultiple(widget.model.selectedNodes.map((e: TestbenchTreeNode) => e.module)),
+        commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTAINS_FILE, {
+            execute: (...args) => this.withConstrainsExplorerWidget(args[0], () => {
+                console.log('loolxd', (<ConstrainsExplorerWidget> args[0]).model.selectedNodes);
+                if((<ConstrainsExplorerWidget> args[0]).model.selectedNodes.length > 1){
+                    commands.executeCommand(WorkspaceCommands.NEW_FILE.id, ...args);
+                }
+            }),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject() && widget.model.selectedNodes.length > 1),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
-
-        commands.registerCommand(ConstrainsExplorerCommands.TESTBENCHES_RUN_SIMULATION_ALL, {
-            isEnabled: widget => { let model = this.projManager.getCurrRTLModel();
-                return !!model && model.testbenchesFiles.length > 0;
-            },
-            isVisible: widget => this.withTestBenchesExplorerWidget(widget, () => true),
-            execute: (widget: ConstrainsExplorerWidget) => this.verilatorService.runMultiple(this.projManager.getCurrRTLModel()!.testbenchesFiles),
+/*
+        commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTRAINS_SET, {
+            execute: (widget) => this.withConstrainsExplorerWidget(widget, (widget) => commands.executeCommand(WorkspaceCommands.NEW_FOLDER.id, this.projManager.getCurrLLD()!.contrainsURI)),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: (widget => this.withConstrainsExplorerWidget(widget, () => true))
         });
-
-
-
-        commands.registerCommand(ConstrainsExplorerCommands.REFRESH_TESTBENCHES, {
-            isEnabled: widget => this.withTestBenchesExplorerWidget(widget, () => true),
-            isVisible: widget => this.withTestBenchesExplorerWidget(widget, () => true),
-            execute: widget => widget.model.refresh(),
+*/
+        commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTRAINS_SET, {
+            execute: (widget) => this.withConstrainsExplorerWidget(widget, async (widget) => {
+                console.log('hhhehehehehehhe');
+                const parent = await this.projManager.getCurrLLD()!.constrainsFolderFStat();
+                const parentUri = parent.resource;
+                const targetUri = parentUri.resolve('Untitled');
+                const vacantChildUri = FileSystemUtils.generateUniqueResourceURI(parent, targetUri, true);
+                const dialog = new WorkspaceInputDialog({
+                    title: nls.localizeByDefault('New Folder...'),
+                    maxWidth: 400,
+                    parentUri: parentUri,
+                    initialValue: vacantChildUri.path.base,
+                    placeholder: nls.localize('theia/workspace/newFolderPlaceholder', 'Folder Name'),
+                    validate: name => this.validateFileName(name, parent, true)
+                }, this.labelProvider);
+                dialog.open().then(async name => {
+                    if (name) {
+                        const folderUri = parentUri.resolve(name);
+                        await this.fileService.createFolder(folderUri);
+                    }
+                });
+            }),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: (widget => this.withConstrainsExplorerWidget(widget, () => true))
         });
 
     }
@@ -80,41 +144,153 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
     registerToolbarItems(registry: TabBarToolbarRegistry): void {
 
         registry.registerItem({
-            id: ConstrainsExplorerCommands.REFRESH_TESTBENCHES.id,
-            command: ConstrainsExplorerCommands.REFRESH_TESTBENCHES.id,
-            tooltip: 'Refresh',
+            id: ConstrainsExplorerCommands.NEW_CONSTRAINS_SET.id,
+            command: ConstrainsExplorerCommands.NEW_CONSTRAINS_SET.id,
+            tooltip: nls.localizeByDefault('New Constrains Set'),
             priority: 1,
         });
 
         registry.registerItem({
-            id: ConstrainsExplorerCommands.TESTBENCHES_RUN_SIMULATION_ALL.id,
-            command: ConstrainsExplorerCommands.TESTBENCHES_RUN_SIMULATION_ALL.id,
-            tooltip: 'Run All',
-            priority: 1,
+            id: ConstrainsExplorerCommands.NEW_CONSTAINS_FILE.id,
+            command: ConstrainsExplorerCommands.NEW_CONSTAINS_FILE.id,
+            tooltip: nls.localizeByDefault('New Constrains File'),
+            priority: 2,
+        });
+
+        registry.registerItem({
+            id: ConstrainsExplorerCommands.REFRESH_EXPLORER.id,
+            command: ConstrainsExplorerCommands.REFRESH_EXPLORER.id,
+            tooltip: nls.localizeByDefault('Refresh'),
+            priority: 3,
+        });
+
+        registry.registerItem({
+            id: ConstrainsExplorerCommands.COLLAPSE_ALL.id,
+            command: ConstrainsExplorerCommands.COLLAPSE_ALL.id,
+            tooltip: nls.localizeByDefault('Collapse All'),
+            priority: 4,
         });
 
     }
 
-    registerMenus(menus: MenuModelRegistry): void {
+    registerMenus(registry: MenuModelRegistry): void {
 
-        menus.registerMenuAction(TESTBENCHES_EXPLORER_CONTEXT_MENU, {
-            commandId: ConstrainsExplorerCommands.TESTBENCHES_RUN_SIMULATION_SELECTED.id,
-            order: '1'
+        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+            commandId: FileNavigatorCommands.OPEN.id,
+            label: nls.localizeByDefault('Open')
+        });
+        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+            commandId: FileNavigatorCommands.OPEN_WITH.id,
+            when: '!explorerResourceIsFolder',
+            label: nls.localizeByDefault('Open With...')
         });
 
-        menus.registerMenuAction(TESTBENCHES_EXPLORER_CONTEXT_MENU, {
-            commandId: ConstrainsExplorerCommands.TESTBENCHES_REMOVE.id,
-            order: '2'
+        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+            commandId: CommonCommands.COPY.id,
+            order: 'a'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+            commandId: CommonCommands.PASTE.id,
+            order: 'b'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+            commandId: CommonCommands.COPY_PATH.id,
+            order: 'c'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+            commandId: WorkspaceCommands.COPY_RELATIVE_FILE_PATH.id,
+            label: WorkspaceCommands.COPY_RELATIVE_FILE_PATH.label,
+            order: 'd'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+            commandId: FileDownloadCommands.COPY_DOWNLOAD_LINK.id,
+            order: 'z'
+        });
+
+        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: WorkspaceCommands.FILE_RENAME.id
+        });
+        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: WorkspaceCommands.FILE_DELETE.id
+        });
+        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: WorkspaceCommands.FILE_DUPLICATE.id
+        });
+
+        const downloadUploadMenu = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '6_downloadupload'];
+        registry.registerMenuAction(downloadUploadMenu, {
+            commandId: FileSystemCommands.UPLOAD.id,
+            order: 'a'
+        });
+        registry.registerMenuAction(downloadUploadMenu, {
+            commandId: FileDownloadCommands.DOWNLOAD.id,
+            order: 'b'
+        });
+
+        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+            commandId: ConstrainsExplorerCommands.NEW_CONSTAINS_FILE.id,
+            when: 'explorerResourceIsFolder'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+            commandId: ConstrainsExplorerCommands.NEW_CONSTRAINS_SET.id
+        });
+        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+            commandId: WorkspaceCommands.FILE_COMPARE.id
+        });
+        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+            commandId: FileNavigatorCommands.COLLAPSE_ALL.id,
+            label: nls.localizeByDefault('Collapse All'),
+            order: 'z2'
+        });
+
+        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+            commandId: NavigatorDiffCommands.COMPARE_FIRST.id,
+            order: 'za'
+        });
+        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+            commandId: NavigatorDiffCommands.COMPARE_SECOND.id,
+            order: 'zb'
         });
 
     }
-  
-    protected withTestBenchesExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: ConstrainsExplorerWidget) => T): T | false {
+
+    protected withConstrainsExplorerWidget<T>(widget: Widget | undefined, cb: (navigator: ConstrainsExplorerWidget) => T): T | false {
         if (widget instanceof ConstrainsExplorerWidget) {
             return cb(widget);
         }
         return false;
     }
   
+    protected async validateFileName(name: string, parent: FileStat, allowNested: boolean = false): Promise<string> {
+        if (!name) {
+            return '';
+        }
+        // do not allow recursive rename
+        if (!allowNested && !validFilename(name)) {
+            return nls.localizeByDefault('The name **{0}** is not valid as a file or folder name. Please choose a different name.');
+        }
+        if (name.startsWith('/')) {
+            return nls.localizeByDefault('A file or folder name cannot start with a slash.');
+        } else if (name.startsWith(' ') || name.endsWith(' ')) {
+            return nls.localizeByDefault('Leading or trailing whitespace detected in file or folder name.');
+        }
+        // check and validate each sub-paths
+        if (name.split(/[\\/]/).some(file => !file || !validFilename(file) || /^\s+$/.test(file))) {
+            return nls.localizeByDefault('\'{0}\' is not a valid file name', this.trimFileName(name));
+        }
+        const childUri = parent.resource.resolve(name);
+        const exists = await this.fileService.exists(childUri);
+        if (exists) {
+            return nls.localizeByDefault('A file or folder **{0}** already exists at this location. Please choose a different name.', this.trimFileName(name));
+        }
+        return '';
+    }
+
+    protected trimFileName(name: string): string {
+        if (name && name.length > 30) {
+            return `${name.substring(0, 30)}...`;
+        }
+        return name;
+    }
 
 }
