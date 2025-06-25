@@ -2,8 +2,8 @@ import { injectable, inject, postConstruct, interfaces, Container } from '@theia
 import { Message } from '@theia/core/shared/@phosphor/messaging';
 import URI from '@theia/core/lib/common/uri';
 import { CommandService } from '@theia/core/lib/common';
-import { Key, TreeModel, ContextMenuRenderer, ExpandableTreeNode, TreeProps, TreeNode, defaultTreeProps } from '@theia/core/lib/browser';
-import { DirNode } from '@theia/filesystem/lib/browser';
+import { Key, TreeModel, ContextMenuRenderer, ExpandableTreeNode, TreeProps, TreeNode, defaultTreeProps, SelectableTreeNode, TreeSelection } from '@theia/core/lib/browser';
+import { DirNode, FileStatNodeData } from '@theia/filesystem/lib/browser';
 import { WorkspaceService, WorkspaceCommands } from '@theia/workspace/lib/browser';
 import { isOSX, environment } from '@theia/core';
 import * as React from '@theia/core/shared/react';
@@ -16,6 +16,7 @@ import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigato
 import { ConstrainsExplorerTreeModel } from './constrains-explorer-model';
 import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
 import { CONSTRAINS_EXPLORER_CONTEXT_MENU } from './constrains-explorer-commands-contribution';
+import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
 
 export const CONSTRAINS_EXPLORER_PROPS: TreeProps = {
     ...defaultTreeProps,
@@ -31,8 +32,9 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
     @inject(CommandService) protected readonly commandService: CommandService;
     @inject(GestolaExplorerContextKeyService) protected readonly contextKeyService: GestolaExplorerContextKeyService;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
+    @inject(NavigatorContextKeyService) protected readonly navigatorKeyService: NavigatorContextKeyService;
 
-    static readonly ID = 'gestola-project-manager:constrains-explorer';
+    static readonly ID = 'gestola:constrains-explorer';
     static readonly VIEW_LABEL = nls.localize("gestola/topology-level-fpga/constrains-explorer-view-title", "Constrains Explorer");
 
     constructor(
@@ -69,6 +71,30 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
 
             })
         ]);
+    }
+
+    protected override handleContextMenuEvent(node: TreeNode | undefined, event: React.MouseEvent<HTMLElement>): void {
+        if (SelectableTreeNode.is(node)) {
+            // Keep the selection for the context menu, if the widget support multi-selection and the right click happens on an already selected node.
+            if (!this.props.multiSelect || !node.selected) {
+                const type = !!this.props.multiSelect && this.hasCtrlCmdMask(event) ? TreeSelection.SelectionType.TOGGLE : TreeSelection.SelectionType.DEFAULT;
+                this.model.addSelection({ node, type });
+            }
+            this.focusService.setFocus(node);
+            const contextMenuPath = this.props.contextMenuPath;
+            if (contextMenuPath) {
+                const { x, y } = event.nativeEvent;
+                const args = this.toContextMenuArgs(node);
+                setTimeout(() => this.contextMenuRenderer.render({
+                    menuPath: contextMenuPath,
+                    context: event.currentTarget,
+                    anchor: { x, y },
+                    args: [this, args]
+                }), 10);
+            }
+        }
+        event.stopPropagation();
+        event.preventDefault();
     }
 
     protected override doUpdateRows(): void {
@@ -182,15 +208,22 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
     protected override onAfterShow(msg: Message): void {
         super.onAfterShow(msg);
         this.contextKeyService.explorerViewletVisible.set(true);
+        this.navigatorKeyService.explorerViewletVisible.set(true);
     }
 
     protected override onAfterHide(msg: Message): void {
         super.onAfterHide(msg);
         this.contextKeyService.explorerViewletVisible.set(false);
+        this.navigatorKeyService.explorerViewletVisible.set(false);
     }
 
     protected updateSelectionContextKeys(): void {
         this.contextKeyService.fileNavigatorResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
+        this.navigatorKeyService.explorerResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
+        // As `FileStatNode` only created if `FileService.resolve` was successful, we can safely assume that
+        // a valid `FileSystemProvider` is available for the selected node. So we skip an additional check
+        // for provider availability here and check the node type.
+        this.navigatorKeyService.isFileSystemResource.set(FileStatNodeData.is(this.model.selectedNodes[0]));
     }
 
 }

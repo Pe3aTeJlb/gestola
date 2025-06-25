@@ -3,7 +3,7 @@ import { Message } from '@theia/core/shared/@phosphor/messaging';
 import URI from '@theia/core/lib/common/uri';
 import { CommandService } from '@theia/core/lib/common';
 import { Key, TreeModel, ContextMenuRenderer, ExpandableTreeNode, TreeProps, TreeNode, defaultTreeProps } from '@theia/core/lib/browser';
-import { DirNode } from '@theia/filesystem/lib/browser';
+import { DirNode, FileStatNodeData  } from '@theia/filesystem/lib/browser';
 import { WorkspaceService, WorkspaceCommands } from '@theia/workspace/lib/browser';
 import { isOSX, environment } from '@theia/core';
 import * as React from '@theia/core/shared/react';
@@ -15,9 +15,10 @@ import { FileNavigatorTree } from '@theia/navigator/lib/browser/navigator-tree';
 import { NavigatorDecoratorService } from '@theia/navigator/lib/browser/navigator-decorator-service';
 import { GestolaFileNavigatorModel } from './file-navigator-model';
 import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
+import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
 import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-commands-contribution';
 
-export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola-project-manager:file-navigator';
+export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
 export const CLASS = 'theia-Files';
 
@@ -40,6 +41,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
     @inject(CommandService) protected readonly commandService: CommandService;
     @inject(GestolaExplorerContextKeyService) protected readonly contextKeyService: GestolaExplorerContextKeyService;
+    @inject(NavigatorContextKeyService) protected readonly navigatorKeyService: NavigatorContextKeyService;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
 
     constructor(
@@ -231,15 +233,22 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     protected override onAfterShow(msg: Message): void {
         super.onAfterShow(msg);
         this.contextKeyService.explorerViewletVisible.set(true);
+        this.navigatorKeyService.explorerViewletVisible.set(true);
     }
 
     protected override onAfterHide(msg: Message): void {
         super.onAfterHide(msg);
         this.contextKeyService.explorerViewletVisible.set(false);
+        this.navigatorKeyService.explorerViewletVisible.set(false);
     }
 
     protected updateSelectionContextKeys(): void {
         this.contextKeyService.fileNavigatorResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
+        this.navigatorKeyService.explorerResourceIsFolder.set(DirNode.is(this.model.selectedNodes[0]));
+        // As `FileStatNode` only created if `FileService.resolve` was successful, we can safely assume that
+        // a valid `FileSystemProvider` is available for the selected node. So we skip an additional check
+        // for provider availability here and check the node type.
+        this.navigatorKeyService.isFileSystemResource.set(FileStatNodeData.is(this.model.selectedNodes[0]));
     }
 
 }

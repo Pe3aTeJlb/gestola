@@ -6,7 +6,7 @@ import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-ex
 import { LLDExplorerWidget } from '../../widgets/low-level-design-explorer/lld-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
-export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestole-project-explorer-view-container';
+export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID = 'gestola.project-explorer.view-container';
 export const GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
     label: nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer"),
     iconClass: codicon('files'),
@@ -48,7 +48,7 @@ export class GestolaProjectExplorerWidgetFactory implements WidgetFactory {
 
         const viewContainer = this.viewContainerFactory({
             id: GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-project-explorer-widget-factory'
+            progressLocationId: 'gestola.project-explorer-widget-factory'
         });
         viewContainer.setTitleOptions(GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_TITLE_OPTIONS);
     

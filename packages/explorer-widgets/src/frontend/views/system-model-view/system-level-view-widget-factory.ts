@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
-export const SYSTEM_LEVEL_VIEW_CONTAINER_ID = 'gestole-system-level-view-container';
+export const SYSTEM_LEVEL_VIEW_CONTAINER_ID = 'gestola.system-level.view-container';
 export const SYSTEM_LEVEL_VIEW_MENU_LABEL = nls.localize("gestola/system-level/view-container-title", "Gestola: System Level")
 export const SYSTEM_LEVEL_VIEW_LABEL = nls.localize("gestola/system-level/project-explorer-view-title", "Gestola: System Level");
 export const SYSTEM_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -40,7 +40,7 @@ export class SystemLevelWidgetFactory implements WidgetFactory {
 
         const viewContainer = this.viewContainerFactory({
             id: SYSTEM_LEVEL_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-system-level-widget-factory'
+            progressLocationId: 'gestola.system-level-widget-factory'
         });
         viewContainer.setTitleOptions(SYSTEM_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS);
     

@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
-export const TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_ID = 'gestole-topology-level-vlsi-view-container';
+export const TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_ID = 'gestola.topology-level.vlsi-view-container';
 export const TOPOLOGY_LEVEL_VLSI_VIEW_MENU_LABEL = nls.localize("gestola/topology-level-vlsi/view-container-title", "Gestola: Topology Level - VLSI")
 export const TOPOLOGY_LEVEL_VLSI_VIEW_LABEL = nls.localize("gestola/topology-level-vlsi/project-explorer-view-title", "Gestola: Topology Level - VLSI");
 export const TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -40,7 +40,7 @@ export class TopologyLevelVLSIWidgetFactory implements WidgetFactory {
 
         const viewContainer = this.viewContainerFactory({
             id: TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-topology-level-vlsi-widget-factory'
+            progressLocationId: 'gestola.topology-level-vlsi-widget-factory'
         });
         viewContainer.setTitleOptions(TOPOLOGY_LEVEL_VLSI_VIEW_CONTAINER_TITLE_OPTIONS);
     

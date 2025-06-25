@@ -17,7 +17,7 @@ export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 @injectable()
 export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
-    static readonly ID = 'gestola-project-manager:project-explorer';
+    static readonly ID = 'gestola:project-explorer';
     static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer")
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Project Explorer");
 

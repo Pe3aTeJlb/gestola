@@ -5,7 +5,7 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 import { ConstrainsExplorerWidget } from '../../widgets/constrains-explorer/constrains-explorer-widget';
 
-export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID = 'gestole-topology-level-fpga-view-container';
+export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID = 'gestola.topology-level-fpga.view-container';
 export const TOPOLOGY_LEVEL_FPGA_VIEW_MENU_LABEL = nls.localize("gestola/topology-level-fpga/view-container-title", "Gestola: Topology Level - FPGA")
 export const TOPOLOGY_LEVEL_FPGA_VIEW_LABEL = nls.localize("gestola/topology-level-fpga/project-explorer-view-title", "Gestola: Topology Level - FPGA");
 export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -41,7 +41,7 @@ export class TopologyLevelFPGAWidgetFactory implements WidgetFactory {
 
         const viewContainer = this.viewContainerFactory({
             id: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-fpga-widget-factory'
+            progressLocationId: 'gestola.fpga-widget-factory'
         });
         viewContainer.setTitleOptions(TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_TITLE_OPTIONS);
 

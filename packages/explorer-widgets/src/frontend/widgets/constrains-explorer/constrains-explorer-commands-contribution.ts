@@ -22,31 +22,14 @@ const validFilename: (arg: string) => boolean = require('valid-filename');
 import { FileStat } from '@theia/filesystem/lib/common/files';
 
 export const CONSTRAINS_EXPLORER_CONTEXT_MENU: MenuPath = ['constrains-explorer-context-menu'];
-
-export namespace NavigatorContextMenu {
+export namespace ConstrainsContextMenu {
     export const NAVIGATION = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, 'navigation'];
-    /** @deprecated use NAVIGATION */
-    export const OPEN = NAVIGATION;
-    /** @deprecated use NAVIGATION */
-    export const NEW = NAVIGATION;
-
     export const WORKSPACE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '2_workspace'];
-
     export const COMPARE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '3_compare'];
-    /** @deprecated use COMPARE */
-    export const DIFF = COMPARE;
-
     export const SEARCH = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '4_search'];
     export const CLIPBOARD = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '5_cutcopypaste'];
-
     export const MODIFICATION = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '7_modification'];
-    /** @deprecated use MODIFICATION */
-    export const MOVE = MODIFICATION;
-    /** @deprecated use MODIFICATION */
-    export const ACTIONS = MODIFICATION;
-
-    /** @deprecated use the `FileNavigatorCommands.OPEN_WITH` command */
-    export const OPEN_WITH = [...NAVIGATION, 'open_with'];
+    export const STAGE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '8_stage'];
 }
 
 @injectable()
@@ -98,12 +81,11 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 
         commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTAINS_FILE, {
             execute: (...args) => this.withConstrainsExplorerWidget(args[0], () => {
-                console.log('loolxd', (<ConstrainsExplorerWidget> args[0]).model.selectedNodes);
-                if((<ConstrainsExplorerWidget> args[0]).model.selectedNodes.length > 1){
+                if((<ConstrainsExplorerWidget> args[0]).model.getFocusedNode()){
                     commands.executeCommand(WorkspaceCommands.NEW_FILE.id, ...args);
                 }
             }),
-            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject() && widget.model.selectedNodes.length > 1),
+            isEnabled: (widget) => this.withConstrainsExplorerWidget(widget, (widget: ConstrainsExplorerWidget) => !!this.projManager.getCurrProject() && !!widget.model.getFocusedNode()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 /*
@@ -115,7 +97,6 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 */
         commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTRAINS_SET, {
             execute: (widget) => this.withConstrainsExplorerWidget(widget, async (widget) => {
-                console.log('hhhehehehehehhe');
                 const parent = await this.projManager.getCurrLLD()!.constrainsFolderFStat();
                 const parentUri = parent.resource;
                 const targetUri = parentUri.resolve('Untitled');
@@ -137,6 +118,30 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
             }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: (widget => this.withConstrainsExplorerWidget(widget, () => true))
+        });
+
+        commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_NONE, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
+
+        commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
+
+        commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_IMPL, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
+
+        commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH_IMPL, {
+            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 
     }
@@ -175,45 +180,45 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 
     registerMenus(registry: MenuModelRegistry): void {
 
-        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.NAVIGATION, {
             commandId: FileNavigatorCommands.OPEN.id,
             label: nls.localizeByDefault('Open')
         });
-        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.NAVIGATION, {
             commandId: FileNavigatorCommands.OPEN_WITH.id,
             when: '!explorerResourceIsFolder',
             label: nls.localizeByDefault('Open With...')
         });
 
-        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+        registry.registerMenuAction(ConstrainsContextMenu.CLIPBOARD, {
             commandId: CommonCommands.COPY.id,
             order: 'a'
         });
-        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+        registry.registerMenuAction(ConstrainsContextMenu.CLIPBOARD, {
             commandId: CommonCommands.PASTE.id,
             order: 'b'
         });
-        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+        registry.registerMenuAction(ConstrainsContextMenu.CLIPBOARD, {
             commandId: CommonCommands.COPY_PATH.id,
             order: 'c'
         });
-        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+        registry.registerMenuAction(ConstrainsContextMenu.CLIPBOARD, {
             commandId: WorkspaceCommands.COPY_RELATIVE_FILE_PATH.id,
             label: WorkspaceCommands.COPY_RELATIVE_FILE_PATH.label,
             order: 'd'
         });
-        registry.registerMenuAction(NavigatorContextMenu.CLIPBOARD, {
+        registry.registerMenuAction(ConstrainsContextMenu.CLIPBOARD, {
             commandId: FileDownloadCommands.COPY_DOWNLOAD_LINK.id,
             order: 'z'
         });
 
-        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
             commandId: WorkspaceCommands.FILE_RENAME.id
         });
-        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
             commandId: WorkspaceCommands.FILE_DELETE.id
         });
-        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
             commandId: WorkspaceCommands.FILE_DUPLICATE.id
         });
 
@@ -227,29 +232,55 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
             order: 'b'
         });
 
-        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
-            commandId: ConstrainsExplorerCommands.NEW_CONSTAINS_FILE.id,
-            when: 'explorerResourceIsFolder'
-        });
-        registry.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
-            commandId: ConstrainsExplorerCommands.NEW_CONSTRAINS_SET.id
-        });
-        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+        registry.registerMenuAction(ConstrainsContextMenu.COMPARE, {
             commandId: WorkspaceCommands.FILE_COMPARE.id
         });
-        registry.registerMenuAction(NavigatorContextMenu.MODIFICATION, {
+        registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
             commandId: FileNavigatorCommands.COLLAPSE_ALL.id,
             label: nls.localizeByDefault('Collapse All'),
             order: 'z2'
         });
 
-        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+        registry.registerMenuAction(ConstrainsContextMenu.COMPARE, {
             commandId: NavigatorDiffCommands.COMPARE_FIRST.id,
             order: 'za'
         });
-        registry.registerMenuAction(NavigatorContextMenu.COMPARE, {
+        registry.registerMenuAction(ConstrainsContextMenu.COMPARE, {
             commandId: NavigatorDiffCommands.COMPARE_SECOND.id,
             order: 'zb'
+        });
+
+
+
+
+
+        registry.registerMenuAction(ConstrainsContextMenu.WORKSPACE, {
+            commandId: ConstrainsExplorerCommands.NEW_CONSTAINS_FILE.id,
+            when: 'explorerResourceIsFolder'
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.WORKSPACE, {
+            commandId: ConstrainsExplorerCommands.NEW_CONSTRAINS_SET.id
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.STAGE, {
+            commandId: ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_NONE.id,
+            when: '!explorerResourceIsFolder'
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.STAGE, {
+            commandId: ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH.id,
+            when: '!explorerResourceIsFolder'
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.STAGE, {
+            commandId: ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_IMPL.id,
+            when: '!explorerResourceIsFolder'
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.STAGE, {
+            commandId: ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH_IMPL.id,
+            when: '!explorerResourceIsFolder'
         });
 
     }

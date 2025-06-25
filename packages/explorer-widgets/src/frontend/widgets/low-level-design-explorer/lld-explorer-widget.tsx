@@ -17,7 +17,7 @@ export const LLD_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 @injectable()
 export class LLDExplorerWidget extends TreeWidget {
 
-    static readonly ID = 'gestola-project-manager:lld-model-explorer';
+    static readonly ID = 'gestola:lld-model-explorer';
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/lld-explorer-view-title", "Low Level Desgines Explorer");
 
     constructor(

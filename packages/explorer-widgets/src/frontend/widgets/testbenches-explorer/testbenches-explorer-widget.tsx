@@ -19,7 +19,7 @@ export const TESTBENCHS_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 @injectable()
 export class TestBenchExplorerWidget extends TreeWidget {
 
-    static readonly ID = 'gestola-project-manager:testbenches-explorer';
+    static readonly ID = 'gestola:testbenches-explorer';
     static readonly VIEW_LABEL = nls.localize("gestola/rtl-level/testbenches-explorer-view-title", "TestBenches");
 
     constructor(

@@ -6,7 +6,7 @@ import { ModuleHierarchyTreeWidget } from '../../widgets/module-hierarchy/module
 import { TestBenchExplorerWidget } from '../../widgets/testbenches-explorer/testbenches-explorer-widget';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
-export const RTL_LEVEL_VIEW_CONTAINER_ID = 'gestole-rtl-level-view-container';
+export const RTL_LEVEL_VIEW_CONTAINER_ID = 'gestola.rtl-level.view-container';
 export const RTL_LEVEL_VIEW_MENU_LABEL = nls.localize("gestola/rtl-level/view-container-title", "Gestola: RTL Level")
 export const RTL_LEVEL_VIEW_LABEL = nls.localize("gestola/rtl-level/project-explorer-view-title", "Gestola: RTL Level");
 export const RTL_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
@@ -42,7 +42,7 @@ export class RTLLevelWidgetFactory implements WidgetFactory {
 
         const viewContainer = this.viewContainerFactory({
             id: RTL_LEVEL_VIEW_CONTAINER_ID,
-            progressLocationId: 'gestola-rtl-level-widget-factory'
+            progressLocationId: 'gestola.rtl-level-widget-factory'
         });
         viewContainer.setTitleOptions(RTL_LEVEL_VIEW_CONTAINER_TITLE_OPTIONS);
     
