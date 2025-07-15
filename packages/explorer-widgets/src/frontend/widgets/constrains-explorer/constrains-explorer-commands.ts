@@ -27,6 +27,12 @@ export namespace ConstrainsExplorerCommands {
         iconClass: codicon('new-folder')
     }
 
+    export const REMOVE_CONSTRAINS_SET: Command = {
+        id: `gestola.constrains-explorer.removefolder`,
+        label: 'Remove Set',
+        iconClass: codicon('new-folder')
+    }
+
 
     
     export const CONSTRAINS_FILE_USE_NONE = Command.toLocalizedCommand({

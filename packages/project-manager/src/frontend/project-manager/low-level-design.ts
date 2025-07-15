@@ -1,18 +1,14 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import { FileStat } from '@theia/filesystem/lib/common/files';
-import { ProjectManager } from './project-manager';
+import { FileStat, FileDeleteOptions } from '@theia/filesystem/lib/common/files';
+import { ProjectManager, FPGATopologyAddEvent, FPGATopologyRemoveEvent } from './project-manager';
 import { RTLModel } from './rtl-model';
+import { FPGATopologyModel } from './fpga-topology-model';
 
 export const regexp =  [
     new RegExp('rtl'),
     new RegExp('topology'),
 ];
-
-export interface ConstrainsSet {
-    name: string,
-    files: URI[]
-}
 
 export class LowLevelDesign {
 
@@ -25,11 +21,13 @@ export class LowLevelDesign {
     rtlModel: RTLModel;
 
     topologyUri: URI;
-    fpgaUri: URI;
-    vlsiUri: URI;
-    contrainsURI: URI;
 
-    contrainsSetRoots: URI[] = [];
+    fpgaUri: URI;
+    currFPGAModel: FPGATopologyModel;
+    fpgaModels: FPGATopologyModel[] = [];
+
+    vlsiUri: URI;
+    
     
     constructor(projManager: ProjectManager, lldRoot: URI){
 
@@ -45,7 +43,14 @@ export class LowLevelDesign {
         this.fpgaUri = this.topologyUri.resolve('fpga');
         this.vlsiUri = this.topologyUri.resolve('vlsi');
 
-        this.contrainsURI = this.fpgaUri.resolve('constrains');
+        this.projManager.onDidAddFPGATopologyModel((event: FPGATopologyAddEvent) => {
+            this.fpgaModels.push(new FPGATopologyModel(this.projManager, event.uri));
+        });
+
+        this.projManager.onDidRemoveFPGATopologyModel((event: FPGATopologyRemoveEvent) => {
+            this.fileService.delete(event.model.rootUri, {recursive: true} as FileDeleteOptions);
+            this.fpgaModels = this.fpgaModels.filter(e => e !== event.model);
+        });
     
         this.process();
 
@@ -53,16 +58,27 @@ export class LowLevelDesign {
 
     private async process() {
 
-        let stats = await this.fileService.resolve(this.contrainsURI);
+        let stats = await this.fileService.resolve(this.fpgaUri);
 
-        let roots: URI[] | undefined = stats.children?.map(i => i.resource);
-        if(roots) this.contrainsSetRoots = roots;
+        if(stats.children){
+            for(let i of stats.children){
+                this.fpgaModels.push(new FPGATopologyModel(this.projManager, i.resource));
+            }
+        }
 
+    }
+
+    public createFPGATopologyModel(uri: URI){
+        this.fpgaModels.push(new FPGATopologyModel(this.projManager, uri));
     }
 
     //Getters
 
     public getRTLModel(): RTLModel {
+        return this.rtlModel;
+    }
+
+    public getCurrFPGATopologyModel(): RTLModel {
         return this.rtlModel;
     }
 
@@ -82,10 +98,6 @@ export class LowLevelDesign {
     
     public async fpgaFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.fpgaUri);
-    }
-
-    public async constrainsFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.contrainsURI);
     }
 
     public async vlsiFolderFStat(): Promise<FileStat> {

@@ -21,7 +21,7 @@ import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigat
 export const CONSTRAINS_EXPLORER_PROPS: TreeProps = {
     ...defaultTreeProps,
     contextMenuPath: CONSTRAINS_EXPLORER_CONTEXT_MENU,
-    multiSelect: true,
+    multiSelect: false,
     search: true,
     globalSelection: true
 }
@@ -89,7 +89,7 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
                     menuPath: contextMenuPath,
                     context: event.currentTarget,
                     anchor: { x, y },
-                    args: [this, args]
+                    args: [this, node, args]
                 }), 10);
             }
         }

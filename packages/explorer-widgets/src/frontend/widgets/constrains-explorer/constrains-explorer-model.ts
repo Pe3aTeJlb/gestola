@@ -96,15 +96,20 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
         this.toDispose.push(this.workspaceService.onWorkspaceLocationChanged(() => {
             this.refresh()
         }));
-        this.toDispose.push(this.projManager.onDidChangeProjectList(() => {
+        this.toDispose.push(this.projManager.onDidAddFPGATopologyModel(() => {
             this.updateRoot(); 
             //this.refresh()
         }));
-        this.toDispose.push(this.projManager.onDidChangeProject(() => {
+        this.toDispose.push(this.projManager.onDidRemoveFPGATopologyModel(() => {
             this.updateRoot(); 
             //this.refresh()
         }));
         this.toDispose.push(this.projManager.onDidChangeLLD(() => {
+            this.updateRoot(); 
+            //this.refresh()
+        }));
+
+        this.toDispose.push(this.projManager.onDidChangeProject(() => {
             this.updateRoot(); 
             //this.refresh()
         }));
@@ -181,15 +186,22 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
         let lld = this.projManager.getCurrProject()?.getCurrLLD();
         if(lld){
 
-            const treeRoot = WorkspaceNode.createRoot();
-            let rootFolder;
-            rootFolder = await lld.constrainsFolderFStat();
+            const treeRoot = WorkspaceNode.createRoot('multiroot');
+            for(let model of lld.fpgaModels){
+                let constrFolder;
+                constrFolder = await model.constrainsFolderFStat();
 
-            if(rootFolder && rootFolder.children){
-                this.rootUri = rootFolder.resource;
-                treeRoot.children.push(
-                    await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
-                );
+                if(constrFolder && constrFolder.children){
+
+                    let node = await this.tree.createWorkspaceRoot(constrFolder, treeRoot);
+
+                    Object.assign(node, {
+                        name: node.uri.path.dir.name,
+                        fpgaModel: model
+                    });
+                    treeRoot.children.push(node);
+                }
+
             }
 
             return treeRoot;

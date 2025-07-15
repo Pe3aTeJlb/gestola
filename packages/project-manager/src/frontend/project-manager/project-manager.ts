@@ -12,6 +12,7 @@ import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, 
 import { LowLevelDesign } from './low-level-design';
 import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 import { HDLModuleRef, RTLModel } from './rtl-model';
+import { FPGATopologyModel } from './fpga-topology-model';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;
@@ -54,6 +55,19 @@ export interface TestBenchesAddEvent {
 export interface TestBenchesRemoveEvent {
     readonly modules: HDLModuleRef[];
     complete: () => void
+}
+
+export interface FPGATopologyAddEvent {
+    readonly uri: URI;
+}
+
+export interface FPGATopologyRemoveEvent {
+    readonly model: FPGATopologyModel;
+}
+
+export interface ConstrainsUsageTypeSetEvent {
+    readonly uris: URI[];
+    readonly type: number;
 }
 
 
@@ -425,6 +439,19 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
+    public addFPGATopologyModel(uri: URI){
+        this.fireFPGATopologyModelAddEvent(uri);
+    }
+
+    public removeFPGATopologyModel(model: FPGATopologyModel){
+        this.fireFPGATopologyModelRemoveEvent(model);
+    }
+
+    public setConstrainsFileUsageType(uri: URI[], type: number){
+        this.fireConstrainsUsageTypeSetEvent(uri, type);
+    }
+
+
     //Context
 
     setFavorite(proj: Project){
@@ -554,6 +581,33 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireTestBenchRemovedEvent(module: HDLModuleRef[]){
         this.onDidTestBenchRemovedEmitter.fire(module);
+    }
+
+    //Add FPGA Model
+    protected readonly onDidAddFPGATopologyModelEmitter = new Emitter<FPGATopologyAddEvent>();
+    get onDidAddFPGATopologyModel(): Event<FPGATopologyAddEvent> {
+        return this.onDidAddFPGATopologyModelEmitter.event;
+    }
+    private fireFPGATopologyModelAddEvent(modelUri: URI){
+        this.onDidAddFPGATopologyModelEmitter.fire({uri: modelUri} as FPGATopologyAddEvent);
+    }
+
+    //Remove FPGA model
+    protected readonly onDidRemoveFPGATopologyModelEmitter = new Emitter<FPGATopologyRemoveEvent>();
+    get onDidRemoveFPGATopologyModel(): Event<FPGATopologyRemoveEvent> {
+        return this.onDidRemoveFPGATopologyModelEmitter.event;
+    }
+    private fireFPGATopologyModelRemoveEvent(model: FPGATopologyModel){
+        this.onDidRemoveFPGATopologyModelEmitter.fire({model: model} as FPGATopologyRemoveEvent);
+    }
+
+    //Change constrains set files usage type
+    protected readonly onDidSetConstrainsUsageTypeEmitter = new Emitter<ConstrainsUsageTypeSetEvent>();
+    get onDidSetConstrainsUsageTypeEvent(): Event<ConstrainsUsageTypeSetEvent> {
+        return this.onDidSetConstrainsUsageTypeEmitter.event;
+    }
+    private fireConstrainsUsageTypeSetEvent(uri: URI[], type: number){
+        this.onDidSetConstrainsUsageTypeEmitter.fire({uris: uri, type: type} as ConstrainsUsageTypeSetEvent);
     }
 
 

@@ -1,6 +1,6 @@
 import "../../styles/index.css"
 import { ContainerModule } from '@theia/core/shared/inversify';
-import { FrontendApplicationContribution,   KeybindingContribution,   WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
+import { FrontendApplicationContribution,   KeybindingContribution,   LabelProviderContribution,   WidgetFactory, bindViewContribution } from '@theia/core/lib/browser';
 import { GestolaProjectExplorerWidgetFactory } from './views/project-explorer-view/gestola-project-explorer-widget-factory';
 import { GestolaFileNavigatorWidget, GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions, createFileNavigatorContainer } from './widgets/file-explorer/file-navigator-widget';
 import { GestolaExplorerContextKeyService } from './views/project-explorer-view/gestola-explorer-context-key-service';
@@ -31,6 +31,7 @@ import { LLDExplorerCommandsContribution } from "./widgets/low-level-design-expl
 import { LLDExplorerWidget } from "./widgets/low-level-design-explorer/lld-explorer-widget";
 import { ConstrainsExplorerCommandsContribution } from "./widgets/constrains-explorer/constrains-explorer-commands-contribution";
 import { ConstrainsExplorerWidget, createConstrainsExplorerContainer } from "./widgets/constrains-explorer/constrains-explorer-widget";
+import { ConstrainsExplorerLabelProvider } from "./widgets/constrains-explorer/constrains-explorer-label-provider";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -117,6 +118,9 @@ export default new ContainerModule((bind, _unbind) => {
     bind(CommandContribution).toService(ConstrainsExplorerCommandsContribution);
     bind(TabBarToolbarContribution).toService(ConstrainsExplorerCommandsContribution);
     bind(MenuContribution).toService(ConstrainsExplorerCommandsContribution);
+
+    bind(ConstrainsExplorerLabelProvider).toSelf().inSingletonScope();
+    bind(LabelProviderContribution).toService(ConstrainsExplorerLabelProvider);
 
     bind(ConstrainsExplorerWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(ctx => ({

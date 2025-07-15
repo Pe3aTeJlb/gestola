@@ -20,6 +20,7 @@ import { WorkspaceInputDialog } from '@theia/workspace/lib/browser/workspace-inp
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 const validFilename: (arg: string) => boolean = require('valid-filename');
 import { FileStat } from '@theia/filesystem/lib/common/files';
+import { USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager/lib/frontend/project-manager/fpga-topology-model';
 
 export const CONSTRAINS_EXPLORER_CONTEXT_MENU: MenuPath = ['constrains-explorer-context-menu'];
 export namespace ConstrainsContextMenu {
@@ -97,7 +98,7 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 */
         commands.registerCommand(ConstrainsExplorerCommands.NEW_CONSTRAINS_SET, {
             execute: (widget) => this.withConstrainsExplorerWidget(widget, async (widget) => {
-                const parent = await this.projManager.getCurrLLD()!.constrainsFolderFStat();
+                const parent = await this.projManager.getCurrLLD()!.fpgaFolderFStat();
                 const parentUri = parent.resource;
                 const targetUri = parentUri.resolve('Untitled');
                 const vacantChildUri = FileSystemUtils.generateUniqueResourceURI(parent, targetUri, true);
@@ -113,6 +114,7 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
                     if (name) {
                         const folderUri = parentUri.resolve(name);
                         await this.fileService.createFolder(folderUri);
+                        this.projManager.addFPGATopologyModel(folderUri);
                     }
                 });
             }),
@@ -120,26 +122,44 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
             isVisible: (widget => this.withConstrainsExplorerWidget(widget, () => true))
         });
 
+        commands.registerCommand(ConstrainsExplorerCommands.REMOVE_CONSTRAINS_SET, {
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                if('fpgaModel' in node){
+                    this.projManager.removeFPGATopologyModel(node.fpgaModel);
+                }
+            }),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
+
         commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_NONE, {
-            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                node.parent.fpgaModel.setConstainsFileUsageType(node.uri, USED_IN_NONE);
+            }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 
         commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH, {
-            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                node.parent.fpgaModel.setConstainsFileUsageType(node.uri, USED_IN_SYTH_ONLY);
+            }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 
         commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_IMPL, {
-            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                node.parent.fpgaModel.setConstainsFileUsageType(node.uri, USED_IN_IMPL_ONLY);
+            }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
 
         commands.registerCommand(ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH_IMPL, {
-            execute: widget => this.withConstrainsExplorerWidget(widget, (widget) => widget.model.refresh()),
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                node.parent.fpgaModel.setConstainsFileUsageType(node.uri, USED_IN_SYNTH_AND_IMPL);
+            }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
         });
@@ -213,13 +233,16 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
         });
 
         registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
-            commandId: WorkspaceCommands.FILE_RENAME.id
+            commandId: WorkspaceCommands.FILE_RENAME.id,
+            when: '!explorerResourceIsFolder'
         });
         registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
-            commandId: WorkspaceCommands.FILE_DELETE.id
+            commandId: WorkspaceCommands.FILE_DELETE.id,
+            when: '!explorerResourceIsFolder'
         });
         registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
-            commandId: WorkspaceCommands.FILE_DUPLICATE.id
+            commandId: WorkspaceCommands.FILE_DUPLICATE.id,
+            when: '!explorerResourceIsFolder'
         });
 
         const downloadUploadMenu = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '6_downloadupload'];
@@ -251,6 +274,10 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
         });
 
 
+        registry.registerMenuAction(ConstrainsContextMenu.MODIFICATION, {
+            commandId: ConstrainsExplorerCommands.REMOVE_CONSTRAINS_SET.id,
+            when: 'explorerResourceIsFolder'
+        });
 
 
 
