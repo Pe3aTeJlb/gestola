@@ -51,7 +51,7 @@ export class RTLLevelWidgetFactory implements WidgetFactory {
 
         const moduleHierarchyWidget = await this.widgetManager.getOrCreateWidget(ModuleHierarchyTreeWidget.ID);
         const simResultsFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
-            <GestolaFileNavigatorOptions>{navigatorID: "simresults", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-rtl-simresults", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});
         const testbenchesExplorerWidget = await this.widgetManager.getOrCreateWidget(TestBenchExplorerWidget.ID);
         const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: RTL_LEVEL_VIEW_CONTAINER_ID});

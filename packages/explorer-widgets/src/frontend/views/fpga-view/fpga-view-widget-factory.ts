@@ -47,13 +47,16 @@ export class TopologyLevelFPGAWidgetFactory implements WidgetFactory {
 
         const constrainsExplorer = await this.widgetManager.getOrCreateWidget(ConstrainsExplorerWidget.ID);
     
-        const fpgaFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
-            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
+        const synthResultsFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga-synth-results", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
+        const implResultsFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-fpga-impl-results", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
         const miscFolderFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
             <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-misc", viewContainerID: TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID});
 
         viewContainer.addWidget(constrainsExplorer, this.widgetOptions);
-        viewContainer.addWidget(fpgaFolderFileNavigator, this.widgetOptions);
+        viewContainer.addWidget(synthResultsFolderFileNavigator, this.widgetOptions);
+        viewContainer.addWidget(implResultsFolderFileNavigator, this.widgetOptions);
         viewContainer.addWidget(miscFolderFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));

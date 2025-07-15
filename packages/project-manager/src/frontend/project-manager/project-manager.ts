@@ -57,6 +57,10 @@ export interface TestBenchesRemoveEvent {
     complete: () => void
 }
 
+export interface FPGATopologyModelChangeEvent {
+    readonly model: FPGATopologyModel | undefined;
+}
+
 export interface FPGATopologyAddEvent {
     readonly uri: URI;
 }
@@ -439,6 +443,11 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
 
+    public setFPGATopologyModel(model: FPGATopologyModel | undefined){
+        this.getCurrLLD()?.setCurrFPGATopologyModel(model);
+        this.fireFPGATopologyModelChangeEvent(model);
+    }
+
     public addFPGATopologyModel(uri: URI){
         this.fireFPGATopologyModelAddEvent(uri);
     }
@@ -581,6 +590,16 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
     private fireTestBenchRemovedEvent(module: HDLModuleRef[]){
         this.onDidTestBenchRemovedEmitter.fire(module);
+    }
+
+
+    //Set FPGA Model
+    protected readonly onDidChangeFPGATopologyModelEmitter = new Emitter<FPGATopologyModelChangeEvent>();
+    get onDidChangeFPGATopologyModel(): Event<FPGATopologyModelChangeEvent> {
+        return this.onDidChangeFPGATopologyModelEmitter.event;
+    }
+    private fireFPGATopologyModelChangeEvent(model: FPGATopologyModel | undefined){
+        this.onDidChangeFPGATopologyModelEmitter.fire({model: model} as FPGATopologyModelChangeEvent);
     }
 
     //Add FPGA Model

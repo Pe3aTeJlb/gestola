@@ -13,8 +13,11 @@ export class FPGATopologyModel {
     projManager: ProjectManager;
     fileService: FileService;
 
+    name: string;
+
     rootUri: URI;
     contrainsURI: URI;
+    synthResults: URI;
     implResults: URI;
 
     constrainsFiles: URI[];
@@ -25,8 +28,11 @@ export class FPGATopologyModel {
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
+        this.name = fpgaModelRoot.path.name;
+
         this.rootUri = fpgaModelRoot;
         this.contrainsURI = fpgaModelRoot.resolve('constrains');
+        this.synthResults = fpgaModelRoot.resolve('synthresults');
         this.implResults = fpgaModelRoot.resolve('implresults');
 
         this.process();
@@ -37,6 +43,10 @@ export class FPGATopologyModel {
 
         if(await this.fileService.exists(this.contrainsURI) == false){
             this.fileService.createFolder(this.contrainsURI);
+        }
+
+        if(await this.fileService.exists(this.synthResults) == false){
+            this.fileService.createFolder(this.synthResults);
         }
 
         if(await this.fileService.exists(this.implResults) == false){
@@ -57,6 +67,14 @@ export class FPGATopologyModel {
 
     public async constrainsFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.contrainsURI);
+    }
+
+    public async synthResultsFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.synthResults);
+    }
+
+    public async implResultsFolderFStat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.implResults);
     }
 
 }

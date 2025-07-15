@@ -17,6 +17,7 @@ import { ConstrainsExplorerTreeModel } from './constrains-explorer-model';
 import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
 import { CONSTRAINS_EXPLORER_CONTEXT_MENU } from './constrains-explorer-commands-contribution';
 import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
+import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
 export const CONSTRAINS_EXPLORER_PROPS: TreeProps = {
     ...defaultTreeProps,
@@ -33,6 +34,7 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
     @inject(GestolaExplorerContextKeyService) protected readonly contextKeyService: GestolaExplorerContextKeyService;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
     @inject(NavigatorContextKeyService) protected readonly navigatorKeyService: NavigatorContextKeyService;
+    @inject(ProjectManager) readonly projManager: ProjectManager;
 
     static readonly ID = 'gestola:constrains-explorer';
     static readonly VIEW_LABEL = nls.localize("gestola/topology-level-fpga/constrains-explorer-view-title", "Constrains Explorer");
@@ -43,9 +45,7 @@ export class ConstrainsExplorerWidget extends AbstractNavigatorTreeWidget {
         @inject(ContextMenuRenderer) contextMenuRenderer: ContextMenuRenderer,
     ) {
         super(props, model, contextMenuRenderer);
-
         this.addClass('theia-Files');
-
     }
 
     @postConstruct()

@@ -23,7 +23,7 @@ export class LowLevelDesign {
     topologyUri: URI;
 
     fpgaUri: URI;
-    currFPGAModel: FPGATopologyModel;
+    currFPGAModel: FPGATopologyModel | undefined;
     fpgaModels: FPGATopologyModel[] = [];
 
     vlsiUri: URI;
@@ -44,12 +44,16 @@ export class LowLevelDesign {
         this.vlsiUri = this.topologyUri.resolve('vlsi');
 
         this.projManager.onDidAddFPGATopologyModel((event: FPGATopologyAddEvent) => {
-            this.fpgaModels.push(new FPGATopologyModel(this.projManager, event.uri));
+            if(this.projManager.getCurrLLD() == this){
+                this.fpgaModels.push(new FPGATopologyModel(this.projManager, event.uri));
+            }
         });
 
         this.projManager.onDidRemoveFPGATopologyModel((event: FPGATopologyRemoveEvent) => {
-            this.fileService.delete(event.model.rootUri, {recursive: true} as FileDeleteOptions);
-            this.fpgaModels = this.fpgaModels.filter(e => e !== event.model);
+            if(this.projManager.getCurrLLD() == this){
+                this.fileService.delete(event.model.rootUri, {recursive: true} as FileDeleteOptions);
+                this.fpgaModels = this.fpgaModels.filter(e => e !== event.model);
+            }
         });
     
         this.process();
@@ -78,8 +82,12 @@ export class LowLevelDesign {
         return this.rtlModel;
     }
 
-    public getCurrFPGATopologyModel(): RTLModel {
-        return this.rtlModel;
+    public getCurrFPGATopologyModel(): FPGATopologyModel | undefined {
+        return this.currFPGAModel;
+    }
+
+    public setCurrFPGATopologyModel(model: FPGATopologyModel | undefined) {
+        this.currFPGAModel = model;
     }
 
     public getRootUri(): URI{ 

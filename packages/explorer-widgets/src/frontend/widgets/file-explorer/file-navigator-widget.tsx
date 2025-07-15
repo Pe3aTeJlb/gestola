@@ -73,7 +73,13 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
             case "file-navigator-fpga": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "FPGA"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "FPGA"); 
+                break;
+            case "file-navigator-fpga-synth-results": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "Synthesis Results"); 
+                break;
+            case "file-navigator-fpga-impl-results": 
+                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "Implementation Results"); 
                 break;
             case "file-navigator-vlsi": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "VLSI"); 
@@ -81,7 +87,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-misc": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-miscFiles", "Misc Files"); 
                 break;
-            case "simresults":
+            case "file-navigator-rtl-simresults":
                 dataset.visibilityCommandLabel = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
                 break;
         }
@@ -116,13 +122,19 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-fpga": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
                 break;
+            case "file-navigator-fpga-synth-results": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "Synthesis Results"); 
+                break;
+            case "file-navigator-fpga-impl-results": 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "Implementation Results"); 
+                break;
             case "file-navigator-vlsi": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
                 break;
             case "file-navigator-misc": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-miscFiles", "Misc Files"); 
                 break;
-            case "simresults":
+            case "file-navigator-rtl-simresults":
                 this.title.label = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
                 break;
         }

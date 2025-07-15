@@ -108,6 +108,10 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
             this.updateRoot(); 
             //this.refresh()
         }));
+        this.toDispose.push(this.projManager.onDidChangeFPGATopologyModel(() => {
+            this.updateRoot(); 
+            //this.refresh()
+        }));
 
 
         this.selectionService.onSelectionChanged(() => {
@@ -180,20 +184,9 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
         let lld = this.projManager.getCurrProject()?.getCurrLLD();
         if(proj){
 
-            if(this.rootId === "file-navigator-system" || this.rootId === "file-navigator-misc"){
-
+            if(this.rootId === "file-navigator-system"){
                 const treeRoot = WorkspaceNode.createRoot();
-
-                let rootFolder;
-                switch(this.rootId){
-                    case "file-navigator-system": 
-                    rootFolder = await proj.systemFolderFStat();
-                    break;
-                    case "file-navigator-misc": 
-                    rootFolder = await proj.miscFolderFStat();
-                    break;
-                }
-
+                let rootFolder = await proj.systemFolderFStat();
                 if(rootFolder && rootFolder.children){
                     this.rootUri = rootFolder.resource;
                     treeRoot.children.push(
@@ -202,29 +195,12 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 }
 
                 return treeRoot;
+            }
+            
 
-            } else if (lld){
-
+            if(this.rootId === "file-navigator-rtl" && lld){
                 const treeRoot = WorkspaceNode.createRoot();
-
-                let rootFolder;
-                switch(this.rootId){      
-                    
-                    case "file-navigator-rtl":
-                        rootFolder = await lld.getRTLModel().rtlModelFolderFStat();
-                        break;
-                    case "file-navigator-fpga": 
-                        rootFolder = await lld.fpgaFolderFStat();
-                        break;
-                    case "file-navigator-vlsi": 
-                        rootFolder = await lld.vlsiFolderFStat();
-                        break;
-                    case "simresults": 
-                        rootFolder = await lld.getRTLModel().simResultsFolderFStat();
-                        break;
-                
-                }
-
+                let rootFolder = await lld.getRTLModel().rtlModelFolderFStat();
                 if(rootFolder && rootFolder.children){
                     this.rootUri = rootFolder.resource;
                     treeRoot.children.push(
@@ -233,7 +209,131 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 }
 
                 return treeRoot;
+            }
 
+            if(this.rootId === "file-navigator-rtl-simresults" && lld){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await lld.getRTLModel().simResultsFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
+            if(this.rootId === "file-navigator-fpga" && lld){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await lld.fpgaFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
+            if(this.rootId == "file-navigator-fpga-synth-results" && lld && lld.getCurrFPGATopologyModel() != undefined){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await lld.getCurrFPGATopologyModel()!.synthResultsFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
+            if(this.rootId == "file-navigator-fpga-synth-results" && lld && lld.getCurrFPGATopologyModel() == undefined){
+
+                const treeRoot = WorkspaceNode.createRoot("multi");
+
+                for(let model of lld.fpgaModels){
+
+                    let implFolder = await model.synthResultsFolderFStat();
+                    if(implFolder && implFolder.children){
+                        for(let f of implFolder.children){
+                            if(f.isDirectory){
+                                treeRoot.children.push(
+                                    await this.tree.createWorkspaceRoot(f, treeRoot)
+                                );
+                            }
+                        }
+                    }
+
+                }
+
+                return treeRoot;
+
+            }
+
+            if(this.rootId == "file-navigator-fpga-impl-results" && lld && lld.getCurrFPGATopologyModel() != undefined){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await lld.getCurrFPGATopologyModel()!.implResultsFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
+            if(this.rootId == "file-navigator-fpga-impl-results" && lld && lld.getCurrFPGATopologyModel() == undefined){
+
+                const treeRoot = WorkspaceNode.createRoot("multi");
+
+                for(let model of lld.fpgaModels){
+
+                    let implFolder = await model.implResultsFolderFStat();
+                    if(implFolder && implFolder.children){
+                        for(let f of implFolder.children){
+                            if(f.isDirectory){
+                                treeRoot.children.push(
+                                    await this.tree.createWorkspaceRoot(f, treeRoot)
+                                );
+                            }
+                        }
+                    }
+
+                }
+
+                return treeRoot;
+
+            }
+
+            if(this.rootId === "file-navigator-vlsi" && lld){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await lld.vlsiFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
+
+            if(this.rootId === "file-navigator-misc"){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await proj.miscFolderFStat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
             }
 
         }

@@ -11,6 +11,7 @@ import { Disposable } from '@theia/core/lib/common/disposable';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { SelectionService } from '@theia/core';
 import { WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
+import { FPGATopologyModel } from '@gestola/project-manager/src/frontend/project-manager/fpga-topology-model';
 
 @injectable()
 export class ConstrainsExplorerTreeModel extends FileTreeModel {
@@ -118,6 +119,12 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
         this.selectionService.onSelectionChanged(() => {
             this.refresh();
             this.applySelection();
+            console.log("kek lol", this.selectedNodes[0]);
+            if (this.selectedNodes[0] && "fpgaModel" in this.selectedNodes[0]) {
+                this.projManager.setFPGATopologyModel(this.selectedNodes[0].fpgaModel as FPGATopologyModel);
+            } else {
+                this.projManager.setFPGATopologyModel(undefined);
+            }
         });
 
         if (this.selectedNodes.length) {
@@ -196,7 +203,7 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
                     let node = await this.tree.createWorkspaceRoot(constrFolder, treeRoot);
 
                     Object.assign(node, {
-                        name: node.uri.path.dir.name,
+                        name: model.name,
                         fpgaModel: model
                     });
                     treeRoot.children.push(node);
