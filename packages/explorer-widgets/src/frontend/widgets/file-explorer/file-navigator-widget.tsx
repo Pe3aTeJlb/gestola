@@ -2,7 +2,7 @@ import { injectable, inject, postConstruct, interfaces, Container } from '@theia
 import { Message } from '@theia/core/shared/@phosphor/messaging';
 import URI from '@theia/core/lib/common/uri';
 import { CommandService } from '@theia/core/lib/common';
-import { Key, TreeModel, ContextMenuRenderer, ExpandableTreeNode, TreeProps, TreeNode, defaultTreeProps } from '@theia/core/lib/browser';
+import { Key, TreeModel, ContextMenuRenderer, ExpandableTreeNode, TreeProps, TreeNode, defaultTreeProps, NodeProps, codicon } from '@theia/core/lib/browser';
 import { DirNode, FileStatNodeData  } from '@theia/filesystem/lib/browser';
 import { WorkspaceService, WorkspaceCommands } from '@theia/workspace/lib/browser';
 import { isOSX, environment } from '@theia/core';
@@ -17,6 +17,7 @@ import { GestolaFileNavigatorModel } from './file-navigator-model';
 import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
 import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
 import { NAVIGATOR_CONTEXT_MENU } from './file-navigator-commands-contribution';
+import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
 export const GESTOLA_FILE_NAVIGATOR_ID = 'gestola:file-navigator';
 export const LABEL = nls.localize('theia/navigator/noFolderOpened', 'No Folder Opened');
@@ -43,6 +44,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
     @inject(GestolaExplorerContextKeyService) protected readonly contextKeyService: GestolaExplorerContextKeyService;
     @inject(NavigatorContextKeyService) protected readonly navigatorKeyService: NavigatorContextKeyService;
     @inject(WorkspaceService) protected readonly workspaceService: WorkspaceService;
+    @inject(ProjectManager) readonly projManager: ProjectManager;
 
     constructor(
         @inject(TreeProps) props: TreeProps,
@@ -261,6 +263,20 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
         // a valid `FileSystemProvider` is available for the selected node. So we skip an additional check
         // for provider availability here and check the node type.
         this.navigatorKeyService.isFileSystemResource.set(FileStatNodeData.is(this.model.selectedNodes[0]));
+    }
+
+    protected override renderTailDecorations(node: FileStatNodeData, props: NodeProps): React.ReactNode {
+        return  <div className='result-node-buttons-prebuffer'>
+                    {this.renderDesignExcludedMarker(node)}
+                </div>;
+    }
+
+    protected renderDesignExcludedMarker(node: FileStatNodeData): React.ReactNode {
+        if(this.projManager.getCurrLLD()?.getRTLModel().designExcludedHDLFiles.find(e => e.isEqual(node.fileStat!.resource)) != undefined){
+        return <span className={`result-node-buttons2 ${codicon('debug-breakpoint')}`}></span>;
+        } else {
+            return ""
+        }
     }
 
 }
