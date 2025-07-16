@@ -71,8 +71,7 @@
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
     "lramseyer.vaporview": "https://lramseyer.gallery.vsassets.io/_apis/public/gallery/publisher/lramseyer/extension/vaporview/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
-    "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
-    "CHIPSAlliance.verible": "https://CHIPSAlliance.gallery.vsassets.io/_apis/public/gallery/publisher/CHIPSAlliance/extension/verible/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+    "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",
