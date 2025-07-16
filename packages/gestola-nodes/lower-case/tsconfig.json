@@ -11,9 +11,6 @@
     ],
     "references": [
         {
-            "path": "../../project-manager"
-        },
-        {
             "path": "../../node-red-integration"
         }
     ]
