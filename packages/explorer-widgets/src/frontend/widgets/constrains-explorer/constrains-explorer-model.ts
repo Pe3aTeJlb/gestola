@@ -119,7 +119,6 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
         this.selectionService.onSelectionChanged(() => {
             this.refresh();
             this.applySelection();
-            console.log("kek lol", this.selectedNodes[0]);
             if (this.selectedNodes[0] && "fpgaModel" in this.selectedNodes[0]) {
                 this.projManager.setFPGATopologyModel(this.selectedNodes[0].fpgaModel as FPGATopologyModel);
             } else {

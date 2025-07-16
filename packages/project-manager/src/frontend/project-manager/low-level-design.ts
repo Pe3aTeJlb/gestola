@@ -1,7 +1,7 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileDeleteOptions } from '@theia/filesystem/lib/common/files';
-import { ProjectManager, FPGATopologyAddEvent, FPGATopologyRemoveEvent } from './project-manager';
+import { ProjectManager } from './project-manager';
 import { RTLModel } from './rtl-model';
 import { FPGATopologyModel } from './fpga-topology-model';
 
@@ -28,7 +28,6 @@ export class LowLevelDesign {
 
     vlsiUri: URI;
     
-    
     constructor(projManager: ProjectManager, lldRoot: URI){
 
         this.projManager = projManager;
@@ -42,19 +41,6 @@ export class LowLevelDesign {
         this.topologyUri = this.lldUri.resolve('topology');
         this.fpgaUri = this.topologyUri.resolve('fpga');
         this.vlsiUri = this.topologyUri.resolve('vlsi');
-
-        this.projManager.onDidAddFPGATopologyModel((event: FPGATopologyAddEvent) => {
-            if(this.projManager.getCurrLLD() == this){
-                this.fpgaModels.push(new FPGATopologyModel(this.projManager, event.uri));
-            }
-        });
-
-        this.projManager.onDidRemoveFPGATopologyModel((event: FPGATopologyRemoveEvent) => {
-            if(this.projManager.getCurrLLD() == this){
-                this.fileService.delete(event.model.rootUri, {recursive: true} as FileDeleteOptions);
-                this.fpgaModels = this.fpgaModels.filter(e => e !== event.model);
-            }
-        });
     
         this.process();
 
@@ -72,8 +58,17 @@ export class LowLevelDesign {
 
     }
 
+    public setCurrFPGATopologyModel(model: FPGATopologyModel | undefined) {
+        this.currFPGAModel = model;
+    }
+
     public createFPGATopologyModel(uri: URI){
         this.fpgaModels.push(new FPGATopologyModel(this.projManager, uri));
+    }
+
+    public removeFPGATopologyModel(model: FPGATopologyModel){
+        this.fileService.delete(model.rootUri, {recursive: true} as FileDeleteOptions);
+        this.fpgaModels = this.fpgaModels.filter(e => e !== model);
     }
 
     //Getters
@@ -84,10 +79,6 @@ export class LowLevelDesign {
 
     public getCurrFPGATopologyModel(): FPGATopologyModel | undefined {
         return this.currFPGAModel;
-    }
-
-    public setCurrFPGATopologyModel(model: FPGATopologyModel | undefined) {
-        this.currFPGAModel = model;
     }
 
     public getRootUri(): URI{ 

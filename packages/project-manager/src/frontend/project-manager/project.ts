@@ -37,7 +37,7 @@ export class Project implements IProject {
                                 new RegExp('\.config'), 
                             ];
 
-    public async constructProject(projManager: ProjectManager, projectRoot: FileStat): Promise<Project>{
+    public constructor(projManager: ProjectManager, projectRoot: FileStat) {
 
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
@@ -54,11 +54,7 @@ export class Project implements IProject {
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
 
-        await this.getLowLevelDesignList(this.lldsRootUri);
-
-        this.curLLD = this.LowLevelDesignes[0];
-
-        return Promise.resolve(this);
+        this.getLowLevelDesignList(this.lldsRootUri);
 
     }
 
@@ -72,6 +68,8 @@ export class Project implements IProject {
                 this.LowLevelDesignes.push(new LowLevelDesign(this.projManager, uri));
             }
         }
+
+        this.curLLD = this.LowLevelDesignes[0];
 
     }
 

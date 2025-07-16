@@ -45,11 +45,9 @@ export class TestBenchExplorerWidget extends TreeWidget {
 
         this.projManager.onDidChangeProject(() => this.model.refresh());
         this.projManager.onDidChangeLLD(() => this.model.refresh());
-        this.projManager.onDidChangedDesignTopModule(() => this.model.refresh());
+        this.projManager.onDidChangeDesignTopModule(() => this.model.refresh());
         this.projManager.onDidAddTestBench(() => this.model.refresh());
         this.projManager.onDidRemoveTestBench(() => this.model.refresh());
-        this.projManager.onDidRemovedTestBench(() => this.model.refresh());
-        this.projManager.onDidAddedTestBench(() => this.model.refresh());
 
     }
 

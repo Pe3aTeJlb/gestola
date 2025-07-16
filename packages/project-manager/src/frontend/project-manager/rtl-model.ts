@@ -1,7 +1,7 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
-import { DesignFilesExcludeEvent, DesignTopModuleChangeEvent, ProjectManager, TestBenchesAddEvent, TestBenchesRemoveEvent } from './project-manager';
+import { ProjectManager } from './project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
@@ -132,57 +132,6 @@ export class RTLModel {
             }
         });
 
-        this.projManager.onDidDesignFilesInclude((event: DesignFilesExcludeEvent) => {
-            
-            if(this.projManager.getCurrRTLModel() == this){
-                this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
-                this.designIncludedHDLFiles = this.designIncludedHDLFiles.concat(event.uris);
-                this.updateVeribleMetaFile();
-            }
-
-        });
-
-        this.projManager.onDidDesignFilesExclude((event: DesignFilesExcludeEvent) => {
-
-            if(this.projManager.getCurrRTLModel() == this){
-                this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => event.uris.find(i => i.isEqual(e)) === undefined);
-                this.projManager.removeTestBenchByUri(event.uris);
-                this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(event.uris);
-                this.checkTopLevelModuleRelevance();
-                this.updateVeribleMetaFile();
-            }
-
-        });
-
-        this.projManager.onDidChangeDesignTopModule((event: DesignTopModuleChangeEvent) => {
-            if(this.projManager.getCurrRTLModel() == this){
-                this.topLevelModule = event.module;
-                if(this.topLevelModule && (this.testbenchesFiles.length == 0 || this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined))) {
-                    this.projManager.addTestBenchByHDLModuleRef(this.topLevelModule);
-                }
-                event.complete();
-            }
-        });
-
-        this.projManager.onDidAddTestBench((event: TestBenchesAddEvent) => {
-
-            if(this.projManager.getCurrRTLModel() == this){
-                this.testbenchesFiles = this.testbenchesFiles.concat(event.module);
-            }
-            event.complete();
-
-        });
-
-        this.projManager.onDidRemoveTestBench((event: TestBenchesRemoveEvent) => {
-
-            if(this.projManager.getCurrRTLModel() == this){
-                this.testbenchesFiles = this.testbenchesFiles.filter(e => event.modules.find(i => i.uri.isEqual(e.uri)) === undefined);
-            }
-            event.complete();
-
-        });
-        
-
         this.indexHDLFiles();
 
     }
@@ -278,11 +227,39 @@ export class RTLModel {
     }
 
 
+    public includeDesignFiles(uris: URI[]){
+        this.designExcludedHDLFiles = this.designExcludedHDLFiles.filter(e => uris.find(i => i.isEqual(e)) === undefined);
+        this.designIncludedHDLFiles = this.designIncludedHDLFiles.concat(uris);
+        this.updateVeribleMetaFile();
+    }
+
+    public excludeDesignFiles(uris: URI[]){
+        this.designIncludedHDLFiles = this.designIncludedHDLFiles.filter(e => uris.find(i => i.isEqual(e)) === undefined);
+        this.projManager.removeTestBenchByUri(uris);
+        this.designExcludedHDLFiles = this.designExcludedHDLFiles.concat(uris);
+        this.checkTopLevelModuleRelevance();
+        this.updateVeribleMetaFile();
+    }
+
+    public setDesignTopModule(module: HDLModuleRef | undefined){
+        this.topLevelModule = module;
+        if(this.topLevelModule && (this.testbenchesFiles.length == 0 || this.testbenchesFiles.find(i => i.uri.isEqual(this.topLevelModule!.uri) === undefined))) {
+            this.projManager.addTestBenchByHDLModuleRef(this.topLevelModule);
+        }
+    }
+
+    public addTestBench(module: HDLModuleRef){
+        this.testbenchesFiles = this.testbenchesFiles.concat(module);
+    }
+
+    public removeTestBenches(modules: HDLModuleRef[]){
+        this.testbenchesFiles = this.testbenchesFiles.filter(e => modules.find(i => i.uri.isEqual(e.uri)) === undefined);
+    }
 
 
 
 
-    private async updateVeribleMetaFile(){
+    public async updateVeribleMetaFile(){
         this.fileService.write(this.veribleFilelistUri, this.designIncludedHDLFiles.map(e => e.path.fsPath()).join('\n'));
     }
 

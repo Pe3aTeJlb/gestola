@@ -10,7 +10,6 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, LLDTemplate } from '../../common/protocol';
 import { LowLevelDesign } from './low-level-design';
-import { VeriblePrefsManager } from "@gestola/verible-wrapper/lib/frontend/prefsManager";
 import { HDLModuleRef, RTLModel } from './rtl-model';
 import { FPGATopologyModel } from './fpga-topology-model';
 
@@ -44,17 +43,14 @@ export interface DesignFilesExcludeEvent {
 
 export interface DesignTopModuleChangeEvent {
     readonly module: HDLModuleRef | undefined;
-    complete: () => void
 }
 
 export interface TestBenchesAddEvent {
     readonly module: HDLModuleRef;
-    complete: () => void
 }
 
 export interface TestBenchesRemoveEvent {
     readonly modules: HDLModuleRef[];
-    complete: () => void
 }
 
 export interface FPGATopologyModelChangeEvent {
@@ -106,9 +102,6 @@ export class ProjectManager implements FrontendApplicationContribution {
     @inject(DatabaseBackendService)
     private readonly databaseBackendService: DatabaseBackendService;
 
-    @inject(VeriblePrefsManager)
-    private readonly veriblePrefsManager: VeriblePrefsManager;
-
     projRoot: FileStat | undefined;
 
     protected openedProjects: Project[] = [];
@@ -148,15 +141,13 @@ export class ProjectManager implements FrontendApplicationContribution {
         this.onDidChangeProject((event: ProjectChangeEvent) => {
             let lld = event.proj.getCurrLLD();
             if(lld){
-                this.fireLLDChangeEvent(lld);
+                this.setLowLevelDesign(lld);
             }
         });
+
         this.onDidChangeLLD((event: LLDChangeEvent) => {
-            this.veriblePrefsManager.setFilelistPath(event.lld.rtlModel.veribleFilelistUri.path.fsPath());
             this.fireDesignTopModuleChangeEvent(event.lld.rtlModel.topLevelModule);
         });
-    
-        //await this.refreshProjectsList();
 
         if(this.openedProjects.length > 1){
             this.setProject(this.openedProjects[0]);
@@ -254,7 +245,7 @@ export class ProjectManager implements FrontendApplicationContribution {
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
                 if(this.openedProjects.filter(e => e.rootUri.isEqual(roots[j].resource)).length == 0){
-                    this.openedProjects.push(await (new Project()).constructProject(this, roots[j]));
+                    this.openedProjects.push(new Project(this, roots[j]));
                 }
             }
         }
@@ -376,10 +367,12 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public includeFilesIntoDesign(uris: URI[]){
+        this.getCurrRTLModel()?.includeDesignFiles(uris);
         this.fireDesignFilesIncludeEvent(uris);
     };
 
     public excludeFilesFromDesign(uris: URI[]){
+        this.getCurrRTLModel()?.excludeDesignFiles(uris);
         this.fireDesignFilesExcludeEvent(uris);
     }
 
@@ -397,12 +390,17 @@ export class ProjectManager implements FrontendApplicationContribution {
             if(descriptions.length > 0){
                 if(descriptions.length > 1){
                     let moduleName = await this.selectModule(descriptions.map(e => e.module.name));
-                    if(moduleName) this.fireDesignTopModuleChangeEvent({name: moduleName, uri: descriptions[0].uri});
+                    if(moduleName) {
+                        this.getCurrRTLModel()?.setDesignTopModule({name: moduleName, uri: descriptions[0].uri});
+                        this.fireDesignTopModuleChangeEvent({name: moduleName, uri: descriptions[0].uri});
+                    }
                 } else {
+                    this.getCurrRTLModel()?.setDesignTopModule({name: descriptions[0].module.name, uri: descriptions[0].uri});
                     this.fireDesignTopModuleChangeEvent({name: descriptions[0].module.name, uri: descriptions[0].uri});
                 }
             }
         } else {
+            this.getCurrRTLModel()?.setDesignTopModule(undefined);
             this.fireDesignTopModuleChangeEvent(undefined);
         }
     }
@@ -425,6 +423,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     public addTestBenchByHDLModuleRef(module: HDLModuleRef){
         if(module && this.currProj?.curLLD){
+            this.getCurrRTLModel()?.addTestBench(module);
             this.fireTestBenchAddEvent(module);
         }
     }
@@ -433,14 +432,17 @@ export class ProjectManager implements FrontendApplicationContribution {
 
         if(uris && this.currProj?.curLLD?.rtlModel){
             let modules = this.currProj.curLLD.rtlModel.testbenchesFiles.filter(e => uris.find(i => i.isEqual(e.uri)) !== undefined);
+            this.getCurrRTLModel()?.removeTestBenches(modules);
             this.fireTestBenchRemoveEvent(modules);
         }
         
     }
 
     public removeTestBenchByHDLModuleRef(modules: HDLModuleRef[]){
+        this.getCurrRTLModel()?.removeTestBenches(modules);
         this.fireTestBenchRemoveEvent(modules);
     }
+
 
 
     public setFPGATopologyModel(model: FPGATopologyModel | undefined){
@@ -449,10 +451,12 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public addFPGATopologyModel(uri: URI){
+        this.getCurrLLD()?.createFPGATopologyModel(uri);
         this.fireFPGATopologyModelAddEvent(uri);
     }
 
     public removeFPGATopologyModel(model: FPGATopologyModel){
+        this.getCurrLLD()?.removeFPGATopologyModel(model);
         this.fireFPGATopologyModelRemoveEvent(model);
     }
 
@@ -539,17 +543,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.onDidChangeDesignTopModuleEmitter.event;
     }
     private fireDesignTopModuleChangeEvent(module: HDLModuleRef | undefined){
-        this.onDidChangeDesignTopModuleEmitter.fire({module: module, complete: () => {
-            this.fireDesignTopModuleChangedEvent(this.currProj?.curLLD?.rtlModel.topLevelModule)
-        }} as DesignTopModuleChangeEvent);
-    }
-
-    protected readonly onDidChangedDesignTopModuleEmitter = new Emitter<DesignTopModuleChangeEvent>();
-    get onDidChangedDesignTopModule(): Event<DesignTopModuleChangeEvent> {
-        return this.onDidChangedDesignTopModuleEmitter.event;
-    }
-    private fireDesignTopModuleChangedEvent(module: HDLModuleRef | undefined){
-        this.onDidChangedDesignTopModuleEmitter.fire({module: module} as DesignTopModuleChangeEvent);
+        this.onDidChangeDesignTopModuleEmitter.fire({module: module} as DesignTopModuleChangeEvent);
     }
 
     // Add Testbench
@@ -559,17 +553,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.onDidAddTestBenchEmitter.event;
     }
     private fireTestBenchAddEvent(module: HDLModuleRef){
-        this.onDidAddTestBenchEmitter.fire({module: module, complete: () => {
-            this.fireTestBenchAddedEvent(module)
-        }} as TestBenchesAddEvent);
-    }
-
-    protected readonly onDidAddedTestBenchEmitter = new Emitter<HDLModuleRef>();
-    get onDidAddedTestBench(): Event<HDLModuleRef> {
-        return this.onDidAddedTestBenchEmitter.event;
-    }
-    private fireTestBenchAddedEvent(module: HDLModuleRef){
-        this.onDidAddedTestBenchEmitter.fire(module);this.fileService.onDidChangeFileSystemProviderCapabilities
+        this.onDidAddTestBenchEmitter.fire({module: module} as TestBenchesAddEvent);
     }
 
     // Remove Testbenches
@@ -579,19 +563,8 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.onDidRemoveTestBenchEmitter.event;
     }
     private fireTestBenchRemoveEvent(modules: HDLModuleRef[]){
-        this.onDidRemoveTestBenchEmitter.fire({modules: modules, complete: () => {
-            this.fireTestBenchRemovedEvent(modules)
-        }} as TestBenchesRemoveEvent);
+        this.onDidRemoveTestBenchEmitter.fire({modules: modules} as TestBenchesRemoveEvent);
     }
-
-    protected readonly onDidTestBenchRemovedEmitter = new Emitter<HDLModuleRef[]>();
-    get onDidRemovedTestBench(): Event<HDLModuleRef[]> {
-        return this.onDidTestBenchRemovedEmitter.event;
-    }
-    private fireTestBenchRemovedEvent(module: HDLModuleRef[]){
-        this.onDidTestBenchRemovedEmitter.fire(module);
-    }
-
 
     //Set FPGA Model
     protected readonly onDidChangeFPGATopologyModelEmitter = new Emitter<FPGATopologyModelChangeEvent>();
@@ -628,6 +601,7 @@ export class ProjectManager implements FrontendApplicationContribution {
     private fireConstrainsUsageTypeSetEvent(uri: URI[], type: number){
         this.onDidSetConstrainsUsageTypeEmitter.fire({uris: uri, type: type} as ConstrainsUsageTypeSetEvent);
     }
+
 
 
     //Utils
@@ -673,15 +647,15 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.openedProjects.length;
     }
 
-    public getCurrProject(): Project | undefined {
+    public getCurrProject(): Readonly<Project | undefined> {
         return this.currProj;
     }
 
-    public getCurrLLD(): LowLevelDesign | undefined {
+    public getCurrLLD(): Readonly<LowLevelDesign | undefined> {
         return this.currProj?.getCurrLLD();
     }
 
-    public getCurrRTLModel(): RTLModel | undefined {
+    public getCurrRTLModel(): Readonly<RTLModel | undefined> {
         return this.getCurrLLD()?.getRTLModel();
     }
 
