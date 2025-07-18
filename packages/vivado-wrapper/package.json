@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/explorer-widgets",
+  "name": "@gestola/vivado-wrapper",
   "private": true,
   "keywords": [
     "gestola",
@@ -19,12 +19,7 @@
     "lib",
     "src"
   ],
-  "dependencies": {
-    "@theia/core": "1.59.0",
-    "@gestola/project-manager": "1.0.0",
-    "@gestola/verilator-wrapper": "1.0.0",
-    "@gestola/vivado-wrapper": "1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "rimraf": "3.0.2"
   },
@@ -39,6 +34,7 @@
   },
   "theiaExtensions": [
     {
+      "backend": "lib/backend/backend-module",
       "frontend": "lib/frontend/frontend-module"
     }
   ]

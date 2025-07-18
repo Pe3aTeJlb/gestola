@@ -338,6 +338,8 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
 
         }
 
+        return WorkspaceNode.createRoot();
+
     }
 
     /**

@@ -15,6 +15,8 @@ export class LowLevelDesign {
     projManager: ProjectManager;
     fileService: FileService;
 
+    chip: string = 'xc7a100tcsg324-1';
+
     lldName: string;
     lldUri: URI;
 

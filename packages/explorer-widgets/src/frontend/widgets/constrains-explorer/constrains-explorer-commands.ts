@@ -59,4 +59,11 @@ export namespace ConstrainsExplorerCommands {
         iconClass: codicon('new-folder')
     }, 'gestola/project-manager/include-into-design');
 
+
+    export const FPGA_RUN_SYNTH_AND_IMPL_SELECTED = Command.toLocalizedCommand({
+        id: 'gestola.constrains-explorer.run-synth-and-impl-single',
+        label: 'Run Synthesis and Implementation',
+        iconClass: codicon('run')
+    }, 'gestola/project-manager/testbenches-remove');
+
 }

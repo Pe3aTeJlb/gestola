@@ -30,7 +30,7 @@ export class VerilatorFrontendService {
                 await fileService.createFolder(rtlModel.simResultsUri);
             }
 
-            let resultFolderName = `${testbench.name} ${moment().format('YYYY-MM-DD HH:mm:ss')}`;
+            let resultFolderName = `${testbench.name} ${moment().format('YYYY-MM-DD HH-mm-ss')}`;
             let resultUri = rtlModel.simResultsUri.resolve(resultFolderName);
             await fileService.createFolder(resultUri);
 

@@ -212,6 +212,8 @@ export class ConstrainsExplorerTreeModel extends FileTreeModel {
 
             return treeRoot;
 
+        } else {
+            return WorkspaceNode.createRoot();
         }
 
     }

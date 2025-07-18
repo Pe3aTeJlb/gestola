@@ -21,6 +21,7 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 const validFilename: (arg: string) => boolean = require('valid-filename');
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager/lib/frontend/project-manager/fpga-topology-model';
+import { VivadoFrontendService } from "@gestola/vivado-wrapper/lib/frontend/vivado-service";
 
 export const CONSTRAINS_EXPLORER_CONTEXT_MENU: MenuPath = ['constrains-explorer-context-menu'];
 export namespace ConstrainsContextMenu {
@@ -31,6 +32,7 @@ export namespace ConstrainsContextMenu {
     export const CLIPBOARD = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '5_cutcopypaste'];
     export const MODIFICATION = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '7_modification'];
     export const STAGE = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '8_stage'];
+    export const RUN = [...CONSTRAINS_EXPLORER_CONTEXT_MENU, '9_run'];
 }
 
 @injectable()
@@ -55,6 +57,9 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
 
     @inject(TestbenchesRemoveHandler) 
     protected readonly testbenchesRemoveHandler: TestbenchesRemoveHandler;
+
+    @inject(VivadoFrontendService) 
+    protected readonly vivadoService: VivadoFrontendService;
 
     protected newUriAwareCommandHandler(handler: UriCommandHandler<URI>): UriAwareCommandHandler<URI> {
         return UriAwareCommandHandler.MonoSelect(this.selectionService, handler);
@@ -162,6 +167,14 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
             }),
             isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
             isVisible: widget => this.withConstrainsExplorerWidget(widget, () => true)
+        });
+
+        commands.registerCommand(ConstrainsExplorerCommands.FPGA_RUN_SYNTH_AND_IMPL_SELECTED, {
+            execute: (widget, node) => this.withConstrainsExplorerWidget(widget, (widget) => {
+                this.vivadoService.runVivado([node.fpgaModel]);
+            }),
+            isEnabled: widget => this.withConstrainsExplorerWidget(widget, () => !!this.projManager.getCurrProject()),
+            isVisible: (widget, node) => this.withConstrainsExplorerWidget(widget, () => true) && !!node.fpgaModel
         });
 
     }
@@ -308,6 +321,11 @@ export class ConstrainsExplorerCommandsContribution implements CommandContributi
         registry.registerMenuAction(ConstrainsContextMenu.STAGE, {
             commandId: ConstrainsExplorerCommands.CONSTRAINS_FILE_USE_SYNTH_IMPL.id,
             when: '!explorerResourceIsFolder'
+        });
+
+        registry.registerMenuAction(ConstrainsContextMenu.RUN, {
+            commandId: ConstrainsExplorerCommands.FPGA_RUN_SYNTH_AND_IMPL_SELECTED.id,
+            when: 'explorerResourceIsFolder'
         });
 
     }
