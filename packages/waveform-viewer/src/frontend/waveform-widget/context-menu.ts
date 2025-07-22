@@ -290,9 +290,9 @@ export class WaveformViewerContextMenuContribution implements CommandContributio
       
     registerMenus(menus: MenuModelRegistry): void {
 
-        menus.registerSubmenu(WaveformViewerContextMenu.FORMAT_SUBMENU, "Format Value", {order: '1'});
-        menus.registerSubmenu(WaveformViewerContextMenu.COLOR_SUBMENU, "Change Color", {order: '2'});
-        menus.registerSubmenu(WaveformViewerContextMenu.RENDER_SUBMENU, "Render Type", {order: '3'});
+        menus.registerSubmenu(WaveformViewerContextMenu.FORMAT_SUBMENU, "Format Value", {sortString: '1'});
+        menus.registerSubmenu(WaveformViewerContextMenu.COLOR_SUBMENU, "Change Color", {sortString: '2'});
+        menus.registerSubmenu(WaveformViewerContextMenu.RENDER_SUBMENU, "Render Type", {sortString: '3'});
 
         menus.registerMenuAction(WaveformViewerContextMenu.FORMAT_SUBMENU, {
             commandId: WaveformViewerCommands.FORMAT_BINARY.id,

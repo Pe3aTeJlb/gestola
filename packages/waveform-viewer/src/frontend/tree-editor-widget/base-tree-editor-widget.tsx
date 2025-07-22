@@ -8,7 +8,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  *******************************************************************************/
-import { Title } from '@phosphor/widgets';
+import { Title } from '@lumino/widgets';
 import { BaseWidget, Message, SplitPanel, Widget } from '@theia/core/lib/browser';
 import { ILogger } from '@theia/core/lib/common';
 import { injectable, postConstruct } from 'inversify';

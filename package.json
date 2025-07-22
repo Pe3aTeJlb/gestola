@@ -29,7 +29,7 @@
   "scripts": {
     "setup": "yarn && yarn update:dependencies && yarn && yarn update:plugins && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
-    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.59.0 && lerna run update:next 1.59.0",
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.63.3 && lerna run update:next 1.63.3",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
     "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts && yarn build:vscode-ext",
@@ -39,6 +39,8 @@
     "postinstall": "theia check:theia-version",
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
+    "start:browser": "yarn --cwd browser-app start",
+    "watch:browser": "lerna run --parallel watch --ignore browser-app",
     "package:prod": "yarn rebuild:prod && yarn --cwd electron-app package:prod",
     "package:test": "yarn rebuild:prod && yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
@@ -62,11 +64,16 @@
     "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
     "bundle": "yarn --cwd electron-app bundle",
     "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "kk": "yarn --cwd packages/verilator-wrapper docker:download"
+
+    "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
+
+    "kk": "yarn --cwd packages/verilator-wrapper docker:download",
+    "kek": "yarn ts-node scripts/test/test.ts"
   },
   "workspaces": [
     "packages/**/",
-    "electron-app"
+    "electron-app",
+    "browser-app"
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {

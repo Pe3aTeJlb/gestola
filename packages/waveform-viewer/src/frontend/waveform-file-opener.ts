@@ -38,7 +38,7 @@ export class WaveformFileOpener extends WidgetOpenHandler<WaveformViewerWidget> 
         };
     }
 
-    protected override async doOpen(widget: WaveformViewerWidget, options?: WidgetOpenerOptions): Promise<void> {
+    protected override async doOpen(widget: WaveformViewerWidget, uri: URI, options?: WidgetOpenerOptions): Promise<void> {
         const op: WidgetOpenerOptions = {
             mode: 'reveal',
             ...options

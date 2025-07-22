@@ -13,3 +13,9 @@ electron-app/resources/node-red/*
 yarn.lock
 workflow
 packages/**/dist
+browser-app/src-gen
+browser-app/dist
+browser-app/resources/verilator
+browser-app/gen-webpack*
+browser-app/resources/templates/*
+browser-app/resources/node-red/*

@@ -1,0 +1,29 @@
+{
+  "extends": "../configs/base.tsconfig.json",
+    "compilerOptions": {
+    "composite": true,
+    "outDir": "lib"
+  },
+  "include": [
+  ],
+  "references": [
+    {
+      "path": "../packages/launcher"
+    },
+    {
+      "path": "../packages/project-manager"
+    },
+    {
+      "path": "../packages/explorer-widgets"
+    },
+    {
+      "path": "../packages/branding"
+    },
+    {
+      "path": "../packages/node-red-integration"
+    },
+    {
+      "path": "../packages/verible-wrapper"
+    }
+  ]
+}

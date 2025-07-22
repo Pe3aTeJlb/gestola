@@ -54,11 +54,11 @@ export class NodeRedFileOpener extends WidgetOpenHandler<NodeRedIntegrationWidge
             widget = await this.getOrCreateWidget(uri, options);
         }
         this.nodeRedService.openFile(uri);
-        await this.doOpen(widget, options);
+        await this.doOpen(widget, uri, options);
         return widget;
     }
 
-    override async doOpen(widget: NodeRedIntegrationWidget, maybeOptions?: WidgetOpenerOptions): Promise<void> {
+    override async doOpen(widget: NodeRedIntegrationWidget, uri: URI, maybeOptions?: WidgetOpenerOptions): Promise<void> {
         const options: WidgetOpenerOptions = {
             mode: 'reveal',
             ...maybeOptions

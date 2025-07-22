@@ -1,7 +1,7 @@
 import { URI } from "@theia/core";
 import { ProjectManager } from "./project-manager";
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import { FileStat } from '@theia/filesystem/lib/common/files';
+import { FileStat, FileChangeType } from '@theia/filesystem/lib/common/files';
 
 export const USED_IN_NONE = 0;
 export const USED_IN_SYNTH_AND_IMPL = 1;
@@ -16,7 +16,7 @@ export class FPGATopologyModel {
     name: string;
 
     rootUri: URI;
-    contrainsURI: URI;
+    contrainsUri: URI;
     synthResults: URI;
     implResults: URI;
 
@@ -31,9 +31,34 @@ export class FPGATopologyModel {
         this.name = fpgaModelRoot.path.name;
 
         this.rootUri = fpgaModelRoot;
-        this.contrainsURI = fpgaModelRoot.resolve('constrains');
+        this.contrainsUri = fpgaModelRoot.resolve('constrains');
         this.synthResults = fpgaModelRoot.resolve('synthresults');
         this.implResults = fpgaModelRoot.resolve('implresults');
+
+        this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
+            if(this.contrainsUri.isEqualOrParent(i.resource)){
+
+                if(i.type == FileChangeType.ADDED){
+
+                    this.constrainsFiles.push(i.resource);
+                    this.constrainsFilesUsageMap.set(i.resource, USED_IN_SYNTH_AND_IMPL);
+
+                } else if (i.type == FileChangeType.UPDATED) {
+
+                    if(this.constrainsFiles.find(e => e.isEqual(i.resource)) === undefined){
+
+                        this.constrainsFiles.push(i.resource);
+                        this.constrainsFilesUsageMap.set(i.resource, USED_IN_SYNTH_AND_IMPL);
+                    }
+
+                } else if (i.type == FileChangeType.DELETED){
+
+                    this.constrainsFiles = this.constrainsFiles.filter(e => !e.isEqual(i.resource));
+                    
+                } 
+                
+            }
+        }));
 
         this.process();
 
@@ -41,8 +66,8 @@ export class FPGATopologyModel {
 
     private async process() {
 
-        if(await this.fileService.exists(this.contrainsURI) == false){
-            this.fileService.createFolder(this.contrainsURI);
+        if(await this.fileService.exists(this.contrainsUri) == false){
+            this.fileService.createFolder(this.contrainsUri);
         }
 
         if(await this.fileService.exists(this.synthResults) == false){
@@ -53,7 +78,7 @@ export class FPGATopologyModel {
             this.fileService.createFolder(this.implResults);
         }
 
-        let stats = await this.fileService.resolve(this.contrainsURI);
+        let stats = await this.fileService.resolve(this.contrainsUri);
 
         if(stats.children){
             this.constrainsFiles = stats.children?.map(i => i.resource);
@@ -66,7 +91,7 @@ export class FPGATopologyModel {
     }
 
     public async constrainsFolderFStat(): Promise<FileStat> {
-        return await this.fileService.resolve(this.contrainsURI);
+        return await this.fileService.resolve(this.contrainsUri);
     }
 
     public async synthResultsFolderFStat(): Promise<FileStat> {
