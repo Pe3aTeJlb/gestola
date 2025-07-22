@@ -22,10 +22,6 @@
     "src"
   ],
   "dependencies": {
-    "@theia/core": "1.63.3",
-    "@theia/getting-started": "1.63.3",
-    "@theia/vsx-registry": "1.63.3",
-    "@theia/workspace": "1.63.3",
     "@gestola/project-manager": "1.0.0"
   },
   "devDependencies": {
