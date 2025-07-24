@@ -114,6 +114,8 @@ nodeConfig.config.ignoreWarnings?.push(
     }
 );
 
+nodeConfig.nativePlugin.nativeBinding("better_sqlite3.node", "better-sqlite3/build/Release/better_sqlite3.node");
+
 module.exports = [
     ...configs,
     nodeConfig.config,

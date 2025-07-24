@@ -19,6 +19,7 @@ export class Project implements IProject {
     lldsRootUri: URI;
     miscUri: URI;
     databesUri: URI;
+    sqliteDBUri: URI;
     theiaUri: URI;
     configUri: URI;
 
@@ -51,8 +52,11 @@ export class Project implements IProject {
         this.lldsRootUri = this.rootUri.resolve('low_level_design');
         this.miscUri = this.rootUri.resolve('misc');
         this.databesUri = this.rootUri.resolve('database');
+        this.sqliteDBUri = this.databesUri.resolve('sqlite.db');
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
+
+        this.projManager.getDatabaseService().createSQLiteConnection(this.sqliteDBUri);
 
         this.getLowLevelDesignList(this.lldsRootUri);
 

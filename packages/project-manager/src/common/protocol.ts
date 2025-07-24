@@ -63,5 +63,5 @@ export interface LLDTemplate {
 export const DatabaseBackendService = Symbol('DatabaseBackendService');
 export const DATABASE_BACKEND_PATH = '/services/gestolaDatabaseBackend';
 export interface DatabaseBackendService {
-    //createSQLiteConnection(uri: URI): Promise<Database>;
+    createSQLiteConnection(uri: URI): void;
 }

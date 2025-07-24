@@ -24,12 +24,14 @@
     "lerna": "2.4.0",
     "ts-node": "^10.0.0",
     "typescript": "~5.4.5",
-    "replace-regex": "0.0.3"
+    "replace-regex": "0.0.3",
+    "@electron/rebuild": "3.7.2"
   },
   "scripts": {
-    "setup": "yarn && yarn update:dependencies && yarn && yarn update:plugins && yarn download:plugins && yarn build",
+    "setup": "yarn && yarn update:dependencies && yarn && yarn repack-sqlite && yarn update:plugins && yarn download:plugins && yarn build",
     "prepare": "lerna run prepare",
     "update:dependencies": "ts-node scripts/update-theia-version.ts 1.63.3 && lerna run update:next 1.63.3",
+    "repack-sqlite": "electron-rebuild -f -w better-sqlite3",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
     "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts && yarn build:vscode-ext",
@@ -68,16 +70,16 @@
     "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
 
     "kk": "yarn --cwd packages/verilator-wrapper docker:download",
-    "kek": "yarn ts-node scripts/test/test.ts"
+    "kek": "yarn ts-node scripts/test/test.ts",
+    "kek2": "electron-rebuild -f -w better-sqlite3",
+    "kek3": "electron-builder install-app-deps"
   },
   "workspaces": [
     "packages/**/",
-    "electron-app",
-    "browser-app"
+    "electron-app"
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    "lramseyer.vaporview": "https://lramseyer.gallery.vsassets.io/_apis/public/gallery/publisher/lramseyer/extension/vaporview/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
     "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
   "theiaPluginsExcludeIds": [
