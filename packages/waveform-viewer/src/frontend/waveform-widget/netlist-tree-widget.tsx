@@ -251,7 +251,6 @@ export class NetlistTreeWidget extends TreeWidget {
     }
 
     public uncheckNode(netlistId: number){
-        console.log('lolxd', netlistId);
         this.uncheckNodes(netlistId, (this.model.root as CompositeTreeNode).children);
     }
 
@@ -259,8 +258,6 @@ export class NetlistTreeWidget extends TreeWidget {
 
         let modules = nodes.filter((e: ModuleTreeNode) => e.type == 'module');
         let target = nodes.filter((e: NetTreeNode) => e.type != 'module').filter((e: NetTreeNode) => e.netlistId == netlistId);
-
-        console.log('lolxd 2', target);
 
         if(target.length > 0){
             this.model.markAsChecked(target[0], false);

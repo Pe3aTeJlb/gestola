@@ -1,0 +1,51 @@
+{
+  "name": "@gestola/dashboard-widget-editor",
+  "private": true,
+  "keywords": [
+    "gestola",
+    "gestola-extension"
+  ],
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pe3aTeJlb/gestola/issues"
+  },
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
+  "version": "1.0.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "plotly.js": "2.16.4",
+    "react-chart-editor": "0.46.1",
+    "stream-browserify": "3.0.0",
+    "assert":"2.1.0",
+    "util":"0.12.5",
+    "buffer":"6.0.3",
+    "stream-http": "3.2.0",
+    "https-browserify": "1.0.0",
+    "url": "0.11.4"
+  },
+  "devDependencies": {
+    "rimraf": "3.0.2",
+    "@types/plotly.js":"3.0.2"
+  },
+  "scripts": {
+    "rebuild:prod": "yarn rebuild",
+    "rebuild": "yarn clean && yarn compile",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "clean:entire": "yarn clean && rimraf node_modules",
+    "compile": "tsc -b",
+    "watch": "tsc -w",
+    "update:next": "ts-node ../../scripts/update-theia-version.ts"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/frontend/frontend-module"
+    }
+  ]
+}

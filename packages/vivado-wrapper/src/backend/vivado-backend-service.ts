@@ -18,7 +18,6 @@ export class VivadoBackendServiceImpl implements VivadoBackendService {
 
       fs.writeFileSync(runFile.fd, runData.join('\n'));
 
-      console.log("kekl", runFile);
       let p = proc.spawn(`/tools/Xilinx/Vivado/2023.2/bin/vivado -mode tcl -source ${runFile.name}`, [], { shell: true, stdio: 'inherit' });
 
       p.on('exit', (code) => {

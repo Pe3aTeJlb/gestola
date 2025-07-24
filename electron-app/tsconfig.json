@@ -24,6 +24,9 @@
     },
     {
       "path": "../packages/verible-wrapper"
+    },
+    {
+      "path": "../packages/dashboard-widget-editor"
     }
   ]
 }

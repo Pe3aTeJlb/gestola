@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const RemovePlugin = require('remove-files-webpack-plugin')
 const path = require('path');
 const resolvePackagePath = require('resolve-package-path');
+const webpack = require('webpack');
 
 
 /**
@@ -27,6 +28,10 @@ if (process.platform !== 'win32') {
 
 // Copy example resources
 const plugins = [
+    new webpack.ProvidePlugin({
+        process: 'process/browser.js',
+        Buffer: ['buffer', 'Buffer']
+    }),
     new CopyWebpackPlugin({
         patterns: [
             {
@@ -65,7 +70,38 @@ const plugins = [
     })
 ]
 
-configs[0].plugins.push(...plugins);
+configs[0].plugins?.push(...plugins);
+configs[0].resolve?.extensions.push(".jsx");
+configs[1].resolve?.extensions.push(".jsx");
+Object.assign(configs[0].resolve.fallback, {
+    "stream": require.resolve("stream-browserify"),
+    "buffer": require.resolve("buffer/"),
+    "util": require.resolve("util/"),
+    "process": require.resolve("process/browser.js"),
+    "assert": require.resolve("assert/"),
+    "http": require.resolve("stream-http"),
+    "https": require.resolve("https-browserify"),
+    "url": require.resolve("url/"),
+    "zlib": require.resolve("browserify-zlib"),
+    "fs": false,
+    "net": false,
+    "tls": false
+
+});
+Object.assign(configs[1].resolve.fallback, {
+    "stream": require.resolve("stream-browserify"),
+    "buffer": require.resolve("buffer/"),
+    "util": require.resolve("util/"),
+    "process": require.resolve("process/browser.js"),
+    "assert": require.resolve("assert/"),
+    "http": require.resolve("stream-http"),
+    "https": require.resolve("https-browserify"),
+    "url": require.resolve("url/"),
+    "zlib": require.resolve("browserify-zlib"),
+    "fs": false,
+    "net": false,
+    "tls": false
+});
 nodeConfig.config.module?.rules?.push(
     {
         test: /\.sh$/,
@@ -77,6 +113,7 @@ nodeConfig.config.ignoreWarnings?.push(
         module: /@node/
     }
 );
+
 module.exports = [
     ...configs,
     nodeConfig.config,
