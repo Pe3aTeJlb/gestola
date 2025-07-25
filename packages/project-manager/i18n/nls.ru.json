@@ -59,6 +59,10 @@
             "view-container-title": "Гестола: Топологический уровень - VLSI"
         },
 
+        "analytics-view":{
+            "view-container-title": "Гестола: Аналитический модуль"
+        },
+
 
         "branding":{
             "report-issue": "Сообщить о проблеме",

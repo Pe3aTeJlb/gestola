@@ -249,7 +249,6 @@ export class ProjectManager implements FrontendApplicationContribution {
                 }
             }
         }
-        this.projManagerBackendService.updateOpenedProjects(this.openedProjects);
         this.fireProjectsListChangeEvent();
     }
 
@@ -278,7 +277,6 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     setProject(proj: Project){
         this.currProj = proj;
-        this.projManagerBackendService.updateCurrProject(proj);
         this.fireProjectChangeEvent();
     }
 

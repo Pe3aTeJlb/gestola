@@ -2,18 +2,18 @@ import { ContainerModule } from '@theia/core/shared/inversify';
 import { bindViewContribution, WidgetFactory } from '@theia/core/lib/browser';
 import '../../src/frontend/style/index.css';
 import 'react-chart-editor/lib/react-chart-editor.css';
-import { DashboardWidgetEditorContribution } from './dashboard-widget-editor-contribution';
-import { DashboardWidgetEditorWidget } from './dashboard-widget-editor';
+import { DashboardEditorWidgetContribution } from './dashboard-editor-contribution';
+import { DashboardEditorWidget } from './dashboard-editor-widget';
 
 export default new ContainerModule(bind => {
     
-    bindViewContribution(bind, DashboardWidgetEditorContribution);
-    bind(DashboardWidgetEditorWidget).toSelf();
+    bindViewContribution(bind, DashboardEditorWidgetContribution);
+    bind(DashboardEditorWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(ctx => ({
-        id: DashboardWidgetEditorWidget.ID,
+        id: DashboardEditorWidget.ID,
         createWidget: () => {
             const child = ctx.container.createChild();
-            const widget = child.get(DashboardWidgetEditorWidget);
+            const widget = child.get(DashboardEditorWidget);
             return widget;
         }
     }));

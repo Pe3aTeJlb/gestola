@@ -1,8 +1,7 @@
 import { URI } from "@theia/core";
 import { DebugConfiguration } from '@theia/debug/lib/common/debug-configuration';
 import { TaskCustomization } from '@theia/task/lib/common/task-protocol';
-import { IProject }  from "./project";
-//import { Database } from "sqlite";
+import { Database } from "./database";
 
 export const ProjectManagerBackendService = Symbol('ProjectManagerBackendService');
 export const PROJECT_MANAGER_BACKEND_PATH = '/services/gestolaProjecManagerBackend';
@@ -11,15 +10,6 @@ export interface ProjectManagerBackendService {
     getLLDTemplates(): Promise<LLDTemplate[]>;
     createProjectFromTemplate(templateId: string, uri: URI): Promise<void>;
     createLLDFromTemplate(templateId: string, uri: URI): Promise<void>;
-    updateCurrProject(proj: IProject): void;
-    updateOpenedProjects(projs: IProject[]): void;
-}
-
-export const ProjectService = Symbol('ProjectService');
-export const PROJECT_SERVICE_PATH = '/services/gestolaProjectService';
-export interface ProjectService {
-    getProjectConfigState(): Object;
-    getProject(): IProject;
 }
 
 
@@ -63,5 +53,5 @@ export interface LLDTemplate {
 export const DatabaseBackendService = Symbol('DatabaseBackendService');
 export const DATABASE_BACKEND_PATH = '/services/gestolaDatabaseBackend';
 export interface DatabaseBackendService {
-    createSQLiteConnection(uri: URI): void;
+    getDatabaseDescription(uri: URI): Promise<Database>;
 }

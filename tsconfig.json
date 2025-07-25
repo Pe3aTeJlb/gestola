@@ -37,7 +37,7 @@
           "path": "packages/waveform-viewer"
         },
         {
-          "path": "packages/dashboard-widget-editor"
+          "path": "packages/dashboard-editor"
         }
     ]
 }

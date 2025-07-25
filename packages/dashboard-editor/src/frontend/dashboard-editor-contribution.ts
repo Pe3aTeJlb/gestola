@@ -2,12 +2,12 @@ import {  injectable } from '@theia/core/shared/inversify';
 import { MenuModelRegistry } from '@theia/core';
 import { AbstractViewContribution } from '@theia/core/lib/browser';
 import { Command, CommandRegistry } from '@theia/core/lib/common/command';
-import { DashboardWidgetEditorWidget } from './dashboard-widget-editor';
+import { DashboardEditorWidget } from './dashboard-editor-widget';
 
-export const DashboardWidgetEditorCommand: Command = { id: 'dashboard-widget-editor:command', label: 'Dashboard Widget Editor' };
+export const DashboardWidgetEditorCommand: Command = { id: 'dashboard-editor-widget:command', label: 'Dashboard Editor' };
 
 @injectable()
-export class DashboardWidgetEditorContribution extends AbstractViewContribution<DashboardWidgetEditorWidget> {
+export class DashboardEditorWidgetContribution extends AbstractViewContribution<DashboardEditorWidget> {
 
     /**
      * `AbstractViewContribution` handles the creation and registering
@@ -19,8 +19,8 @@ export class DashboardWidgetEditorContribution extends AbstractViewContribution<
      */
     constructor() {
         super({
-            widgetId: DashboardWidgetEditorWidget.ID,
-            widgetName: DashboardWidgetEditorWidget.LABEL,
+            widgetId: DashboardEditorWidget.ID,
+            widgetName: DashboardEditorWidget.LABEL,
             defaultWidgetOptions: { area: 'main' },
             toggleCommandId: DashboardWidgetEditorCommand.id
         });

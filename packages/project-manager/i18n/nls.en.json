@@ -41,6 +41,10 @@
 
         "topology-level-vlsi":{
             "view-container-title": "Gestola: Topology Level - VLSI"
+        },
+
+        "analytics-view":{
+            "view-container-title": "Gestola: Analytics Module"
         }
 
 

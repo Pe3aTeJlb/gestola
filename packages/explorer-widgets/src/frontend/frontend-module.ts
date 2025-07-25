@@ -32,6 +32,10 @@ import { LLDExplorerWidget } from "./widgets/low-level-design-explorer/lld-explo
 import { ConstrainsExplorerCommandsContribution } from "./widgets/constrains-explorer/constrains-explorer-commands-contribution";
 import { ConstrainsExplorerWidget, createConstrainsExplorerContainer } from "./widgets/constrains-explorer/constrains-explorer-widget";
 import { ConstrainsExplorerLabelProvider } from "./widgets/constrains-explorer/constrains-explorer-label-provider";
+import { DatabaseExplorerWidget } from "./widgets/database-explorer/database-explorer-widget";
+import { AnalyticsWidgetFactory } from "./views/analytics-view/analytics-view-widget-factory";
+import { AnalyticsViewContribution } from "./views/analytics-view/analitycs-view-contribution";
+import { DatabaseExplorerCommandsContribution } from "./widgets/database-explorer/database-explorer-commands-contribution";
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -131,6 +135,19 @@ export default new ContainerModule((bind, _unbind) => {
         }
     }));
 
+    //Report Database Explorer
+
+    bind(DatabaseExplorerCommandsContribution).toSelf().inSingletonScope();
+
+    bind(CommandContribution).toService(DatabaseExplorerCommandsContribution);
+    bind(TabBarToolbarContribution).toService(DatabaseExplorerCommandsContribution);
+
+    bind(DatabaseExplorerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+        id: DatabaseExplorerWidget.ID,
+        createWidget: () => DatabaseExplorerWidget.createWidget(container)
+    })).inSingletonScope();
+
     /*
     *   VIEWS
     */ 
@@ -177,6 +194,15 @@ export default new ContainerModule((bind, _unbind) => {
 
     bindViewContribution(bind, TopologyLevelVLSIViewContribution);
     bind(FrontendApplicationContribution).toService(TopologyLevelVLSIViewContribution);
+
+
+    // Analytics View
+
+    bind(AnalyticsWidgetFactory).toSelf().inSingletonScope();
+    bind(WidgetFactory).toService(AnalyticsWidgetFactory);
+
+    bindViewContribution(bind, AnalyticsViewContribution);
+    bind(FrontendApplicationContribution).toService(AnalyticsViewContribution);
 
     /*
     *   HANDLERS

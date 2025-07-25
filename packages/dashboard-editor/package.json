@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/dashboard-widget-editor",
+  "name": "@gestola/dashboard-editor",
   "private": true,
   "keywords": [
     "gestola",
@@ -20,19 +20,20 @@
     "src"
   ],
   "dependencies": {
+    "@gestola/project-manager": "1.0.0",
     "plotly.js": "2.16.4",
     "react-chart-editor": "0.46.1",
     "stream-browserify": "3.0.0",
-    "assert":"2.1.0",
-    "util":"0.12.5",
-    "buffer":"6.0.3",
+    "assert": "2.1.0",
+    "util": "0.12.5",
+    "buffer": "6.0.3",
     "stream-http": "3.2.0",
     "https-browserify": "1.0.0",
     "url": "0.11.4"
   },
   "devDependencies": {
     "rimraf": "3.0.2",
-    "@types/plotly.js":"3.0.2"
+    "@types/plotly.js": "3.0.2"
   },
   "scripts": {
     "rebuild:prod": "yarn rebuild",

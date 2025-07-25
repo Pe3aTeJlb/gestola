@@ -8,10 +8,10 @@ import PlotlyEditor from "react-chart-editor";
 import source from './dataSources';
 
 @injectable()
-export class DashboardWidgetEditorWidget extends ReactWidget implements StatefulWidget {
+export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
 
-    static readonly ID = 'dashboard-widget-editor:widget';
-    static readonly LABEL = 'Gestola: Dashboard Wdiget Editor';
+    static readonly ID = 'dashboard-editor-widget:chart-editor';
+    static readonly LABEL = 'Gestola: Chart Editor';
     private dataSourceOptions = Object.keys(source).map((name) => ({
         value: name,
         label: name,
@@ -38,9 +38,9 @@ export class DashboardWidgetEditorWidget extends ReactWidget implements Stateful
     }
 
     protected async doInit(): Promise <void> {
-        this.id = DashboardWidgetEditorWidget.ID;
-        this.title.label = DashboardWidgetEditorWidget.LABEL;
-        this.title.caption = DashboardWidgetEditorWidget.LABEL;
+        this.id = ChartEditorWidget.ID;
+        this.title.label = ChartEditorWidget.LABEL;
+        this.title.caption = ChartEditorWidget.LABEL;
         this.title.closable = true;
         this.title.iconClass = 'fa fa-window-maximize'; // example widget icon.
         this.update();

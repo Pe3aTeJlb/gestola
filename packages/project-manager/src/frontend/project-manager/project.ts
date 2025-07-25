@@ -1,11 +1,11 @@
 import { URI } from '@theia/core/lib/common/uri';
-import { IProject } from '../../common/project';
 import { LowLevelDesign, regexp as RTLModelRegexp } from './low-level-design';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { ProjectManager } from './project-manager';
+import { Database } from '../../common/database';
 
-export class Project implements IProject {
+export class Project {
 
     projManager: ProjectManager;
     fileService: FileService;
@@ -26,6 +26,8 @@ export class Project implements IProject {
     curLLD: LowLevelDesign | undefined;
     LowLevelDesignes: LowLevelDesign[] = [];
     rtlModelDepTree: undefined;
+
+    reportDatabaseDescription: Database;
 
     isFavorite: boolean = false;
 
@@ -56,10 +58,16 @@ export class Project implements IProject {
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
 
-        this.projManager.getDatabaseService().createSQLiteConnection(this.sqliteDBUri);
-
+        this.getDatabaseDescription(this.sqliteDBUri);
         this.getLowLevelDesignList(this.lldsRootUri);
 
+    }
+
+    private async getDatabaseDescription(sqliteUri: URI){
+        if(await this.fileService.exists(sqliteUri)){
+            this.reportDatabaseDescription = await this.projManager.getDatabaseService().getDatabaseDescription(sqliteUri);
+            console.log('kek', this.reportDatabaseDescription);
+        }
     }
 
     private async getLowLevelDesignList(lldsRoot: URI) {

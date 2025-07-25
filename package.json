@@ -28,10 +28,10 @@
     "@electron/rebuild": "3.7.2"
   },
   "scripts": {
-    "setup": "yarn && yarn update:dependencies && yarn && yarn repack-sqlite && yarn update:plugins && yarn download:plugins && yarn build",
+    "setup": "yarn && yarn repack-sqlite && yarn download:plugins && yarn --cwd packages/verilator-wrapper docker:download && yarn build",
     "prepare": "lerna run prepare",
-    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.63.3 && lerna run update:next 1.63.3",
     "repack-sqlite": "electron-rebuild -f -w better-sqlite3",
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.63.3 && lerna run update:next 1.63.3",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
     "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts && yarn build:vscode-ext",
@@ -69,10 +69,8 @@
 
     "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
 
-    "kk": "yarn --cwd packages/verilator-wrapper docker:download",
-    "kek": "yarn ts-node scripts/test/test.ts",
-    "kek2": "electron-rebuild -f -w better-sqlite3",
-    "kek3": "electron-builder install-app-deps"
+    "kek": "yarn ts-node scripts/test/test.ts"
+
   },
   "workspaces": [
     "packages/**/",

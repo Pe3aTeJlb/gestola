@@ -1,12 +1,12 @@
 import React = require('react');
 import { injectable, inject, interfaces, Container } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
-import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeViewWelcomeWidget, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
+import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
-import { ProjectExplorerTreeImpl, ProjectTreeNode } from './project-explorer-tree-impl';
+import { ProjectExplorerTreeImpl, ProjectTreeNode } from './database-explorer-tree-impl';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
-export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
+export const DATABASE_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
     virtualized: false,
     multiSelect: false,
@@ -15,10 +15,10 @@ export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 };
 
 @injectable()
-export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
+export class DatabaseExplorerWidget extends TreeWidget {
 
-    static readonly ID = 'gestola:project-explorer';
-    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer")
+    static readonly ID = 'gestola:database-explorer';
+    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer");
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Project Explorer");
 
     constructor(
@@ -30,8 +30,8 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     
         super(props, model, contextMenuRenderer);
 
-        this.id = ProjectExplorerWidget.ID;
-        this.title.label = ProjectExplorerWidget.VIEW_LABEL;
+        this.id = DatabaseExplorerWidget.ID;
+        this.title.label = DatabaseExplorerWidget.VIEW_LABEL;
 
         const root: CompositeTreeNode = {
             id: "dummy-root",
@@ -46,9 +46,9 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 		this.projManager.onDidChangeProjectFavoriteStatus(() => this.model.refresh())
 		this.projManager.onDidChangeProject((event) => {
 			if(event.proj){
-				this.title.label = ProjectExplorerWidget.VIEW_LABEL + ": " + event.proj.projName;
+				this.title.label = DatabaseExplorerWidget.VIEW_LABEL + ": " + event.proj.projName;
 			} else {
-				this.title.label = ProjectExplorerWidget.VIEW_LABEL;
+				this.title.label = DatabaseExplorerWidget.VIEW_LABEL;
 			}
             this.model.refresh();
 		});
@@ -64,51 +64,27 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
         widget.rebind(Tree).toService(ProjectExplorerTreeImpl);
 
         widget.unbind(TreeWidget);
-        widget.bind(ProjectExplorerWidget).toSelf();
+        widget.bind(DatabaseExplorerWidget).toSelf();
 
-        widget.rebind(TreeProps).toConstantValue(PROJECT_EXPLORER_WIDGET_TREE_PROPS);
+        widget.rebind(TreeProps).toConstantValue(DATABASE_EXPLORER_WIDGET_TREE_PROPS);
 
         return widget;
 
     }
 
-    static createWidget(ctx: interfaces.Container): ProjectExplorerWidget {
-        return ProjectExplorerWidget.createContainer(ctx).get(ProjectExplorerWidget);
+    static createWidget(ctx: interfaces.Container): DatabaseExplorerWidget {
+        return DatabaseExplorerWidget.createContainer(ctx).get(DatabaseExplorerWidget);
     }
 
     protected override tapNode(node?: ProjectTreeNode | undefined): void {
         if(node){
-            this.projManager.setProject(node?.project);
+            this.projManager.setProject(node?.project)
         }
     }
 
     protected override renderTree(model: TreeModel): React.ReactNode {
-        if (this.model.root && this.projManager.getProjectsCount() === 0) {
-            return this.renderViewWelcome();
-        }
         return super.renderTree(model);
     }
-
-    protected override renderViewWelcome(): React.ReactNode {
-        return (
-            <div className='theia-navigator-container'>
-            <div className='center'>{nls.localize("gestola-project-manager/gestola-project-explorer/view-welcome", "You have not yet created project")}</div>
-            <div className='open-workspace-button-container'>
-                <button className='theia-button open-workspace-button'
-                    onClick={() => this.projManager.createProject()}>
-                    {nls.localize("gestola/explorer/create-project", "Create Project")}
-                </button>
-            </div>
-            <div className='open-workspace-button-container'>
-                <button className='theia-button open-workspace-button'
-                    onClick={() => this.projManager.openProject()}>
-                    {nls.localize("gestola/explorer/open-project", "Open Project")}
-                </button>
-            </div>
-        </div>
-        );
-    }
-
 
     protected override renderTailDecorations(node: ProjectTreeNode, props: NodeProps): React.ReactNode {
         return  <div className='result-node-buttons-prebuffer'>

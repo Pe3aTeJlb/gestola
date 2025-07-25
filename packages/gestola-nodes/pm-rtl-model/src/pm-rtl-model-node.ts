@@ -1,18 +1,18 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { NodeDef, NodeAPI, Node } from "@node-red/registry";
-import ES6Node, { diContainer, getSymbol } from "@gestola/df-base-node";
+import ES6Node from "@gestola/df-base-node";
 
-import getDecorators from "inversify-inject-decorators";
-let { lazyInject } = getDecorators(diContainer);
+//import getDecorators from "inversify-inject-decorators";
+//let { lazyInject } = getDecorators(diContainer);
 
-import { ProjectService } from "@gestola/project-manager/lib/common/protocol";
-const ProjectServiceSymbol = getSymbol("@gestola/project-manager/lib/common/protocol", 'ProjectService');
+//import { ProjectService } from "@gestola/project-manager/lib/common/protocol";
+//const ProjectServiceSymbol = getSymbol("@gestola/project-manager/lib/common/protocol", 'ProjectService');
 
 @injectable()
 export class ProjectManagerRTLModel extends ES6Node {
 
-    @lazyInject(ProjectServiceSymbol)
-    private readonly projectService: ProjectService;
+   // @lazyInject(ProjectServiceSymbol)
+ //   private readonly projectService: ProjectService;
 
     constructor(node: Node, config: NodeDef, RED: NodeAPI){
         super(node);
@@ -25,7 +25,7 @@ export class ProjectManagerRTLModel extends ES6Node {
           
             const newMsg = {
                 ...msg,
-                project: this.projectService.getProject()
+                //project: this.projectService.getProject()
             };
             send(newMsg);
             if (done) { done(); }

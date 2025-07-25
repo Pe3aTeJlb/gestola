@@ -7,7 +7,7 @@ import { ConstrainsExplorerWidget } from '../../widgets/constrains-explorer/cons
 
 export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID = 'gestola.topology-level-fpga.view-container';
 export const TOPOLOGY_LEVEL_FPGA_VIEW_MENU_LABEL = nls.localize("gestola/topology-level-fpga/view-container-title", "Gestola: Topology Level - FPGA")
-export const TOPOLOGY_LEVEL_FPGA_VIEW_LABEL = nls.localize("gestola/topology-level-fpga/project-explorer-view-title", "Gestola: Topology Level - FPGA");
+export const TOPOLOGY_LEVEL_FPGA_VIEW_LABEL = nls.localize("gestola/topology-level-fpga/view-container-title", "Gestola: Topology Level - FPGA");
 export const TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
     label: nls.localize("gestola/topology-level-fpga/view-container-title", "Topology Level - FPGA"),
     iconClass: codicon('files'),

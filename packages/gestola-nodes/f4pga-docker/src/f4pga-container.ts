@@ -3,7 +3,6 @@ import { NodeDef, NodeAPI, Node } from "@node-red/registry";
 import ES6Node from "@gestola/df-base-node";
 import { Docker, Options } from 'docker-cli-js';
 import tmp = require('tmp');
-import { IProject } from "@gestola/project-manager/lib/common/project";
 import DockerNames from "@gestola/docker-like-names";
 
 @injectable()
@@ -29,7 +28,7 @@ export class F4PGADockerContainer extends ES6Node {
 
     }
 
-    start(proj: IProject){
+    start(proj: Object){
     
 
         DockerNames.getRandomName(6);
