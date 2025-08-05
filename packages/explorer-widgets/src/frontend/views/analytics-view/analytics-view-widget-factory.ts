@@ -3,6 +3,7 @@ import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, Widge
 import { nls } from '@theia/core/lib/common/nls';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import { DatabaseExplorerWidget } from '../../widgets/database-explorer/database-explorer-widget';
+import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const ANALYTICS_VIEW_CONTAINER_ID = 'gestola.analytics-view.view-container';
 export const ANALYTICS_VIEW_MENU_LABEL = nls.localize("gestola/analytics-view/view-container-title", "Gestola: Analytics Module")
@@ -45,8 +46,11 @@ export class AnalyticsWidgetFactory implements WidgetFactory {
         viewContainer.setTitleOptions(ANALYTICS_VIEW_CONTAINER_TITLE_OPTIONS);
 
         const databaseExploerer = await this.widgetManager.getOrCreateWidget(DatabaseExplorerWidget.ID);
+        const dashboardsFileNavigator = await this.widgetManager.getOrCreateWidget(GESTOLA_FILE_NAVIGATOR_ID, 
+            <GestolaFileNavigatorOptions>{navigatorID: "file-navigator-analytics", viewContainerID: ANALYTICS_VIEW_CONTAINER_ID});
 
         viewContainer.addWidget(databaseExploerer, this.widgetOptions);
+        viewContainer.addWidget(dashboardsFileNavigator, this.widgetOptions);
 
         viewContainer.getParts().slice(1).forEach(i => i.setHidden(this.projectManager.getProjectsCount() == 0));
 

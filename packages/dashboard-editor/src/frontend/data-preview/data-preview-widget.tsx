@@ -1,33 +1,17 @@
 import * as React from 'react';
-import { injectable, postConstruct, inject } from '@theia/core/shared/inversify';
+import { injectable, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
-import { MessageService } from '@theia/core';
 import { Message, StatefulWidget } from '@theia/core/lib/browser';
-import * as plotly from 'plotly.js';
-import PlotlyEditor from "react-chart-editor";
-import source from '../chart-editor/dataSources';
+import DataTable, { TableColumn } from 'react-data-table-component';
 
 @injectable()
 export class DataPreviewWidget extends ReactWidget implements StatefulWidget {
 
     static readonly ID = 'dashboard-editor-widget:data-preview';
     static readonly LABEL = 'Gestola: Dashboard Editor Data Preview';
-    private dataSourceOptions = Object.keys(source).map((name) => ({
-        value: name,
-        label: name,
-      }));
-      
-    private config = {editable: true};
-    private state = {
-        data: [] as any,
-        layout: {} as any,
-        frames: [] as any,
-        currentMockIndex: -1,
-        mocks: [],
-      };
 
-    @inject(MessageService)
-    protected readonly messageService!: MessageService;
+    private columns: TableColumn<Object>[];
+    private data: Object[];
 
     configure(){
     }
@@ -44,29 +28,26 @@ export class DataPreviewWidget extends ReactWidget implements StatefulWidget {
         this.title.closable = true;
         this.title.iconClass = 'fa fa-window-maximize'; // example widget icon.
         this.update();
+    }
 
+    public setData(data: Object[]){
+        this.data = data;
+        this.columns = Object.keys(data[0]).map(e => {
+            return {
+                name: e,
+                selector: (row:any) => row[e]
+            } as TableColumn<Object>
+        });
+        this.update();
     }
 
     render(): React.ReactElement {
-        return <div>
-        <PlotlyEditor
-         data={this.state.data}
-         layout={this.state.layout}
-         config={this.config}
-         frames={this.state.frames}
-         dataSources={source}
-         dataSourceOptions={this.dataSourceOptions}
-         advancedTraceTypeSelector
-          plotly={plotly}
-          useResizeHandler={true}
-          onUpdate={(data: any[], layout: Record<string, unknown>, frames: any[]) => {
-            this.state.data = data;
-            this.state.layout = layout;
-            this.state.frames = frames;
-            this.update();
-        }}
-        />
-      </div>
+        return (
+            <DataTable
+                columns={this.columns}
+                data={this.data}
+            />
+        );
     }
 
     storeState(): object | undefined {
@@ -74,10 +55,6 @@ export class DataPreviewWidget extends ReactWidget implements StatefulWidget {
     }
     restoreState(oldState: object): void {
         throw new Error('Method not implemented.');
-    }
-
-    protected displayMessage(): void {
-        this.messageService.info('Congratulations: Design Flow Editor Widget Successfully Created!');
     }
 
     protected override onActivateRequest(msg: Message): void {

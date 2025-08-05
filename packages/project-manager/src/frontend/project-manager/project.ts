@@ -22,6 +22,8 @@ export class Project {
     sqliteDBUri: URI;
     theiaUri: URI;
     configUri: URI;
+    analyticsUri: URI;
+    dashboardsUri: URI;
 
     curLLD: LowLevelDesign | undefined;
     LowLevelDesignes: LowLevelDesign[] = [];
@@ -35,9 +37,10 @@ export class Project {
                                 new RegExp('system'),
                                 new RegExp('low_level_design'),
                                 new RegExp('misc'),  
+                                new RegExp('analytics'),
                                 new RegExp('database'),
                                 new RegExp('\.theia'),
-                                new RegExp('\.config'), 
+                                new RegExp('\.config'),
                             ];
 
     public constructor(projManager: ProjectManager, projectRoot: FileStat) {
@@ -57,6 +60,8 @@ export class Project {
         this.sqliteDBUri = this.databesUri.resolve('sqlite.db');
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
+        this.analyticsUri = this.rootUri.resolve('analytics');
+        this.dashboardsUri = this.analyticsUri.resolve('dashboards');
 
         this.getDatabaseDescription(this.sqliteDBUri);
         this.getLowLevelDesignList(this.lldsRootUri);
@@ -156,6 +161,10 @@ export class Project {
 
     public async miscFolderFStat(): Promise<FileStat> {
         return await this.fileService.resolve(this.miscUri);
+    }
+
+    public async dashboardsFstat(): Promise<FileStat> {
+        return await this.fileService.resolve(this.dashboardsUri);
     }
 
     setFavorite() {

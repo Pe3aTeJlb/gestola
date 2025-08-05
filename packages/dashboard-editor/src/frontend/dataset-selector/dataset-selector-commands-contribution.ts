@@ -2,15 +2,15 @@ import { injectable } from '@theia/core/shared/inversify';
 import { Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
-import { DatabaseExplorerCommands } from './database-explorer-commands';
-import { DatabaseExplorerWidget } from './database-explorer-widget';
+import { DatasetSelectorCommands } from './dataset-selector-commands';
+import { DatasetSelectorWidget } from './dataset-selector-widget';
 
 @injectable()
-export class DatabaseExplorerCommandsContribution implements CommandContribution, TabBarToolbarContribution {
+export class DatasetSelectorCommandsContribution implements CommandContribution, TabBarToolbarContribution {
 
     registerCommands(commands: CommandRegistry): void {
 
-        commands.registerCommand(DatabaseExplorerCommands.REFRESH_DATABASE_EXPLORER, {
+        commands.registerCommand(DatasetSelectorCommands.REFRESH_DATASET_SELECTOR, {
             isEnabled: widget => this.withModulesHierarchyWidget(widget, () => true),
             isVisible: widget => this.withModulesHierarchyWidget(widget, () => true),
             execute: widget => this.withModulesHierarchyWidget(widget, (widget) => widget.model.refresh()),
@@ -21,16 +21,16 @@ export class DatabaseExplorerCommandsContribution implements CommandContribution
     registerToolbarItems(registry: TabBarToolbarRegistry): void {
 
         registry.registerItem({
-            id: DatabaseExplorerCommands.REFRESH_DATABASE_EXPLORER.id,
-            command: DatabaseExplorerCommands.REFRESH_DATABASE_EXPLORER.id,
+            id: DatasetSelectorCommands.REFRESH_DATASET_SELECTOR.id,
+            command: DatasetSelectorCommands.REFRESH_DATASET_SELECTOR.id,
             tooltip: 'Refresh',
             priority: 1,
         });
 
     }
   
-    protected withModulesHierarchyWidget<T>(widget: Widget | undefined, cb: (navigator: DatabaseExplorerWidget) => T): T | false {
-        if (widget instanceof DatabaseExplorerWidget) {
+    protected withModulesHierarchyWidget<T>(widget: Widget | undefined, cb: (navigator: DatasetSelectorWidget) => T): T | false {
+        if (widget instanceof DatasetSelectorWidget) {
             return cb(widget);
         }
         return false;

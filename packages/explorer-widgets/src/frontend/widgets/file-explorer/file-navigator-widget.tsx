@@ -92,6 +92,9 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
             case "file-navigator-rtl-simresults":
                 dataset.visibilityCommandLabel = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
                 break;
+            case "file-navigator-analytics":
+                dataset.visibilityCommandLabel = nls.localize("gestola/analytics-view/file-explorer-dashboards", "Dashboards"); 
+                break;
         }
         this.title.dataset = dataset;
         this.updateSelectionContextKeys();
@@ -138,6 +141,9 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 break;
             case "file-navigator-rtl-simresults":
                 this.title.label = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
+                break;
+            case "file-navigator-analytics":
+                this.title.label = nls.localize("gestola/analytics-view/file-explorer-dashboards", "Dashboards"); 
                 break;
         }
         this.title.caption = this.title.label;

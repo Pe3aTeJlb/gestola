@@ -4,9 +4,10 @@ import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, Tree, TreeImpl, TreeWidget, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { DatabaseExplorerTreeImpl } from './database-explorer-tree-impl';
+import { DatasetSelectorTreeImpl, TableTreeNode } from './dataset-selector-tree-impl';
+import { Event, Emitter } from "@theia/core";
 
-export const DATABASE_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
+export const DATASET_SELECTOR_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
     virtualized: false,
     multiSelect: false,
@@ -15,11 +16,11 @@ export const DATABASE_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 };
 
 @injectable()
-export class DatabaseExplorerWidget extends TreeWidget {
+export class DatasetSelectorWidget extends TreeWidget {
 
-    static readonly ID = 'gestola:database-explorer';
-    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Report Database Explorer")
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Report Database Explorer");
+    static readonly ID = 'gestola:dataset-selector';
+    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Dataset Explorer")
+    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Dataset Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
@@ -30,8 +31,8 @@ export class DatabaseExplorerWidget extends TreeWidget {
     
         super(props, model, contextMenuRenderer);
 
-        this.id = DatabaseExplorerWidget.ID;
-        this.title.label = DatabaseExplorerWidget.VIEW_LABEL;
+        this.id = DatasetSelectorWidget.ID;
+        this.title.label = DatasetSelectorWidget.VIEW_LABEL;
 
         const root: CompositeTreeNode = {
             id: "dummy-root",
@@ -53,24 +54,44 @@ export class DatabaseExplorerWidget extends TreeWidget {
         const widget = createTreeContainer(container);
 
         widget.unbind(TreeImpl);
-        widget.bind(DatabaseExplorerTreeImpl).toSelf();
-        widget.rebind(Tree).toService(DatabaseExplorerTreeImpl);
+        widget.bind(DatasetSelectorTreeImpl).toSelf();
+        widget.rebind(Tree).toService(DatasetSelectorTreeImpl);
 
         widget.unbind(TreeWidget);
-        widget.bind(DatabaseExplorerWidget).toSelf();
+        widget.bind(DatasetSelectorWidget).toSelf();
 
-        widget.rebind(TreeProps).toConstantValue(DATABASE_EXPLORER_WIDGET_TREE_PROPS);
+        widget.rebind(TreeProps).toConstantValue(DATASET_SELECTOR_WIDGET_TREE_PROPS);
 
         return widget;
 
     }
 
-    static createWidget(ctx: interfaces.Container): DatabaseExplorerWidget {
-        return DatabaseExplorerWidget.createContainer(ctx).get(DatabaseExplorerWidget);
+    static createWidget(ctx: interfaces.Container): DatasetSelectorWidget {
+        return DatasetSelectorWidget.createContainer(ctx).get(DatasetSelectorWidget);
+    }
+
+    protected override handleDblClickEvent(node?: CompositeTreeNode | undefined): void {
+        if(node && 'columns' in node){
+            this.fireTaleSelectEvent((node as TableTreeNode).name!);
+        }
     }
 
     protected override renderTree(model: TreeModel): React.ReactNode {
         return super.renderTree(model);
     }
 
+    
+
+    protected readonly onDidCheckedChangeEmitter = new Emitter<TableSelectEvent>();
+    get onDidTableSelect(): Event<TableSelectEvent> {
+		return this.onDidCheckedChangeEmitter.event;
+	}
+    private fireTaleSelectEvent(table: string){
+        this.onDidCheckedChangeEmitter.fire({table: table} as TableSelectEvent);
+    }
+
+}
+
+export interface TableSelectEvent {
+    readonly table: string;
 }

@@ -74,7 +74,9 @@
     "app-builder-lib": "22.10.5",
     "remove-files-webpack-plugin": "^1.5.0",
     "sh-loader": "1.0.1",
-    "node-loader": "2.0.0"
+    "node-loader": "2.0.0",
+    "copy-webpack-plugin": "13.0.0",
+    "compression-webpack-plugin": "11.1.0"
   },
   "scripts": {
     "package:prod": "yarn build:prod && electron-builder -c.mac.identity=null --publish never",

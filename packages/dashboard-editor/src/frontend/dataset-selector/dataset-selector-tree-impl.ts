@@ -5,13 +5,13 @@ import { Column, Table } from "@gestola/project-manager/lib/common/database";
 import { v4 } from 'uuid';
 
 @injectable()
-export class DatabaseExplorerTreeImpl extends TreeImpl {
+export class DatasetSelectorTreeImpl extends TreeImpl {
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;
 
     protected override resolveChildren(parent: CompositeTreeNode): Promise<TreeNode[]> {
-
+        
         let proj =  this.projManager.getCurrProject();
 
         if(parent.id == "dummy-root"){
@@ -39,7 +39,7 @@ export class DatabaseExplorerTreeImpl extends TreeImpl {
             parent: undefined,
             selected: false,
             visible: true,
-            children: [],
+            children: table.columns.map(e => this.makeColumnTreeNode(e)),
             columns: table.columns,
             expanded: false
         };

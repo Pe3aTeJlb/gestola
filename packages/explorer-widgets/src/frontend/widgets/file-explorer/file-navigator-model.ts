@@ -336,6 +336,19 @@ export class GestolaFileNavigatorModel extends FileTreeModel {
                 return treeRoot;
             }
 
+            if(this.rootId === "file-navigator-analytics"){
+                const treeRoot = WorkspaceNode.createRoot();
+                let rootFolder = await proj.dashboardsFstat();
+                if(rootFolder && rootFolder.children){
+                    this.rootUri = rootFolder.resource;
+                    treeRoot.children.push(
+                        await this.tree.createWorkspaceRoot(rootFolder, treeRoot)
+                    );
+                }
+
+                return treeRoot;
+            }
+
         }
 
         return WorkspaceNode.createRoot();

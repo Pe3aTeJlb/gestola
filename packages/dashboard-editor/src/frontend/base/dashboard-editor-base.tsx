@@ -24,12 +24,11 @@ export abstract class BaseDashboardEditorWidget extends BaseWidget {
         super();
         this.id = widgetId;
         this.horSplitPanel = new SplitPanel();
-        this.vertSplitPanel = new SplitPanel();
-        //this.addClass(BaseTreeEditorWidget.Styles.EDITOR);
+        this.vertSplitPanel = new SplitPanel({orientation: "vertical"});
+
         this.horSplitPanel.addClass(BaseDashboardEditorWidget.Styles.SASH);
         this.vertSplitPanel.addClass(BaseDashboardEditorWidget.Styles.SASH);
-        //this.treeWidget.addClass(BaseTreeEditorWidget.Styles.TREE);
-        //this.viewerWidget.addClass(BaseTreeEditorWidget.Styles.FORM);
+
     }
 
     @postConstruct()
@@ -38,12 +37,9 @@ export abstract class BaseDashboardEditorWidget extends BaseWidget {
     }
 
     protected override onResize(_msg: any): void {
-        if (this.horSplitPanel) {
-            this.horSplitPanel.update();
-        }
-        if (this.vertSplitPanel) {
-            this.vertSplitPanel.update();
-        }
+        this.horSplitPanel.update();
+        this.vertSplitPanel.update();
+        this.chartEditorWidget.update();
     }
 
     protected renderError(errorMessage: string): void {
@@ -60,16 +56,19 @@ export abstract class BaseDashboardEditorWidget extends BaseWidget {
         this.vertSplitPanel.addWidget(this.chartEditorWidget);
         this.vertSplitPanel.addWidget(this.dataPreviewWidget);
 
-        this.horSplitPanel.setRelativeSizes([1, 4]);
-        this.vertSplitPanel.setRelativeSizes([1, 4]);
-
         Widget.attach(this.horSplitPanel, this.node);
 
         this.treeWidget.activate();
         this.chartEditorWidget.activate();
         this.dataPreviewWidget.activate();
 
+        this.horSplitPanel.handleMoved.connect(() => {this.chartEditorWidget.update()});
+        this.vertSplitPanel.handleMoved.connect(() => {this.chartEditorWidget.update()});
+
         super.onAfterAttach(msg);
+
+        this.horSplitPanel.setRelativeSizes([0.1, 0.9], true);
+        this.vertSplitPanel.setRelativeSizes([0.9, 0.1], true);
 
     }
 

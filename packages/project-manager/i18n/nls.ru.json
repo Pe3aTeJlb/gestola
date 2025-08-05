@@ -60,7 +60,8 @@
         },
 
         "analytics-view":{
-            "view-container-title": "Гестола: Аналитический модуль"
+            "view-container-title": "Гестола: Аналитический модуль",
+            "file-explorer-dashboards": "Дашборды"
         },
 
 

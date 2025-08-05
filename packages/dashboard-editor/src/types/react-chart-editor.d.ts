@@ -13,6 +13,7 @@ declare module 'react-chart-editor' {
 		data?: any[];
 		dataSourceOptions?: any[];
 		dataSources?: Record<string, unknown>;
+		dataSourceName?: string;
 		debug?: boolean;
 		dictionaries?: Record<string, unknown>;
 		divId?: string;
@@ -23,12 +24,14 @@ declare module 'react-chart-editor' {
 		glByDefault?: boolean;
 		hideControls?: boolean;
 		/** Layout Record<string, unknown> (see https://plot.ly/javascript/reference/#layout) */
-		layout?: Record<string, unknown>;
+		layout?: [{}];
 		locale?: string;
 		makeDefaultTrace?: (...args: any[]) => void;
 		/** Callback when the component is updated */
-		onUpdate?: (data: any[], layout: Record<string, unknown>, frames: any[]) => void;
+		onUpdate?: (data: any[], layout: any[{}], frames: any[]) => void;
 		onRender?: (...args: any[]) => void;
+		onSaveDashboard?: (widgets: Object) => void;
+		onPreviewDashboard?: (widgets: Object) => void;
 		/** Plotly module from plotly.js default export */
 		plotly: Record<string, unknown>;
 		showFieldTooltips?: boolean;

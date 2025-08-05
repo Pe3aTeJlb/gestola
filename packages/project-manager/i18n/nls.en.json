@@ -44,7 +44,8 @@
         },
 
         "analytics-view":{
-            "view-container-title": "Gestola: Analytics Module"
+            "view-container-title": "Gestola: Analytics Module",
+            "file-explorer-dashboards": "Dashboards"
         }
 
 

@@ -16,7 +16,7 @@ import { BaseDashboardEditorWidget } from './dashboard-editor-base';
 
 export const NavigatableDashboardEditorOptions = Symbol('NavigatableDashboardEditorOptions');
 export interface NavigatableDashboardEditorOptions {
-    uri: URI;
+    uri: URI | undefined;
 }
 
 export abstract class NavigatableDashboardEditorWidget extends BaseDashboardEditorWidget implements Navigatable {
@@ -33,7 +33,7 @@ export abstract class NavigatableDashboardEditorWidget extends BaseDashboardEdit
     }
 
     /** The uri of the editor's resource. */
-    get uri(): URI {
+    get uri(): URI | undefined {
         return this.options.uri;
     }
 
@@ -46,8 +46,10 @@ export abstract class NavigatableDashboardEditorWidget extends BaseDashboardEdit
     }
 
     protected configureTitle(title: Title<Widget>): void {
-        title.label = this.options.uri.path.base;
-        title.caption = this.options.uri.toString();
+        if(this.options.uri){
+            title.label = this.options.uri.path.base;
+            title.caption = this.options.uri.toString();
+        }
         title.closable = true;
     }
 }

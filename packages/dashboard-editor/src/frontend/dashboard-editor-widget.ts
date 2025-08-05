@@ -2,10 +2,11 @@ import { inject, injectable, postConstruct } from 'inversify';
 import { Message, Title, Widget } from '@theia/core/lib/browser';
 import { ILogger } from '@theia/core/lib/common';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import { NavigatableDashboardEditorWidget } from './base/navigatable-waveform-viewer-widget';
-import { DatabaseExplorerWidget } from './database-explorer/database-explorer-widget';
+import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } from './base/navigatable-waveform-viewer-widget';
+import { DatasetSelectorWidget, TableSelectEvent } from './dataset-selector/dataset-selector-widget';
 import { ChartEditorWidget } from './chart-editor/react-chart-editor-widget';
 import { DataPreviewWidget } from './data-preview/data-preview-widget';
+import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 
 @injectable()
 export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
@@ -13,29 +14,39 @@ export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
     static readonly ID = 'dashboard-widget-editor:widget';
     static readonly LABEL = 'Gestola: Dashboard Wdiget Editor';
 
+    @inject(ProjectManager) 
+    protected readonly projManager: ProjectManager;
+
     @inject(FileService)
     readonly fileService: FileService;
 
     constructor(
-        @inject(DatabaseExplorerWidget)
-        readonly databaseExplorerWidget: DatabaseExplorerWidget,
+        @inject(DatasetSelectorWidget)
+        readonly datasetSelectorWidget: DatasetSelectorWidget,
         @inject(ChartEditorWidget)
         readonly chartEditor: ChartEditorWidget,
         @inject(DataPreviewWidget)
         override readonly dataPreviewWidget: DataPreviewWidget,
         @inject(ILogger) 
         override readonly logger: ILogger,
-        @inject(NavigatableDashboardEditorWidget)
-        protected override readonly options: NavigatableDashboardEditorWidget,
+        @inject(NavigatableDashboardEditorOptions)
+        protected override readonly options: NavigatableDashboardEditorOptions,
     ) {
         super(
-            databaseExplorerWidget,
+            datasetSelectorWidget,
             chartEditor,
             dataPreviewWidget,
             logger,
             DashboardEditorWidget.ID,
             options
         );
+
+
+        this.datasetSelectorWidget.onDidTableSelect(async (event: TableSelectEvent) => {
+            const sampleData: Object[] = await this.projManager.getDatabaseService().getReportSampleDataFor(event.table);
+            this.dataPreviewWidget.setData(sampleData);
+            this.chartEditor.setDataset(event.table, sampleData);
+        });
 
         
     }
@@ -55,8 +66,13 @@ export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
     }
 
     protected override configureTitle(title: Title<Widget>): void {
-        super.configureTitle(title);
-        //title.iconClass = "waveform-file";
+       if(this.options.uri){
+        title.label = this.options.uri.path.base;
+        title.caption = this.options.uri.toString();
+       } else {
+        title.label = DashboardEditorWidget.LABEL;
+        title.caption = DashboardEditorWidget.LABEL;
+       }
     }
 
     protected override onCloseRequest(msg: Message): void {

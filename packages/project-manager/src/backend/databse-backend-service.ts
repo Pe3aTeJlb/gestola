@@ -2,20 +2,30 @@ import { URI } from '@theia/core';
 import { injectable } from '@theia/core/shared/inversify';
 import { DatabaseBackendService } from '../common/protocol';
 import * as db from "better-sqlite3";
+import { Database as Connection } from 'better-sqlite3';
 import { Column, ColumnDescriptionRow, Database, Table } from '../common/database';
 
 @injectable()
 export class DatabaseBackendServiceImpl implements DatabaseBackendService {
 
+    private conn: Connection;
+
+    async changeDBConnection(uri: URI): Promise<void> {
+        console.log('create conn for ', uri);
+        if(this.conn)this.conn.close();
+        this.conn = db(uri.path.fsPath());
+        return Promise.resolve();
+    }
+
     async getDatabaseDescription(uri: URI): Promise<Database> {
 
-        const conn = db(uri.path.fsPath());
+        const cn = db(uri.path.fsPath());
 
         let description: Database = {
             tables: []
         } as Database;
 
-        let tables = conn.prepare(
+        let tables = cn.prepare(
             `SELECT name, type FROM sqlite_master
                             WHERE (type='table' OR type='view')
                             AND name <> 'sqlite_sequence'
@@ -29,7 +39,7 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
 
         for(let table of description.tables){
 
-            let rows = conn.pragma(`table_xinfo('${table.name}')`) as [];
+            let rows = cn.pragma(`table_xinfo('${table.name}')`) as [];
             
             if(rows.length > 0){
                 rows
@@ -63,9 +73,16 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
             }
         }
 
-        conn.close();
+        cn.close();
+
         return Promise.resolve(description);
 
+    }
+
+    async getReportSampleDataFor(table: string): Promise<Object[]> {
+        return  this.conn.prepare(
+            `SELECT * FROM "${table}" LIMIT 1000;`
+        ).all() as Object[];
     }
 
 }

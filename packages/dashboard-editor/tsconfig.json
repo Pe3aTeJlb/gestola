@@ -4,7 +4,8 @@
         "composite": true,
         "rootDir": "src",
         "baseUrl": ".",
-        "outDir": "lib"
+        "outDir": "lib",
+        "allowJs": true,
     },
     "include": [
       "src" 
@@ -12,6 +13,9 @@
     "references": [
         {
             "path": "../project-manager"
+        },
+        {
+            "path": "../explorer-widgets"
         }
     ]
 }
