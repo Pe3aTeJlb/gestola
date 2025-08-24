@@ -175,7 +175,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     }
 
     protected displayMessage(): void {
-        this.messageService.info('Congratulations: Design Flow Editor Widget Successfully Created!');
+        this.messageService.info('Congratulations: Dashboard Viewer Widget Successfully Created!');
     }
 
     protected override onActivateRequest(msg: Message): void {

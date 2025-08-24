@@ -12,7 +12,7 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
 
     static readonly ID = 'dashboard-editor:widget';
-    static readonly LABEL = 'Gestola: Dashboard Wdiget Editor';
+    static readonly LABEL = 'Gestola: Dashboard Editor Widget';
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;

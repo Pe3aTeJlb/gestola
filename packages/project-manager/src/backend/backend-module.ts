@@ -6,7 +6,7 @@ import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_
 import { ProjectManagerBackendServiceImpl } from './project-manager-backend-service';
 import { GestolaProjectTemplateContribution } from './project-templates-contribution';
 import { bindContributionProvider } from '@theia/core';
-import { DatabaseBackendServiceImpl } from './databse-backend-service';
+import { DatabaseBackendServiceImpl } from './database-backend-service';
 import { GestolaLLDTemplateContribution } from './lld-templates-contribution';
 
 export default new ContainerModule(bind => {

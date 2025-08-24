@@ -11,7 +11,6 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
     private conn: Connection;
 
     async changeDBConnection(uri: URI): Promise<void> {
-        console.log('create conn for ', uri);
         if(this.conn)this.conn.close();
         this.conn = db(uri.path.fsPath());
         return Promise.resolve();
@@ -83,6 +82,10 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
         return  this.conn.prepare(
             `SELECT * FROM "${table}" LIMIT 1000;`
         ).all() as Object[];
+    }
+
+    async executeQuery(query: string): Promise<Object[]> {
+        return this.conn.prepare(query).all() as Object[];
     }
 
 }

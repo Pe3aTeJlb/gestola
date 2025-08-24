@@ -71,7 +71,6 @@ export class Project {
     private async getDatabaseDescription(sqliteUri: URI){
         if(await this.fileService.exists(sqliteUri)){
             this.reportDatabaseDescription = await this.projManager.getDatabaseService().getDatabaseDescription(sqliteUri);
-            console.log('kek', this.reportDatabaseDescription);
         }
     }
 

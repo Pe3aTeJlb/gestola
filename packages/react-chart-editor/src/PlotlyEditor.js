@@ -130,7 +130,7 @@ class PlotlyEditor extends Component {
         w: el.w,
         h: el.h,
         template: this.props.plotly.makeTemplate({data: this.state.data[Number(el.i)], layout:this.state.data[Number(el.i)]}),
-        datasource: this.props.dataSourceName,
+        dataSource: this.props.dataSourceName,
         sqlColumns: this.collectDistinctColumns(this.state.data[Number(el.i)])
       }
     });

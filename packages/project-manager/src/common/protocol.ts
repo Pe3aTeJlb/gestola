@@ -56,4 +56,5 @@ export interface DatabaseBackendService {
     changeDBConnection(uri: URI): Promise<void>;
     getDatabaseDescription(uri: URI): Promise<Database>;
     getReportSampleDataFor(table: string): Promise<Object[]>;
+    executeQuery(query: string): Promise<Object[]>;
 }

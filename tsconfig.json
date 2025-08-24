@@ -38,6 +38,9 @@
         },
         {
           "path": "packages/dashboard-editor"
+        },
+        {
+          "path": "packages/dashboard-viewer"
         }
     ]
 }
