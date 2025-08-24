@@ -63,7 +63,8 @@
     "@gestola/verilator-wrapper": "1.0.0",
     "@gestola/waveform-viewer": "1.0.0",
     "@gestola/vivado-wrapper": "1.0.0",
-    "@gestola/dashboard-editor": "1.0.0"
+    "@gestola/dashboard-editor": "1.0.0",
+    "@gestola/dashboard-viewer": "1.0.0"
   },
   "devDependencies": {
     "@theia/cli": "1.63.3",

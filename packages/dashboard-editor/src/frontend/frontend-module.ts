@@ -18,6 +18,9 @@ import { DataPreviewWidget } from './data-preview/data-preview-widget';
 import { interfaces } from 'inversify';
 import { BaseDashboardEditorWidget } from './base/dashboard-editor-base';
 import { DatasetSelectorWidget } from './dataset-selector/dataset-selector-widget';
+import { DashboardEditorFileOpener } from './dashboard-editor-file-opener';
+import {  FrontendApplicationContribution} from '@theia/core/lib/browser';
+import { OpenHandler } from '@theia/core/lib/browser';
 
 export default new ContainerModule(bind => {
 
@@ -25,6 +28,10 @@ export default new ContainerModule(bind => {
 
     bind(CommandContribution).toService(DatasetSelectorCommandsContribution);
     bind(TabBarToolbarContribution).toService(DatasetSelectorCommandsContribution);
+
+    bind(DashboardEditorFileOpener).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(DashboardEditorFileOpener);
+    bind(OpenHandler).toService(DashboardEditorFileOpener);
 
     bind(DatasetSelectorWidget).toSelf();
 

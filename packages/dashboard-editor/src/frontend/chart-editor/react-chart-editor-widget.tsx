@@ -67,7 +67,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             value: name,
             label: name,
         }));
-        console.log('lolxd',this.transposeArrayOfObjects(data));
+
         this.update();
     }
 
@@ -93,10 +93,6 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     }
 
     private async saveDashboard(widgets: any){
-        console.log('zopa 1');
-        console.log('zopa 2', this.projManager);
-        console.log("zopa 3", this.projManager, this.projManager.getCurrProject)
-        console.log('zopa,4', this.projManager, this.projManager.getCurrProject());
         const parent = await this.projManager.getCurrProject()!.dashboardsFstat();
         const parentUri = parent.resource;
         const targetUri = parentUri.resolve('Untitled');
