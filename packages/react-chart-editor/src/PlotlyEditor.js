@@ -17,7 +17,7 @@ class PlotlyEditor extends Component {
     super();
     
     this.state = {
-      gridItems: [0].map(function(i, key, list) {
+      gridItems: props.initItems.length > 0 ? props.initItems : [0].map(function(i, key, list) {
         return {
           i: i.toString(),
           x: i * 2,
@@ -26,7 +26,7 @@ class PlotlyEditor extends Component {
           h: 2,
         };
       }),
-      newCounter: 1,
+      newCounter: props.initItems.length > 0 ? props.initItemId + 1 : 1,
       cols: 12,
       graphDiv: undefined,
       selectedGraphDiv: undefined,
@@ -52,6 +52,7 @@ class PlotlyEditor extends Component {
   }
 
   handleDivSelect(event) {
+    console.log('lolxd', this.state);
     const selectedGraphDiv = event.currentTarget.children[0];
     this.setState({selectedGraphDiv});
   }
@@ -250,6 +251,8 @@ class PlotlyEditor extends Component {
 }
 
 PlotlyEditor.propTypes = {
+  initItemId: PropTypes.number,
+  initItems: PropTypes.array,
   dataSourceName: PropTypes.string,
   children: PropTypes.any,
   layout: PropTypes.array,

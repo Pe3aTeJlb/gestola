@@ -12,6 +12,8 @@ import { nls } from '@theia/core';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { LabelProvider } from '@theia/core/lib/browser';
 import { FileStat } from '@theia/filesystem/lib/common/files';
+import { NavigatableDashboardEditorOptions } from '../base/navigatable-dashboard-editor-widget';
+import { URI } from '@theia/core';
 const validFilename: (arg: string) => boolean = require('valid-filename');
 
 @injectable()
@@ -29,6 +31,11 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     static readonly ID = 'dashboard-editor-widget:chart-editor';
     static readonly LABEL = 'Gestola: Chart Editor';
 
+    public opt: NavigatableDashboardEditorOptions;
+    public uri: URI | undefined;
+    private initItems: any[]  = [];
+    private initItemId: number = 0;
+    private template: [];
     private config = {editable: true, displaylogo: false};
     private state = {
         data: [] as any,
@@ -42,7 +49,13 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     @inject(MessageService)
     protected readonly messageService!: MessageService;
 
-    configure(){
+    constructor(
+        @inject(NavigatableDashboardEditorOptions)
+        options: NavigatableDashboardEditorOptions,
+    ){
+        super();
+        this.opt = options;
+        this.uri = options.uri;
     }
 
     @postConstruct()
@@ -56,8 +69,13 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         this.title.caption = ChartEditorWidget.LABEL;
         this.title.closable = true;
         this.title.iconClass = 'fa fa-window-maximize'; // example widget icon.
+        if(this.uri){
+            this.initItems = [];
+            await this.readData();
+            await Promise.all(this.template.map(async(e) => this.processElement(e)));
+            console.log('kek', this.state);
+        }
         this.update();
-
     }
 
     public setDataset(table: string, data: Object[]){
@@ -69,6 +87,53 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         }));
 
         this.update();
+    }
+
+    async readData(){
+        let fileService = this.projManager.getFileSerivce();
+        if(this.uri && await fileService.exists(this.uri)){
+            this.template = JSON.parse((await fileService.read(this.uri)).value);
+        }
+    }
+
+    private async processElement(el: any) {
+     
+        this.initItems.push({
+            i: this.initItemId,
+            x: el.x,
+            y: el.y,
+            w: el.w,
+            h: el.h,
+        });
+
+        this.state.layout[this.initItemId] = el.template.layout;
+
+        let buff = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource} Limit 100;`);
+        let dataset:any = this.transposeArrayOfObjects(buff);
+        
+        let data: any[] = [];
+        let chartsDesc = Object.keys(el.template.data);
+
+        for(let key of chartsDesc){
+            for(let desc of el.template.data[key]){
+                let columnsKeys = Object.keys(desc.meta.columnNames);
+                let buff:any = {};
+                for(let columnKey of columnsKeys){
+                    buff[columnKey] = dataset[desc.meta.columnNames[columnKey]];
+                }
+                data.push(
+                    {
+                        ...desc,
+                        type: key,
+                        ...buff
+                    }
+                );
+            }
+        }
+
+        this.state.data[this.initItemId] = data;
+        this.initItemId += 1;
+
     }
 
     transposeArrayOfObjects<T extends Record<string, any>>(
@@ -148,8 +213,11 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     }
 
     render(): React.ReactElement {
+        console.log('render');
         return (
         <PlotlyEditor
+            initItemId={this.initItemId}
+            initItems={this.initItems}
             data={this.state.data}
             layout={this.state.layout}
             config={this.config}

@@ -156,9 +156,6 @@ class DefaultEditor extends Component {
             <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
           </SingleSidebarItem>
           <SingleSidebarItem>
-              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
-          </SingleSidebarItem>
-          <SingleSidebarItem>
             <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />
           </SingleSidebarItem>
           {children || null}
@@ -170,9 +167,6 @@ class DefaultEditor extends Component {
             <SelectWidgetPanel group={_('Info')} name={_('Hint')} />
             <SingleSidebarItem>
               <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
-            </SingleSidebarItem>
-            <SingleSidebarItem>
-              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
             </SingleSidebarItem>
             <SingleSidebarItem>
               <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />

@@ -10,7 +10,7 @@ import { DashboardEditorWidget } from './dashboard-editor-widget';
 import { DatasetSelectorCommandsContribution } from './dataset-selector/dataset-selector-commands-contribution';
 import { CommandContribution } from "@theia/core";
 import { TabBarToolbarContribution } from "@theia/core/lib/browser/shell/tab-bar-toolbar";
-import { NavigatableDashboardEditorOptions } from './base/navigatable-waveform-viewer-widget';
+import { NavigatableDashboardEditorOptions } from './base/navigatable-dashboard-editor-widget';
 import URI from '@theia/core/lib/common/uri';
 import { NavigatableWidgetOptions } from '@theia/core/lib/browser';
 import { ChartEditorWidget } from './chart-editor/react-chart-editor-widget';

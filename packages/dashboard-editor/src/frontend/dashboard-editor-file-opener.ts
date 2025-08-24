@@ -4,17 +4,13 @@ import {
     WidgetOpenerOptions,
     WidgetOpenHandler,
     OpenWithHandler,
-    NavigatableWidgetOptions,
     ApplicationShell
 } from '@theia/core/lib/browser';
 import URI from '@theia/core/lib/common/uri';
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { EditorManager } from '@theia/editor/lib/browser';
 import { DashboardEditorWidget } from './dashboard-editor-widget';
-
-export const DashboardViewerOptions = Symbol('DashboardViewerOptions');
-export interface DashboardViewerOptions extends NavigatableWidgetOptions {
-}
+import { NavigatableDashboardEditorOptions } from './base/navigatable-dashboard-editor-widget';
 
 @injectable()
 export class DashboardEditorFileOpener extends WidgetOpenHandler<DashboardEditorWidget> implements OpenWithHandler {
@@ -82,10 +78,9 @@ export class DashboardEditorFileOpener extends WidgetOpenHandler<DashboardEditor
         this.shell.addWidget(widget, widgetOptions);
     }
 
-    protected override createWidgetOptions(uri: URI, options: WidgetOpenerOptions): DashboardViewerOptions {
+    protected override createWidgetOptions(uri: URI, options: WidgetOpenerOptions): NavigatableDashboardEditorOptions {
         return {
-            kind: 'navigatable',
-            uri: uri.toString()
+            uri: uri.withoutFragment()
         };
     }
 

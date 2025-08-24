@@ -2,7 +2,7 @@ import { inject, injectable, postConstruct } from 'inversify';
 import { Message, Title, Widget } from '@theia/core/lib/browser';
 import { ILogger } from '@theia/core/lib/common';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
-import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } from './base/navigatable-waveform-viewer-widget';
+import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } from './base/navigatable-dashboard-editor-widget';
 import { DatasetSelectorWidget, TableSelectEvent } from './dataset-selector/dataset-selector-widget';
 import { ChartEditorWidget } from './chart-editor/react-chart-editor-widget';
 import { DataPreviewWidget } from './data-preview/data-preview-widget';
@@ -41,24 +41,17 @@ export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
             options
         );
 
-
         this.datasetSelectorWidget.onDidTableSelect(async (event: TableSelectEvent) => {
             const sampleData: Object[] = await this.projManager.getDatabaseService().getReportSampleDataFor(event.table);
             this.dataPreviewWidget.setData(sampleData);
             this.chartEditor.setDataset(event.table, sampleData);
         });
-
         
     }
 
     @postConstruct()
     protected override init() {
         this.configureTitle(this.title);
-        this.configure();
-    }
-
-    protected async configure(){
-
     }
 
     protected getTypeProperty(): string {
@@ -73,6 +66,7 @@ export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
         title.label = DashboardEditorWidget.LABEL;
         title.caption = DashboardEditorWidget.LABEL;
        }
+       title.closable = true;
     }
 
     protected override onCloseRequest(msg: Message): void {

@@ -37,7 +37,6 @@ export class DashboardViewerWidget extends ReactWidget {
         @inject(NavigatableDashboardViewerOptions) opts: NavigatableDashboardViewerOptions,
     ){
         super();
-        console.log('zez', opts);
         if(opts){
             this.opt = opts;
             this.uri = opts.uri;
@@ -58,7 +57,6 @@ export class DashboardViewerWidget extends ReactWidget {
         this.PlotComponent = rce.createPlotComponent(plotly);
         await this.readData();
         this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)));
-        console.log('zez', this.plots);
         this.update();
     }
 
@@ -81,7 +79,6 @@ export class DashboardViewerWidget extends ReactWidget {
 
         let buff = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource};`);
         let dataset:any = this.transposeArrayOfObjects(buff);
-        console.log('kek', dataset);
         
         let data: any[] = [];
         let chartsDesc = Object.keys(el.template.data);
@@ -102,8 +99,6 @@ export class DashboardViewerWidget extends ReactWidget {
                 );
             }
         }
-        
-        console.log('mom', data);
 
         return (
             <div key={gridItem.i} data-grid={gridItem} >
