@@ -97,7 +97,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     }
 
     private async processElement(el: any) {
-     
+
         this.state.gridItems.push({
             i: this.state.maxGridItemId.toString(),
             x: el.x,
@@ -106,33 +106,75 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             h: el.h,
         });
 
-        this.state.layout[this.state.maxGridItemId] = {template: el.template};
-
         let dataset:any = await this.projManager.getDatabaseService().getReportSampleDataFor(el.dataSource, true);
         this.setDataset(el.dataSource, dataset);
-        
-        let data: any[] = [];
-        let chartsDesc = Object.keys(el.template.data);
 
-        for(let key of chartsDesc){
-            for(let desc of el.template.data[key]){
-                let columnsKeys = Object.keys(desc.meta.columnNames);
-                let buff:any = {};
-                for(let columnKey of columnsKeys){
-                    buff[columnKey] = dataset[desc.meta.columnNames[columnKey]];
-                    buff[`${columnKey}src`] = desc.meta.columnNames[columnKey];
+        let data: any[] = el.data;
+        let layout: any = el.layout;
+
+        for(let trace of data){
+
+            let columnsKeys = Object.keys(trace.meta.columnNames);
+            for(let columnKey of columnsKeys){
+                trace[columnKey] = dataset[trace.meta.columnNames[columnKey]];
+            }
+
+            for(let transform of trace.transforms){
+                if(transform.target && transform.targetsrc){
+                    transform.target = dataset[transform.targetsrc];
                 }
-                data.push(
-                    {
-                        ...desc,
-                        type: key,
-                        ...buff
+            }
+
+            trace.transforms = [
+                ...[...Array(10)].map(() => ({
+                    "type": "filter",
+                    "target": [],
+                    "targetsrc": "Technical filter, Do Not Delete",
+                    "extra": "empty"
+                })),
+                ...trace.transforms
+            ]
+
+        }
+
+        if(layout.updatemenus){
+            let index = 0;
+            for(let menu of layout.updatemenus){
+                let distinctData = [...new Set(dataset[menu.source])];
+                let filters: any[] = distinctData.map((e:any) => {
+                    return {
+                      label: `${menu.source}: ${e.toString()}`,
+                      method: 'restyle',
+                      args: [`transforms[${index}]`, {
+                          type: 'filter',
+                          target: distinctData,
+                          targetsrc: menu.source,
+                          operation: '=',
+                          value: e,
+                          extra: "technical"
+                      }]
                     }
-                );
+                  });
+                  console.log("filters",filters);
+                menu.buttons = [
+                    {
+                      label: menu.source,
+                      method: 'restyle',
+                      args: [`transforms[${index}]`, {
+                        type: "filter",
+                        target: [],
+                        targetsrc: menu.source,
+                        extra: "technical"
+                      }]
+                    }, 
+                    ...filters
+                  ];
+                index++;
             }
         }
 
         this.state.data[this.state.maxGridItemId] = data;
+        this.state.layout[this.state.maxGridItemId] = layout;
         this.state.maxGridItemId = this.state.maxGridItemId + 1;
 
     }

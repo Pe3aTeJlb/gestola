@@ -1,7 +1,10 @@
 export const ADDITIONAL_EDITOR_ACTIONS = {
-    ADD_WIDGET: 'plotly-editor-add-widget',
-    PREVIEW_DASHBOARD: 'plotly-editor-preview-dashboard',
-    SAVE_DASHBOARD: 'plotly-editor-save-dashboard'
+  ADD_WIDGET: 'plotly-editor-add-widget',
+  PREVIEW_DASHBOARD: 'plotly-editor-preview-dashboard',
+  SAVE_DASHBOARD: 'plotly-editor-save-dashboard',
+  ADD_CONTROL: 'plotly-editor-add-control',
+  DELETE_CONTROL: 'plotly-editor-delete-control',
+  UPDATE_CONTROL: 'plotly-editor-updatemenus-update'
 };
 
 export const ICONS = {

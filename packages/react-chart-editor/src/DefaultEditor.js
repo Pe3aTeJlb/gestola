@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   GraphCreatePanel,
-  GraphTransformsPanel,
   GraphSubplotsPanel,
   StyleLayoutPanel,
   StyleAxesPanel,
@@ -14,8 +13,9 @@ import {
   StyleImagesPanel,
   StyleTracesPanel,
   StyleColorbarsPanel,
-  StyleUpdateMenusPanel,
+  
 } from 'react-chart-editor/lib/default_panels';
+import GraphTransformsPanel from './GraphTransformsPanel'
 import {traceHasColorbar} from 'react-chart-editor/lib/default_panels/StyleColorbarsPanel';
 import Logo from 'react-chart-editor/lib/components/widgets/Logo';
 import {TRANSFORMABLE_TRACES, TRACE_TO_AXIS} from 'react-chart-editor/lib/lib/constants';
@@ -34,13 +34,14 @@ import {
   LayoutPanel,
   Button,
   SingleSidebarItem,
-  TraceAccordion,
+  TraceAccordion
 } from 'react-chart-editor';
 import { ADDITIONAL_EDITOR_ACTIONS } from './constants';
 import '../style/style2.css';
 import GettingStartedPanel from './GettingStartedPanel';
 import PanelMenuWrapper from './PanelMenuWrapper';
 import SelectWidgetPanel from './SelectWidgetPanel';
+import StyleUpdateMenusPanel from './StyleUpdateMenusPanel';
 
 class DefaultEditor extends Component {
   constructor(props, context) {
@@ -151,9 +152,12 @@ class DefaultEditor extends Component {
           <StyleShapesPanel group={_('Annotate')} name={_('Shapes')} />
           <StyleImagesPanel group={_('Annotate')} name={_('Images')} />
           {this.hasSliders() && <StyleSlidersPanel group={_('Control')} name={_('Sliders')} />}
-          {this.hasMenus() && <StyleUpdateMenusPanel group={_('Control')} name={_('Menus')} />}
+          {this.hasTransforms() && <StyleUpdateMenusPanel group={_('Control')} name={_('Menus')} />}
           <SingleSidebarItem>
             <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
+          </SingleSidebarItem>
+          <SingleSidebarItem>
+              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
           </SingleSidebarItem>
           <SingleSidebarItem>
             <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />
@@ -167,6 +171,9 @@ class DefaultEditor extends Component {
             <SelectWidgetPanel group={_('Info')} name={_('Hint')} />
             <SingleSidebarItem>
               <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
+            </SingleSidebarItem>
+            <SingleSidebarItem>
+              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
             </SingleSidebarItem>
             <SingleSidebarItem>
               <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />

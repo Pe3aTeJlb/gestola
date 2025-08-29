@@ -17,6 +17,8 @@ class PlotlyEditor extends Component {
     super();
 
     this.state = {
+      gridItems: [],
+      newCounter: 0,
       cols: 12,
       graphDiv: undefined,
       selectedGraphDiv: undefined,
@@ -83,12 +85,12 @@ class PlotlyEditor extends Component {
 
   onAddWidget() {
 
-    let maxGridItemId = Math.max(...this.state.gridItems.map(e => Number(e.i))) + 1;
+    let maxGridItemId = this.state.gridItems.length > 0 ? Math.max(...this.state.gridItems.map(e => Number(e.i))) + 1 : 0;
     
     const newData = this.state.data;
     newData[Number(maxGridItemId)] = [];
     const newLayout = this.state.layout;
-    newLayout[Number(maxGridItemId)] = {};
+    newLayout[Number(maxGridItemId)] = {updatemenus: []};
     const newFrames = this.state.frames;
     newFrames[Number(maxGridItemId)] = []
     this.setState({
@@ -116,15 +118,39 @@ class PlotlyEditor extends Component {
   }
 
   onCollectWidgets(){
+
     return this.state.gridItems.map(el => {
+
+      //1 deep copy data
+      let tempData = structuredClone(this.state.data[Number(el.i)]);
+      
+      //2 clear technical transforms (first 10)
+      //3 clear target field in all transforms
+      //4 clear data from plots
+      tempData.forEach(e => {
+        e.transforms.splice(0, 10);
+        e.transforms.forEach(i => {if(i.target) i.target = []});
+        Object.keys(e.meta.columnNames).forEach(key => e[key] = []);
+      });
+
+      //5 make template from updatemenus
+      let tempLayout = structuredClone(this.state.layout[Number(el.i)]);
+      tempLayout.updatemenus = tempLayout.updatemenus.filter(e => e.buttons.length > 0);
+      tempLayout.updatemenus.forEach(e => {
+        e.source = e.buttons[0].label;
+        e.buttons = [];
+      });
+
+      console.log(tempData, tempLayout);
       return {
         i: el.i,
         x: el.x,
         y: el.y,
         w: el.w,
         h: el.h,
-        template: this.props.plotly.makeTemplate({data: this.state.data[Number(el.i)], layout:this.state.layout[Number(el.i)]}),
         dataSource: this.props.dataSourceName,
+        data: tempData,
+        layout: tempLayout,
         sqlColumns: this.collectDistinctColumns(this.state.data[Number(el.i)])
       }
     });

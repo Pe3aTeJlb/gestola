@@ -57,6 +57,7 @@ export class DashboardViewerWidget extends ReactWidget {
         this.PlotComponent = rce.createPlotComponent(plotly);
         await this.readData();
         this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)));
+        console.log('plots', this.plots);
         this.update();
     }
 
@@ -77,25 +78,70 @@ export class DashboardViewerWidget extends ReactWidget {
             h: el.h,
         };
 
-        let dataset: any = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource};`, true);
+        let dataset: any = await this.projManager.getDatabaseService().executeQuery(`Select * from ${el.dataSource};`, true);
        
-        let data: any[] = [];
-        let chartsDesc = Object.keys(el.template.data);
+        let data: any[] = el.data;
+        let layout: any = el.layout;
 
-        for(let key of chartsDesc){
-            for(let desc of el.template.data[key]){
-                let columnsKeys = Object.keys(desc.meta.columnNames);
-                let buff:any = {};
-                for(let columnKey of columnsKeys){
-                    buff[columnKey] = dataset[desc.meta.columnNames[columnKey]];
+        for(let trace of data){
+
+            let columnsKeys = Object.keys(trace.meta.columnNames);
+            for(let columnKey of columnsKeys){
+                trace[columnKey] = dataset[trace.meta.columnNames[columnKey]];
+            }
+
+            for(let transform of trace.transforms){
+                if(transform.target && transform.targetsrc){
+                    transform.target = dataset[transform.targetsrc];
                 }
-                data.push(
-                    {
-                        ...desc,
-                        type: key,
-                        ...buff
+            }
+
+            if(el.layout.updatemenus && el.layout.updatemenus.length > 0){
+                trace.transforms = [
+                    ...[...Array(el.layout.updatemenus.length)].map(() => ({
+                        "type": "filter",
+                        "target": [],
+                        "targetsrc": "Technical filter, Do Not Delete",
+                        "extra": "empty"
+                    })),
+                    ...trace.transforms
+                ]
+            }
+
+        }
+
+        if(layout.updatemenus){
+            let index = 0;
+            for(let menu of layout.updatemenus){
+                let distinctData = [...new Set(dataset[menu.source])];
+                let filters: any[] = distinctData.map((e:any) => {
+                    return {
+                      label: `${menu.source}: ${e.toString()}`,
+                      method: 'restyle',
+                      args: [`transforms[${index}]`, {
+                          type: 'filter',
+                          target: distinctData,
+                          targetsrc: menu.source,
+                          operation: '=',
+                          value: e,
+                          extra: "technical"
+                      }]
                     }
-                );
+                  });
+                menu.buttons = [
+                    {
+                      label: menu.source,
+                      method: 'restyle',
+                      args: [`transforms[${index}]`, {
+                        type: "filter",
+                        target: [],
+                        targetsrc: menu.source,
+                        extra: "technical"
+                      }]
+                    }, 
+                    ...filters
+                  ];
+                index++;
             }
         }
 
@@ -103,7 +149,7 @@ export class DashboardViewerWidget extends ReactWidget {
             <div key={gridItem.i} data-grid={gridItem} >
                 <this.PlotComponent
                     data={data}
-                    layout={{template: el.template}}
+                    layout={layout}
                     frames={[]}
                     config={this.config}
                     useResizeHandler={true}
@@ -117,18 +163,23 @@ export class DashboardViewerWidget extends ReactWidget {
     }
 
     render(): React.ReactElement {
+        /*
+        <div className="refresh-button">
+                    <button  onClick={async () => {this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)))}}>Refresh</button>
+                </div>
+        */
         return (
-            <ReactGridLayout
-            cols={12}
-            isDraggable={false}
-            isResizable={false}
-            isBounded={true}
-            autoSize={true}
-            onLayoutChange={this.update}
-            style={{width: '100%', height: '100%'}}
-            >
-            {this.plots}
-            </ReactGridLayout>
+                <ReactGridLayout
+                cols={12}
+                isDraggable={false}
+                isResizable={false}
+                isBounded={true}
+                autoSize={true}
+                onLayoutChange={this.update}
+                style={{width: '100%', height: '100%'}}
+                >
+                    {this.plots}
+                </ReactGridLayout>
         );
     }
 

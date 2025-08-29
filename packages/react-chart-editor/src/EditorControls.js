@@ -184,6 +184,13 @@ class EditorControls extends Component {
           );
         }
 
+        graphDiv.data[graphDiv.data.length - 1].transforms = [...Array(10)].map(() => ({
+          "type": "filter",
+          "target": [],
+          "targetsrc": "Technical filter, Do Not Delete",
+          "extra": "empty"
+        }));
+
         if (this.props.afterAddTrace) {
           this.props.afterAddTrace(payload);
         }
@@ -374,9 +381,98 @@ class EditorControls extends Component {
         }
         break;
 
-        case ADDITIONAL_EDITOR_ACTIONS.ADD_WIDGET:
-          this.props.onAddWidget();
-          if (this.props.onUpdate && graphDiv && graphDiv.data) {
+      case ADDITIONAL_EDITOR_ACTIONS.ADD_WIDGET:
+        this.props.onAddWidget();
+        if (this.props.onUpdate && graphDiv && graphDiv.data) {
+          this.props.onUpdate(
+            graphDiv.id,
+            graphDiv.data.slice(),
+            graphDiv.layout,
+            graphDiv._transitionData._frames
+          );
+        }
+        break;
+
+      case ADDITIONAL_EDITOR_ACTIONS.PREVIEW_DASHBOARD:
+        this.props.onPreviewDashboard(this.props.onCollectWidgets())
+        break;
+
+      case ADDITIONAL_EDITOR_ACTIONS.SAVE_DASHBOARD:
+        this.props.onSaveDashboard(this.props.onCollectWidgets())
+        break;
+
+      case ADDITIONAL_EDITOR_ACTIONS.ADD_CONTROL:
+        graphDiv.layout.updatemenus.push({
+          type: 'dropdown',
+          active: 0,
+          buttons: []
+        });
+
+        if (this.props.onUpdate) {
+          this.props.onUpdate(
+            graphDiv.id,
+            graphDiv.data.slice(),
+            Object.assign({}, graphDiv.layout),
+            graphDiv._transitionData._frames
+          );
+        }
+        break;
+
+        case ADDITIONAL_EDITOR_ACTIONS.UPDATE_CONTROL:
+          if (payload.updateMenuIndex != undefined) {
+
+            let freeTransformIndex = graphDiv.data[0].transforms.findIndex(e => e.extra && e.extra == "empty");
+            let filters = payload.data.map(e => {
+              return {
+                label: `${payload.srcAttr}: ${e.toString()}`,
+                method: 'restyle',
+                args: [`transforms[${freeTransformIndex}]`, {
+                    type: 'filter',
+                    target: payload.data,
+                    targetsrc: payload.srcAttr,
+                    operation: '=',
+                    value: e,
+                    extra: "technical"
+                }]
+              }
+            })
+        
+            filters = [{
+                label: payload.srcAttr,
+                method: 'restyle',
+                args: [`transforms[${freeTransformIndex}]`, {
+                  type: "filter",
+                  target: [],
+                  targetsrc: payload.srcAttr,
+                  extra: "technical"
+                }]
+              }, 
+              ...filters
+            ];
+
+            graphDiv.layout.updatemenus[payload.updateMenuIndex].buttons = filters;
+            graphDiv.layout.updatemenus[payload.updateMenuIndex].pureTransformIndex = freeTransformIndex;
+            if (this.props.onUpdate) {
+              this.props.onUpdate(
+                graphDiv.id,
+                graphDiv.data.slice(),
+                graphDiv.layout,
+                graphDiv._transitionData._frames
+              );
+            }
+          }
+          break;
+
+      case ADDITIONAL_EDITOR_ACTIONS.DELETE_CONTROL:
+        if (payload.updateMenuIndex != undefined) {
+          graphDiv.data.forEach(e => {e.transforms[graphDiv.layout.updatemenus[payload.updateMenuIndex].pureTransformIndex] = {
+            "type": "filter",
+            "target": [],
+            "targetsrc": "Technical filter, Do Not Delete",
+            "extra": "empty"
+          }});
+          graphDiv.layout.updatemenus.splice(payload.updateMenuIndex, 1);
+          if (this.props.onUpdate) {
             this.props.onUpdate(
               graphDiv.id,
               graphDiv.data.slice(),
@@ -384,14 +480,7 @@ class EditorControls extends Component {
               graphDiv._transitionData._frames
             );
           }
-        break;
-
-        case ADDITIONAL_EDITOR_ACTIONS.PREVIEW_DASHBOARD:
-          this.props.onPreviewDashboard(this.props.onCollectWidgets())
-        break;
-
-        case ADDITIONAL_EDITOR_ACTIONS.SAVE_DASHBOARD:
-          this.props.onSaveDashboard(this.props.onCollectWidgets())
+        }
         break;
 
       default:
