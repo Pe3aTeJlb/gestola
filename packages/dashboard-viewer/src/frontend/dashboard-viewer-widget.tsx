@@ -163,12 +163,11 @@ export class DashboardViewerWidget extends ReactWidget {
     }
 
     render(): React.ReactElement {
-        /*
-        <div className="refresh-button">
+        return (
+            <div className='app'>
+                <div className="refresh-button">
                     <button  onClick={async () => {this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)))}}>Refresh</button>
                 </div>
-        */
-        return (
                 <ReactGridLayout
                 cols={12}
                 isDraggable={false}
@@ -180,6 +179,7 @@ export class DashboardViewerWidget extends ReactWidget {
                 >
                     {this.plots}
                 </ReactGridLayout>
+            </div>
         );
     }
 
