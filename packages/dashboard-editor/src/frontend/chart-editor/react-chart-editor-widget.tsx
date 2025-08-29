@@ -33,14 +33,14 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
 
     public opt: NavigatableDashboardEditorOptions;
     public uri: URI | undefined;
-    private initItems: any[]  = [];
-    private initItemId: number = 0;
-    private template: [];
+    private dashboardDescription: [];
     private config = {editable: true, displaylogo: false};
     private state = {
         data: [] as any,
-        layout: [{}] as any,
+        layout: [] as any,
         frames: [] as any,
+        gridItems: [] as any,
+        maxGridItemId: 0,
         dataSources: {},
         dataSourceOptions: [{}],
         dataSourceName: "",
@@ -70,46 +70,46 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         this.title.closable = true;
         this.title.iconClass = 'fa fa-window-maximize'; // example widget icon.
         if(this.uri){
-            this.initItems = [];
             await this.readData();
-            await Promise.all(this.template.map(async(e) => this.processElement(e)));
-            console.log('kek', this.state);
+            for(let e of this.dashboardDescription){
+                await this.processElement(e);
+            }
+            console.log('zzzz', this.state, this.state.gridItems);
         }
         this.update();
     }
 
     public setDataset(table: string, data: Object[]){
         this.state.dataSourceName = table;
-        this.state.dataSources = this.transposeArrayOfObjects(data);
+        this.state.dataSources = data;
         this.state.dataSourceOptions = Object.keys(this.state.dataSources).map((name) => ({
             value: name,
             label: name,
         }));
-
         this.update();
     }
 
     async readData(){
         let fileService = this.projManager.getFileSerivce();
         if(this.uri && await fileService.exists(this.uri)){
-            this.template = JSON.parse((await fileService.read(this.uri)).value);
+            this.dashboardDescription = JSON.parse((await fileService.read(this.uri)).value);
         }
     }
 
     private async processElement(el: any) {
      
-        this.initItems.push({
-            i: this.initItemId,
+        this.state.gridItems.push({
+            i: this.state.maxGridItemId.toString(),
             x: el.x,
             y: el.y,
             w: el.w,
             h: el.h,
         });
 
-        this.state.layout[this.initItemId] = el.template.layout;
+        this.state.layout[this.state.maxGridItemId] = {template: el.template};
 
-        let buff = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource} Limit 100;`);
-        let dataset:any = this.transposeArrayOfObjects(buff);
+        let dataset:any = await this.projManager.getDatabaseService().getReportSampleDataFor(el.dataSource, true);
+        this.setDataset(el.dataSource, dataset);
         
         let data: any[] = [];
         let chartsDesc = Object.keys(el.template.data);
@@ -120,6 +120,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
                 let buff:any = {};
                 for(let columnKey of columnsKeys){
                     buff[columnKey] = dataset[desc.meta.columnNames[columnKey]];
+                    buff[`${columnKey}src`] = desc.meta.columnNames[columnKey];
                 }
                 data.push(
                     {
@@ -131,30 +132,9 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             }
         }
 
-        this.state.data[this.initItemId] = data;
-        this.initItemId += 1;
+        this.state.data[this.state.maxGridItemId] = data;
+        this.state.maxGridItemId = this.state.maxGridItemId + 1;
 
-    }
-
-    transposeArrayOfObjects<T extends Record<string, any>>(
-        array: T[]
-      ): { [K in keyof T]: T[K][] } {
-        if (array.length === 0) return {} as { [K in keyof T]: T[K][] };
-      
-        // Get all unique keys from all objects
-        const allKeys = Array.from(
-          new Set(array.flatMap(obj => Object.keys(obj)))
-        ) as (keyof T)[];
-      
-        // Initialize result object
-        const result = {} as { [K in keyof T]: T[K][] };
-      
-        // Populate each key with array of values
-        allKeys.forEach(key => {
-          result[key] = array.map(obj => obj[key]);
-        });
-      
-        return result;
     }
 
     private async saveDashboard(widgets: any){
@@ -174,7 +154,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             if (name) {
                 const fileUri = parentUri.resolve(name+".dashboard");
                 await this.fileService.createFile(fileUri);
-                await this.fileService.write(fileUri, JSON.stringify(widgets));
+                await this.fileService.write(fileUri, JSON.stringify(widgets, undefined, 2));
             }
         });
 
@@ -213,11 +193,9 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     }
 
     render(): React.ReactElement {
-        console.log('render');
         return (
         <PlotlyEditor
-            initItemId={this.initItemId}
-            initItems={this.initItems}
+            gridItems={this.state.gridItems}
             data={this.state.data}
             layout={this.state.layout}
             config={this.config}

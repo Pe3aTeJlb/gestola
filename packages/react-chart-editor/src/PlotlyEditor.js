@@ -15,21 +15,12 @@ class PlotlyEditor extends Component {
 
   constructor(props) {
     super();
-    
+
     this.state = {
-      gridItems: props.initItems.length > 0 ? props.initItems : [0].map(function(i, key, list) {
-        return {
-          i: i.toString(),
-          x: i * 2,
-          y: 0,
-          w: 4,
-          h: 2,
-        };
-      }),
-      newCounter: props.initItems.length > 0 ? props.initItemId + 1 : 1,
       cols: 12,
       graphDiv: undefined,
       selectedGraphDiv: undefined,
+      gridItems: props.gridItems,
       data: props.data,
       layout: props.layout,
       frames: props.frames,
@@ -91,22 +82,24 @@ class PlotlyEditor extends Component {
   }
 
   onAddWidget() {
+
+    let maxGridItemId = Math.max(...this.state.gridItems.map(e => Number(e.i))) + 1;
+    
     const newData = this.state.data;
-    newData[Number(this.state.newCounter)] = [];
+    newData[Number(maxGridItemId)] = [];
     const newLayout = this.state.layout;
-    newLayout[Number(this.state.newCounter)] = {};
+    newLayout[Number(maxGridItemId)] = {};
     const newFrames = this.state.frames;
-    newFrames[Number(this.state.newCounter)] = []
+    newFrames[Number(maxGridItemId)] = []
     this.setState({
       // Add a new item. It must have a unique key!
       gridItems: this.state.gridItems.concat({
-        i: this.state.newCounter.toString(),
+        i: maxGridItemId.toString(),
         x: 0,
         y: Infinity, // puts it at the bottom
         w: 4,
         h: 2,
       }),
-      newCounter: this.state.newCounter + 1,
       data: newData, 
       layout: newLayout, 
       frames: newFrames
@@ -130,7 +123,7 @@ class PlotlyEditor extends Component {
         y: el.y,
         w: el.w,
         h: el.h,
-        template: this.props.plotly.makeTemplate({data: this.state.data[Number(el.i)], layout:this.state.data[Number(el.i)]}),
+        template: this.props.plotly.makeTemplate({data: this.state.data[Number(el.i)], layout:this.state.layout[Number(el.i)]}),
         dataSource: this.props.dataSourceName,
         sqlColumns: this.collectDistinctColumns(this.state.data[Number(el.i)])
       }
@@ -230,7 +223,7 @@ class PlotlyEditor extends Component {
         )}
          <div className="plotly_editor_plot" style={{width: '100%', height: '100%'}}>
           <ReactGridLayout
-            cols={12}
+            cols={this.state.cols}
             draggableHandle=".drag-handle"
             resizeHandles={["s", "w", "e", "sw", "nw", "se"]}
             isBounded={true}
@@ -251,8 +244,7 @@ class PlotlyEditor extends Component {
 }
 
 PlotlyEditor.propTypes = {
-  initItemId: PropTypes.number,
-  initItems: PropTypes.array,
+  gridItems: PropTypes.array,
   dataSourceName: PropTypes.string,
   children: PropTypes.any,
   layout: PropTypes.array,

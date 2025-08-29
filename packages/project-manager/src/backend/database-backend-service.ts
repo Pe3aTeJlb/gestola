@@ -4,6 +4,7 @@ import { DatabaseBackendService } from '../common/protocol';
 import * as db from "better-sqlite3";
 import { Database as Connection } from 'better-sqlite3';
 import { Column, ColumnDescriptionRow, Database, Table } from '../common/database';
+import {sqlutils} from "@gestola/utils";
 
 @injectable()
 export class DatabaseBackendServiceImpl implements DatabaseBackendService {
@@ -78,14 +79,16 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
 
     }
 
-    async getReportSampleDataFor(table: string): Promise<Object[]> {
-        return  this.conn.prepare(
-            `SELECT * FROM "${table}" LIMIT 1000;`
-        ).all() as Object[];
+    async getReportSampleDataFor(table: string, transpose?: boolean):  Promise<Object | Object[]> {
+        return  transpose 
+                ? sqlutils.transpose(this.conn.prepare(`SELECT * FROM "${table}" LIMIT 1000;`).all() as Object[]) as {}
+                : this.conn.prepare(`SELECT * FROM "${table}" LIMIT 1000;`).all() as Object[];
     }
 
-    async executeQuery(query: string): Promise<Object[]> {
-        return this.conn.prepare(query).all() as Object[];
+    async executeQuery(query: string, transpose?: boolean): Promise<Object | Object[]> {
+        return transpose 
+                ? sqlutils.transpose(this.conn.prepare(query).all() as Object[]) as {}
+                : this.conn.prepare(query).all() as Object[];
     }
 
 }

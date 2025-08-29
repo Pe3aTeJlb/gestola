@@ -41,6 +41,9 @@
         },
         {
           "path": "packages/dashboard-viewer"
+        },
+        {
+          "path": "packages/utils"
         }
     ]
 }

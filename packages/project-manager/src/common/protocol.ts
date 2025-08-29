@@ -55,6 +55,6 @@ export const DATABASE_BACKEND_PATH = '/services/gestolaDatabaseBackend';
 export interface DatabaseBackendService {
     changeDBConnection(uri: URI): Promise<void>;
     getDatabaseDescription(uri: URI): Promise<Database>;
-    getReportSampleDataFor(table: string): Promise<Object[]>;
-    executeQuery(query: string): Promise<Object[]>;
+    getReportSampleDataFor(table: string, transpose?: boolean):  Promise<Object | Object[]>;
+    executeQuery(query: string, transpose?: boolean):  Promise<Object | Object[]>;
 }

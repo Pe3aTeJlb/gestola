@@ -1,5 +1,5 @@
 {
-  "name": "@gestola/project-manager",
+  "name": "@gestola/utils",
   "private": true,
   "keywords": [
     "gestola",
@@ -15,22 +15,14 @@
   },
   "homepage": "https://github.com/Pe3aTeJlb/gestola",
   "version": "1.0.0",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
   "files": [
-    "i18n",
-    "resources",
     "lib",
     "src"
   ],
-  "dependencies": {
-    "fs-extra": "11.2.0",
-    "better-sqlite3": "12.2.0",
-    "@gestola/utils": "1.0.0"
-  },
+  "main": "./lib/index.js",
+  "dependencies": {},
   "devDependencies": {
-    "rimraf": "3.0.2",
-    "@types/better-sqlite3": "7.6.13"
+    "rimraf": "3.0.2"
   },
   "scripts": {
     "rebuild:prod": "yarn rebuild",
@@ -40,11 +32,5 @@
     "compile": "tsc -b",
     "watch": "tsc -w",
     "update:next": "ts-node ../../scripts/update-theia-version.ts"
-  },
-  "theiaExtensions": [
-    {
-      "backend": "lib/backend/backend-module",
-      "frontend": "lib/frontend/frontend-module"
-    }
-  ]
+  }
 }

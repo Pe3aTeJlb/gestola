@@ -42,9 +42,8 @@ export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
         );
 
         this.datasetSelectorWidget.onDidTableSelect(async (event: TableSelectEvent) => {
-            const sampleData: Object[] = await this.projManager.getDatabaseService().getReportSampleDataFor(event.table);
-            this.dataPreviewWidget.setData(sampleData);
-            this.chartEditor.setDataset(event.table, sampleData);
+            this.dataPreviewWidget.setData(await this.projManager.getDatabaseService().getReportSampleDataFor(event.table) as any);
+            this.chartEditor.setDataset(event.table, await this.projManager.getDatabaseService().getReportSampleDataFor(event.table, true) as any);
         });
         
     }

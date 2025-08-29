@@ -77,9 +77,8 @@ export class DashboardViewerWidget extends ReactWidget {
             h: el.h,
         };
 
-        let buff = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource};`);
-        let dataset:any = this.transposeArrayOfObjects(buff);
-        
+        let dataset: any = await this.projManager.getDatabaseService().executeQuery(`Select ${el.sqlColumns.join(',')} from ${el.dataSource};`, true);
+       
         let data: any[] = [];
         let chartsDesc = Object.keys(el.template.data);
 
@@ -104,7 +103,7 @@ export class DashboardViewerWidget extends ReactWidget {
             <div key={gridItem.i} data-grid={gridItem} >
                 <this.PlotComponent
                     data={data}
-                    layout={el.template.layout}
+                    layout={{template: el.template}}
                     frames={[]}
                     config={this.config}
                     useResizeHandler={true}
@@ -115,27 +114,6 @@ export class DashboardViewerWidget extends ReactWidget {
                 />
             </div>
         );
-    }
-
-    transposeArrayOfObjects<T extends Record<string, any>>(
-        array: T[]
-      ): { [K in keyof T]: T[K][] } {
-        if (array.length === 0) return {} as { [K in keyof T]: T[K][] };
-      
-        // Get all unique keys from all objects
-        const allKeys = Array.from(
-          new Set(array.flatMap(obj => Object.keys(obj)))
-        ) as (keyof T)[];
-      
-        // Initialize result object
-        const result = {} as { [K in keyof T]: T[K][] };
-      
-        // Populate each key with array of values
-        allKeys.forEach(key => {
-          result[key] = array.map(obj => obj[key]);
-        });
-      
-        return result;
     }
 
     render(): React.ReactElement {
