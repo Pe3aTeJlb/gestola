@@ -4,7 +4,7 @@ const path = require('path');
 /* Отвечает за правку упакованного node-red для standalone сборки*/
 
 //readFile(path.resolve(__dirname, '../packages/node-red-integration/dist/node-red-integration.js'), 'utf-8', function (err, contents) {
-readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), 'utf-8', function (err, contents) {
+readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-87d373.js'), 'utf-8', function (err, contents) {
   if (err) {
     console.log(err);
     return;
@@ -82,7 +82,7 @@ readFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modul
     'log.warn("["+nodeErrors[i].id+"] "+nodeErrors[i].err + " " + nodeErrors[i].err.details)'
   );
 
-  writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-a48654.js'), replaced, 'utf-8', function (err) {
+  writeFile(path.resolve(__dirname, '../electron-app/lib/backend/vendors-node_modules_node-red_runtime_lib_storage_localfilesystem_projects_git_node-red-ask-p-87d373.js'), replaced, 'utf-8', function (err) {
     console.log('replaces from', __filename);
     console.log(err);
   });

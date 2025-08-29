@@ -1,0 +1,146 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+| Date         : Fri Jul 18 16:57:14 2025
+| Host         : debian-srk running 64-bit Debian GNU/Linux 11 (bullseye)
+| Command      : create_slack_histogram -details -file /home/debian/ECAD/vivado_integration/low_level_design/lld_1/topology/fpga/set_1/implresults/slack.txt
+| Design       : top_fsm_div
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Slack histogram report
+
+Summary Tables
+
+
+100 items from 6.826 ns to 9.266 ns
+Setup sub-table
++-------+-----------------+-----------------+-------+------------------+
+| Index | Slack Range Min | Slack Range Max | Count | Cumulative Count |
++-------+-----------------+-----------------+-------+------------------+
+|   0   |      6.826      |      7.070      |  15   |        15        |
+|   1   |      7.070      |      7.314      |  17   |        32        |
+|   2   |      7.314      |      7.558      |   4   |        36        |
+|   3   |      7.558      |      7.802      |  16   |        52        |
+|   4   |      7.802      |      8.046      |  11   |        63        |
+|   5   |      8.046      |      8.290      |  12   |        75        |
+|   6   |      8.290      |      8.534      |  12   |        87        |
+|   7   |      8.534      |      8.778      |   5   |        92        |
+|   8   |      8.778      |      9.022      |   6   |        98        |
+|   9   |      9.022      |      9.266      |   2   |       100        |
++-------+-----------------+-----------------+-------+------------------+
+
+Detailed Tables
+
+
+100 items from 6.826 ns to 9.266 ns
+Setup sub-table
++--------+-----------+-----------+----------+---------+-------------------+--------------------+-------------------------------------------+
+| Index  | Slack     | Type      | Group    | Corner  | Source Clock      | Destination Clock  | Pin                                       |
++--------+-----------+-----------+----------+---------+-------------------+--------------------+-------------------------------------------+
+| 0      | 6.826     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[10]/R            |
+| 0      | 6.826     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[11]/R            |
+| 0      | 6.826     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[12]/R            |
+| 0      | 6.826     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[9]/R             |
+| 0      | 6.848     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[2]/R                        |
+| 0      | 6.848     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[3]/R                        |
+| 0      | 6.876     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[5]/R             |
+| 0      | 6.876     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[6]/R             |
+| 0      | 6.876     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[7]/R             |
+| 0      | 6.876     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[8]/R             |
+| 0      | 6.943     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[1]/R                        |
+| 0      | 6.951     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[1]/CE                       |
+| 0      | 6.952     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[13]/R            |
+| 0      | 6.985     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[0]/CE                       |
+| 0      | 7.007     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[0]/R                        |
+| 1      | 7.071     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[2]/D                        |
+| 1      | 7.103     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[2]/R                    |
+| 1      | 7.103     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[3]/R                    |
+| 1      | 7.145     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[1]/R             |
+| 1      | 7.145     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[2]/R             |
+| 1      | 7.145     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[3]/R             |
+| 1      | 7.145     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[4]/R             |
+| 1      | 7.147     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[3]/D                        |
+| 1      | 7.161     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[0]/R             |
+| 1      | 7.176     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[2]/CE                       |
+| 1      | 7.176     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[3]/CE                       |
+| 1      | 7.198     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[0]/R                    |
+| 1      | 7.198     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[1]/R                    |
+| 1      | 7.241     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[0]/R                        |
+| 1      | 7.241     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[1]/R                        |
+| 1      | 7.241     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[2]/R                        |
+| 1      | 7.241     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[3]/R                        |
+| 2      | 7.467     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[0]/CE                       |
+| 2      | 7.467     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[1]/CE                       |
+| 2      | 7.467     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[2]/CE                       |
+| 2      | 7.467     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/a_reg_reg[3]/CE                       |
+| 3      | 7.614     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_div_reg/D                    |
+| 3      | 7.678     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[0]/R             |
+| 3      | 7.678     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[1]/R             |
+| 3      | 7.678     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[2]/R             |
+| 3      | 7.678     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[3]/R             |
+| 3      | 7.694     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | seg/digit_counter_reg[0]/D                |
+| 3      | 7.708     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[0]/CE                       |
+| 3      | 7.708     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[1]/CE                       |
+| 3      | 7.716     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[0]/R         |
+| 3      | 7.716     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[1]/R         |
+| 3      | 7.716     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[2]/R         |
+| 3      | 7.716     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[3]/R         |
+| 3      | 7.734     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[0]/D                        |
+| 3      | 7.782     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/error_out_reg/D                       |
+| 3      | 7.798     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[2]/CE                       |
+| 3      | 7.798     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[3]/CE                       |
+| 4      | 7.838     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[2]/CE                   |
+| 4      | 7.838     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[3]/CE                   |
+| 4      | 7.920     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[13]/D            |
+| 4      | 7.924     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[10]/D            |
+| 4      | 7.945     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[12]/D            |
+| 4      | 7.984     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/d_out_reg[1]/D                        |
+| 4      | 7.985     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[0]/D         |
+| 4      | 8.000     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[1]/D         |
+| 4      | 8.019     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[11]/D            |
+| 4      | 8.035     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[9]/D             |
+| 4      | 8.038     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[6]/D             |
+| 5      | 8.059     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[8]/D             |
+| 5      | 8.129     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[0]/CE                   |
+| 5      | 8.129     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[1]/CE                   |
+| 5      | 8.133     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[7]/D             |
+| 5      | 8.149     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[5]/D             |
+| 5      | 8.182     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[2]/D         |
+| 5      | 8.193     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/counter_reg[3]/D         |
+| 5      | 8.214     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/FSM_sequential_state_reg[0]/D         |
+| 5      | 8.232     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/FSM_sequential_state_reg[1]/D         |
+| 5      | 8.265     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | seg/digit_counter_reg[1]/D                |
+| 5      | 8.273     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[0]/D                        |
+| 5      | 8.280     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | seg/digit_counter_reg[2]/D                |
+| 6      | 8.293     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[1]/D                        |
+| 6      | 8.308     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[4]/D             |
+| 6      | 8.368     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[3]/D             |
+| 6      | 8.380     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[2]/D                        |
+| 6      | 8.391     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/OUT_SIGNAL_ENABLE_reg/D  |
+| 6      | 8.397     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/b_reg_reg[3]/D                        |
+| 6      | 8.405     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/OUT_SIGNAL_reg/D         |
+| 6      | 8.418     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[1]/D             |
+| 6      | 8.420     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/OUT_SIGNAL_reg/D             |
+| 6      | 8.420     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/OUT_SIGNAL_ENABLE_reg/D      |
+| 6      | 8.517     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[2]/D             |
+| 6      | 8.522     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_error_out_reg_reg/D                   |
+| 7      | 8.574     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm/valid_out_reg/D                       |
+| 7      | 8.610     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[3]/D             |
+| 7      | 8.689     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_valid_out_reg_reg/D                   |
+| 7      | 8.694     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[1]/D             |
+| 7      | 8.748     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[2]/D             |
+| 8      | 8.873     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[3]/D                    |
+| 8      | 8.881     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/IN_SIGNAL_SYNC_reg[1]/D      |
+| 8      | 8.896     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | clk_div1/clk_counter_reg[0]/D             |
+| 8      | 8.897     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_c_filter/counter_reg[0]/D             |
+| 8      | 8.902     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[2]/D                    |
+| 8      | 8.922     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[0]/D                    |
+| 9      | 9.073     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | fsm_d_out_reg_reg[1]/D                    |
+| 9      | 9.262     | Cell Pin  | clk_pin  | Slow    | clk_pin (rising)  | clk_pin (rising)   | btn_reset_filter/IN_SIGNAL_SYNC_reg[1]/D  |
++--------+-----------+-----------+----------+---------+-------------------+--------------------+-------------------------------------------+
+
+
+

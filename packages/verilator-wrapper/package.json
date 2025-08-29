@@ -20,13 +20,14 @@
     "src"
   ],
   "dependencies": {
+    "@gestola/docker-like-names": "1.0.0",
     "@gestola/project-manager": "1.0.0",
     "docker-cli-js": "2.10.0",
-    "tmp": "0.2.3",
-    "@gestola/docker-like-names": "1.0.0",
-    "moment": "2.30.1"
+    "moment": "2.30.1",
+    "tmp": "0.2.3"
   },
   "devDependencies": {
+    "@types/tmp": "^0.2.6",
     "rimraf": "3.0.2"
   },
   "scripts": {

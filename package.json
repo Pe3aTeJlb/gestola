@@ -25,7 +25,8 @@
     "ts-node": "^10.0.0",
     "typescript": "~5.4.5",
     "replace-regex": "0.0.3",
-    "@electron/rebuild": "3.7.2"
+    "@electron/rebuild": "3.7.2",
+    "rimraf": "3.0.2"
   },
   "scripts": {
     "setup": "yarn && yarn repack-sqlite && yarn download:plugins && yarn --cwd packages/verilator-wrapper docker:download && yarn build",
@@ -58,18 +59,16 @@
     "rebuild:branding": "yarn --cwd packages/branding rebuild",
     "rebuild:node-red": "yarn --cwd packages/node-red-integration rebuild",
     "rebuild:node-red:prod": "yarn --cwd packages/node-red-integration rebuild:prod",
-    "play": "yarn --cwd electron-app start",
     "debug": "yarn rebuild && yarn --cwd electron-app start",
     "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",
     "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
-    "debug:red": "yarn rebuild:node-red && yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
-    "start:red": "yarn --cwd electron-app ts-node ../scripts/local-node-red.ts ",
+    "play": "yarn --cwd electron-app start",
     "bundle": "yarn --cwd electron-app bundle",
-    "rebundle": "yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+
 
     "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
 
-    "kek": "yarn ts-node scripts/test/test.ts"
+    "script": "yarn ts-node scripts/test/test.ts"
 
   },
   "workspaces": [

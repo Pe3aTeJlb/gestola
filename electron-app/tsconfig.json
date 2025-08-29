@@ -20,9 +20,6 @@
       "path": "../packages/branding"
     },
     {
-      "path": "../packages/node-red-integration"
-    },
-    {
       "path": "../packages/verible-wrapper"
     },
     {

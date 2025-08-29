@@ -1,0 +1,940 @@
+{
+  "metadata": {
+    "toolVersion": "Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023",
+    "date": "Fri Jul 18 16:57:14 2025",
+    "host": "debian-srk running 64-bit Debian GNU/Linux 11 (bullseye)",
+    "command": "create_slack_histogram -details -file /home/debian/ECAD/vivado_integration/low_level_design/lld_1/topology/fpga/set_1/implresults/slack.txt",
+    "design": "top_fsm_div",
+    "device": "7a100t-csg324",
+    "speedFile": "-1  PRODUCTION 1.23 2018-06-13",
+    "designState": "Routed"
+  },
+  "summary": {
+    "totalItems": 100,
+    "minSlack": 6.826,
+    "maxSlack": 9.266,
+    "setup": {
+      "ranges": [
+        { "min": 6.826, "max": 7.07, "count": 15, "cumulativeCount": 15 },
+        { "min": 7.07, "max": 7.314, "count": 17, "cumulativeCount": 32 },
+        { "min": 7.314, "max": 7.558, "count": 4, "cumulativeCount": 36 },
+        { "min": 7.558, "max": 7.802, "count": 16, "cumulativeCount": 52 },
+        { "min": 7.802, "max": 8.046, "count": 11, "cumulativeCount": 63 },
+        { "min": 8.046, "max": 8.29, "count": 12, "cumulativeCount": 75 },
+        { "min": 8.29, "max": 8.534, "count": 12, "cumulativeCount": 87 },
+        { "min": 8.534, "max": 8.778, "count": 5, "cumulativeCount": 92 },
+        { "min": 8.778, "max": 9.022, "count": 6, "cumulativeCount": 98 },
+        { "min": 9.022, "max": 9.266, "count": 2, "cumulativeCount": 100 }
+      ]
+    }
+  },
+  "details": {
+    "totalItems": 100,
+    "minSlack": 6.826,
+    "maxSlack": 9.266,
+    "setup": {
+      "entries": [
+        {
+          "slack": 6.826,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[10]/R"
+        },
+        {
+          "slack": 6.826,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[11]/R"
+        },
+        {
+          "slack": 6.826,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[12]/R"
+        },
+        {
+          "slack": 6.826,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[9]/R"
+        },
+        {
+          "slack": 6.848,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[2]/R"
+        },
+        {
+          "slack": 6.848,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[3]/R"
+        },
+        {
+          "slack": 6.876,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[5]/R"
+        },
+        {
+          "slack": 6.876,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[6]/R"
+        },
+        {
+          "slack": 6.876,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[7]/R"
+        },
+        {
+          "slack": 6.876,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[8]/R"
+        },
+        {
+          "slack": 6.943,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[1]/R"
+        },
+        {
+          "slack": 6.951,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[1]/CE"
+        },
+        {
+          "slack": 6.952,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[13]/R"
+        },
+        {
+          "slack": 6.985,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[0]/CE"
+        },
+        {
+          "slack": 7.007,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[0]/R"
+        },
+        {
+          "slack": 7.071,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[2]/D"
+        },
+        {
+          "slack": 7.103,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[2]/R"
+        },
+        {
+          "slack": 7.103,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[3]/R"
+        },
+        {
+          "slack": 7.145,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[1]/R"
+        },
+        {
+          "slack": 7.145,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[2]/R"
+        },
+        {
+          "slack": 7.145,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[3]/R"
+        },
+        {
+          "slack": 7.145,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[4]/R"
+        },
+        {
+          "slack": 7.147,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[3]/D"
+        },
+        {
+          "slack": 7.161,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[0]/R"
+        },
+        {
+          "slack": 7.176,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[2]/CE"
+        },
+        {
+          "slack": 7.176,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[3]/CE"
+        },
+        {
+          "slack": 7.198,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[0]/R"
+        },
+        {
+          "slack": 7.198,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[1]/R"
+        },
+        {
+          "slack": 7.241,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[0]/R"
+        },
+        {
+          "slack": 7.241,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[1]/R"
+        },
+        {
+          "slack": 7.241,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[2]/R"
+        },
+        {
+          "slack": 7.241,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[3]/R"
+        },
+        {
+          "slack": 7.467,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[0]/CE"
+        },
+        {
+          "slack": 7.467,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[1]/CE"
+        },
+        {
+          "slack": 7.467,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[2]/CE"
+        },
+        {
+          "slack": 7.467,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/a_reg_reg[3]/CE"
+        },
+        {
+          "slack": 7.614,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_div_reg/D"
+        },
+        {
+          "slack": 7.678,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[0]/R"
+        },
+        {
+          "slack": 7.678,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[1]/R"
+        },
+        {
+          "slack": 7.678,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[2]/R"
+        },
+        {
+          "slack": 7.678,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[3]/R"
+        },
+        {
+          "slack": 7.694,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "seg/digit_counter_reg[0]/D"
+        },
+        {
+          "slack": 7.708,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[0]/CE"
+        },
+        {
+          "slack": 7.708,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[1]/CE"
+        },
+        {
+          "slack": 7.716,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[0]/R"
+        },
+        {
+          "slack": 7.716,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[1]/R"
+        },
+        {
+          "slack": 7.716,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[2]/R"
+        },
+        {
+          "slack": 7.716,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[3]/R"
+        },
+        {
+          "slack": 7.734,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[0]/D"
+        },
+        {
+          "slack": 7.782,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/error_out_reg/D"
+        },
+        {
+          "slack": 7.798,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[2]/CE"
+        },
+        {
+          "slack": 7.798,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[3]/CE"
+        },
+        {
+          "slack": 7.838,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[2]/CE"
+        },
+        {
+          "slack": 7.838,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[3]/CE"
+        },
+        {
+          "slack": 7.92,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[13]/D"
+        },
+        {
+          "slack": 7.924,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[10]/D"
+        },
+        {
+          "slack": 7.945,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[12]/D"
+        },
+        {
+          "slack": 7.984,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/d_out_reg[1]/D"
+        },
+        {
+          "slack": 7.985,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[0]/D"
+        },
+        {
+          "slack": 8,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[1]/D"
+        },
+        {
+          "slack": 8.019,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[11]/D"
+        },
+        {
+          "slack": 8.035,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[9]/D"
+        },
+        {
+          "slack": 8.038,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[6]/D"
+        },
+        {
+          "slack": 8.059,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[8]/D"
+        },
+        {
+          "slack": 8.129,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[0]/CE"
+        },
+        {
+          "slack": 8.129,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[1]/CE"
+        },
+        {
+          "slack": 8.133,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[7]/D"
+        },
+        {
+          "slack": 8.149,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[5]/D"
+        },
+        {
+          "slack": 8.182,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[2]/D"
+        },
+        {
+          "slack": 8.193,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/counter_reg[3]/D"
+        },
+        {
+          "slack": 8.214,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/FSM_sequential_state_reg[0]/D"
+        },
+        {
+          "slack": 8.232,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/FSM_sequential_state_reg[1]/D"
+        },
+        {
+          "slack": 8.265,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "seg/digit_counter_reg[1]/D"
+        },
+        {
+          "slack": 8.273,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[0]/D"
+        },
+        {
+          "slack": 8.28,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "seg/digit_counter_reg[2]/D"
+        },
+        {
+          "slack": 8.293,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[1]/D"
+        },
+        {
+          "slack": 8.308,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[4]/D"
+        },
+        {
+          "slack": 8.368,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[3]/D"
+        },
+        {
+          "slack": 8.38,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[2]/D"
+        },
+        {
+          "slack": 8.391,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/OUT_SIGNAL_ENABLE_reg/D"
+        },
+        {
+          "slack": 8.397,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/b_reg_reg[3]/D"
+        },
+        {
+          "slack": 8.405,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/OUT_SIGNAL_reg/D"
+        },
+        {
+          "slack": 8.418,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[1]/D"
+        },
+        {
+          "slack": 8.42,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/OUT_SIGNAL_reg/D"
+        },
+        {
+          "slack": 8.42,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/OUT_SIGNAL_ENABLE_reg/D"
+        },
+        {
+          "slack": 8.517,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[2]/D"
+        },
+        {
+          "slack": 8.522,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_error_out_reg_reg/D"
+        },
+        {
+          "slack": 8.574,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm/valid_out_reg/D"
+        },
+        {
+          "slack": 8.61,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[3]/D"
+        },
+        {
+          "slack": 8.689,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_valid_out_reg_reg/D"
+        },
+        {
+          "slack": 8.694,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[1]/D"
+        },
+        {
+          "slack": 8.748,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[2]/D"
+        },
+        {
+          "slack": 8.873,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[3]/D"
+        },
+        {
+          "slack": 8.881,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/IN_SIGNAL_SYNC_reg[1]/D"
+        },
+        {
+          "slack": 8.896,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "clk_div1/clk_counter_reg[0]/D"
+        },
+        {
+          "slack": 8.897,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_c_filter/counter_reg[0]/D"
+        },
+        {
+          "slack": 8.902,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[2]/D"
+        },
+        {
+          "slack": 8.922,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[0]/D"
+        },
+        {
+          "slack": 9.073,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "fsm_d_out_reg_reg[1]/D"
+        },
+        {
+          "slack": 9.262,
+          "type": "Cell Pin",
+          "group": "clk_pin",
+          "corner": "Slow",
+          "sourceClock": "clk_pin (rising)",
+          "destinationClock": "clk_pin (rising)",
+          "pin": "btn_reset_filter/IN_SIGNAL_SYNC_reg[1]/D"
+        }
+      ]
+    }
+  }
+}

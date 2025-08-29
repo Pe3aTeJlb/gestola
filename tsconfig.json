@@ -19,12 +19,6 @@
           "path": "packages/launcher"
         },
         {
-          "path": "packages/node-red-integration"
-        },
-        {
-          "path": "packages/gestola-nodes/lower-case"
-        },
-        {
           "path": "packages/verible-wrapper"
         },
         {
