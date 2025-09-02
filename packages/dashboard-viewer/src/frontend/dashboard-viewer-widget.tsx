@@ -120,7 +120,7 @@ export class DashboardViewerWidget extends ReactWidget {
                       method: 'restyle',
                       args: [`transforms[${index}]`, {
                           type: 'filter',
-                          target: distinctData,
+                          target: dataset[menu.source],
                           targetsrc: menu.source,
                           operation: '=',
                           value: e,

@@ -422,7 +422,7 @@ class EditorControls extends Component {
           if (payload.updateMenuIndex != undefined) {
 
             let freeTransformIndex = graphDiv.data[0].transforms.findIndex(e => e.extra && e.extra == "empty");
-            let filters = payload.data.map(e => {
+            let filters = payload.distinctData.map(e => {
               return {
                 label: `${payload.srcAttr}: ${e.toString()}`,
                 method: 'restyle',

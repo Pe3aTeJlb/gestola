@@ -147,7 +147,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
                       method: 'restyle',
                       args: [`transforms[${index}]`, {
                           type: 'filter',
-                          target: distinctData,
+                          target: dataset[menu.source],
                           targetsrc: menu.source,
                           operation: '=',
                           value: e,

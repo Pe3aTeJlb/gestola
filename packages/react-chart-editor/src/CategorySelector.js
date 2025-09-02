@@ -72,7 +72,8 @@ export class UnconnectedCategorySelector extends Component {
         type: ADDITIONAL_EDITOR_ACTIONS.UPDATE_CONTROL,
         payload: {
           updateMenuIndex: this.props.fullContainer._index,
-          data: distinctData,
+          distinctData: distinctData,
+          data: data,
           srcAttr: srcAttr
         },
       });
