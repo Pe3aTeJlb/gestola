@@ -22,7 +22,7 @@ export class DashboardViewerWidget extends ReactWidget {
     
     public opt: NavigatableDashboardViewerOptions;
     public uri: URI;
-    private template: [];
+    private dashboardDescr: [];
     private plots: any[];
     private PlotComponent: any;
     private config = {editable: false, displaylogo: false};
@@ -56,15 +56,14 @@ export class DashboardViewerWidget extends ReactWidget {
         this.title.iconClass = 'fa fa-window-maximize'; // example widget icon.
         this.PlotComponent = rce.createPlotComponent(plotly);
         await this.readData();
-        this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)));
-        console.log('plots', this.plots);
+        this.plots = await Promise.all(structuredClone(this.dashboardDescr).map(async (e) => await this.createElement(e)));
         this.update();
     }
 
     async readData(){
         let fileService = this.projManager.getFileSerivce();
         if(await fileService.exists(this.uri)){
-            this.template = JSON.parse((await fileService.read(this.uri)).value);
+            this.dashboardDescr = JSON.parse((await fileService.read(this.uri)).value);
         }
     }
 
@@ -166,7 +165,10 @@ export class DashboardViewerWidget extends ReactWidget {
         return (
             <div className='app'>
                 <div className="refresh-button">
-                    <button  onClick={async () => {this.plots = await Promise.all(this.template.map(async (e) => await this.createElement(e)))}}>Refresh</button>
+                    <button  onClick={async () => {
+                        this.plots = await Promise.all(structuredClone(this.dashboardDescr).map(async (e) => await this.createElement(e)));
+                        this.update();
+                        }}>Refresh</button>
                 </div>
                 <ReactGridLayout
                 cols={12}
