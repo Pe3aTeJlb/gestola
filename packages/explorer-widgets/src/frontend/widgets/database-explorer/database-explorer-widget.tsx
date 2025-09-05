@@ -18,8 +18,8 @@ export const DATABASE_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
 export class DatabaseExplorerWidget extends TreeWidget {
 
     static readonly ID = 'gestola:database-explorer';
-    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Report Database Explorer")
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Report Database Explorer");
+    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Analytics Database Explorer")
+    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Analytics Database Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,

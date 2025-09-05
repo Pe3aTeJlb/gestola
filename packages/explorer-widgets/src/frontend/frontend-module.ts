@@ -135,7 +135,7 @@ export default new ContainerModule((bind, _unbind) => {
         }
     }));
 
-    //Report Database Explorer
+    //Analytics Database Explorer
 
     bind(DatabaseExplorerCommandsContribution).toSelf().inSingletonScope();
 
