@@ -32,7 +32,7 @@
     "setup": "yarn && yarn repack-sqlite && yarn download:plugins && yarn --cwd packages/verilator-wrapper docker:download && yarn build",
     "prepare": "lerna run prepare",
     "repack-sqlite": "electron-rebuild -f -w better-sqlite3",
-    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.63.3 && lerna run update:next 1.63.3",
+    "update:dependencies": "ts-node scripts/update-theia-version.ts 1.64.1 && lerna run update:next 1.64.1",
     "update:plugins": "ts-node scripts/plugin-update.ts",
     "download:plugins-old": "rimraf ./plugins && theia download:plugins",
     "download:plugins": "rimraf ./plugins && ts-node scripts/download-plugins.ts && yarn build:vscode-ext",
@@ -64,12 +64,8 @@
     "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "play": "yarn --cwd electron-app start",
     "bundle": "yarn --cwd electron-app bundle",
-
-
     "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
-
     "script": "yarn ts-node scripts/test/test.ts"
-
   },
   "workspaces": [
     "packages/**/",
@@ -77,7 +73,9 @@
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
-    "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+    "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
+    "eclipse-cdt.serial-monitor": "https://open-vsx.org/api/eclipse-cdt/serial-monitor/2.0.0/file/eclipse-cdt.serial-monitor-2.0.0.vsix",
+    "ms-vscode.wasm-wasi-core": "https://ms-vscode.gallery.vsassets.io/_apis/public/gallery/publisher/ms-vscode/extension/wasm-wasi-core/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
   "theiaPluginsExcludeIds": [
     "ms-vscode.js-debug-companion",

@@ -7,6 +7,9 @@
     },
     "references": [
         {
+          "path": "packages/utils"
+        },
+        {
           "path": "packages/project-manager"
         },
         {
@@ -37,10 +40,10 @@
           "path": "packages/dashboard-viewer"
         },
         {
-          "path": "packages/utils"
+          "path": "packages/design-flow-editor"
         },
         {
-          "path": "packages/design-flow-editor"
+          "path": "packages/openfpgaloader"
         }
     ]
 }

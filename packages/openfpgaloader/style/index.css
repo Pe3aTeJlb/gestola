@@ -1,0 +1,111 @@
+.openfpgaloader-widget {
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.openfpgaloader-widget .header {
+    margin-bottom: 20px;
+}
+
+.openfpgaloader-widget .header h2 {
+    margin: 0;
+    color: var(--theia-ui-font-color1);
+}
+
+.openfpgaloader-widget .controls {
+    background: var(--theia-layout-color1);
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.openfpgaloader-widget .control-group {
+    margin-bottom: 15px;
+}
+
+.openfpgaloader-widget .control-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--theia-ui-font-color1);
+}
+
+.openfpgaloader-widget .control-group select,
+.openfpgaloader-widget .control-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--theia-border-color1);
+    border-radius: 3px;
+    background: var(--theia-input-background);
+    color: var(--theia-ui-font-color1);
+}
+
+.openfpgaloader-widget .file-input {
+    display: flex;
+    gap: 10px;
+}
+
+.openfpgaloader-widget .file-input input {
+    flex: 1;
+}
+
+.openfpgaloader-widget .file-input button {
+    padding: 8px 12px;
+}
+
+.openfpgaloader-widget .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.openfpgaloader-widget .buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.openfpgaloader-widget .program-btn {
+    background: var(--theia-accent-color1);
+    color: white;
+}
+
+.openfpgaloader-widget .program-btn:disabled {
+    background: var(--theia-disabled-color1);
+    cursor: not-allowed;
+}
+
+.openfpgaloader-widget .output-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--theia-layout-color1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.openfpgaloader-widget .output-container h3 {
+    margin: 0;
+    padding: 15px;
+    background: var(--theia-layout-color2);
+    color: var(--theia-ui-font-color1);
+}
+
+.openfpgaloader-widget .output {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--theia-editor-background);
+    color: var(--theia-ui-font-color1);
+}
+
+.openfpgaloader-widget .output-line {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}

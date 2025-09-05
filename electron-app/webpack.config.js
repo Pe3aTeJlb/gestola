@@ -41,6 +41,14 @@ const plugins = [
             }
         ]
     }),
+    new CopyWebpackPlugin({
+        patterns: [
+            {
+                from: path.join(resolvePackagePath('@gestola/openfpgaloader', __dirname), '..', 'resources'),
+                to: path.join(__dirname, 'lib/frontend')
+            }
+        ]
+    }),
     new RemovePlugin({
         after: {
             root: './resources/templates',
