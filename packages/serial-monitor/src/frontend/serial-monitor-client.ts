@@ -1,8 +1,9 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { SerialFilter, SerialInfo, getName } from '../common/types';
-import { SerialMonitorBackedService } from '../common/protocol';
+import { ISerialMonitorServer} from '../common/protocol';
 import { QuickPickService, QuickInputService, QuickPickValue, QuickPickItem } from '@theia/core/lib/common';
 import { PortInfo } from '@serialport/bindings-cpp';
+import { SerialMonitorWatcher } from '../common/serial-monitor-watcher';
 
 const CUSTOM_BAUD = 'Custom...';
 const BAUD_RATES = ['115200', '57600', '38400', '19200', '9600', '4800', '2400', '1800', '1200', '600', CUSTOM_BAUD];
@@ -25,8 +26,15 @@ export class SerialMonitorClient {
     @inject(QuickInputService)
     private readonly quickInputService: QuickInputService;
 
-    @inject(SerialMonitorBackedService)
-    private readonly seriaMonitorBackendService: SerialMonitorBackedService;
+    @inject(ISerialMonitorServer)
+    private readonly seriaMonitorBackendService: ISerialMonitorServer;
+
+    @inject(SerialMonitorWatcher)
+    private readonly serialMonitorWatcher: SerialMonitorWatcher;
+
+    constructor(){
+
+    }
 
 
     public async listPorts(): Promise<SerialInfo[]> {
@@ -35,6 +43,10 @@ export class SerialMonitorClient {
 
     public write(line: string){
         this.seriaMonitorBackendService.handleInput(line);
+    }
+
+    public handleData(data: string): void {
+        console.log(data);
     }
 
     public async openSerial(portOrFilter?: SerialPort | SerialFilter, options?: SerialOptions, name?: string) {
@@ -46,6 +58,10 @@ export class SerialMonitorClient {
         } else {
             this.seriaMonitorBackendService.createSerialMonitor(await this.selectSerialPort() as SerialFilter);
         }
+
+        this.serialMonitorWatcher.onTransactionReceived(event => {
+            console.log(event)
+        });
         
     }
 

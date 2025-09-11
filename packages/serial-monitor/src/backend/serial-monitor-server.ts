@@ -3,13 +3,15 @@ import { injectable } from '@theia/core/shared/inversify';
 import { SerialPort } from 'serialport';
 import { PortInfo } from '@serialport/bindings-cpp';
 import { SerialFilter, isSerialPort } from '../common/types';
-import { SerialMonitorBackedService } from '../common/protocol';
+import { ISerialMonitorServer, ISerialMonitorClient } from '../common/protocol';
 import { DesktopSerialDevice } from './desktop-serial-device';
 import { SerialDevice, SerialPortDevice } from './serial-device';
 import { Event, Emitter } from "@theia/core";
 
 @injectable()
-export class SerialMonitorServer implements SerialMonitorBackedService, theia.Pseudoterminal {
+export class SerialMonitorServer implements ISerialMonitorServer, theia.Pseudoterminal {
+
+    protected clients: ISerialMonitorClient[] = [];
 
     private serialDevice: SerialDevice | undefined;
     private options: SerialOptions = {
@@ -17,12 +19,31 @@ export class SerialMonitorServer implements SerialMonitorBackedService, theia.Ps
         dataBits: 8,
         parity: 'none',
         stopBits: 1
-    }
+    };
     private writeEmitter = new Emitter<string>();
     public onDidWrite: Event<string> = this.writeEmitter.event;
     private closeEmitter = new Emitter<number>();
     public onDidClose: Event<number> = this.closeEmitter.event;
     public closed = false;
+
+    public constructor(){
+        console.log("create monitor bakcend");
+    }
+
+    dispose(): void {  
+        this.close();
+    } 
+
+    setClient(client: ISerialMonitorClient): void {
+        this.clients.push(client);
+    }
+
+    disconnectClient(client: ISerialMonitorClient): void {
+        const idx = this.clients.indexOf(client);
+        if (idx > -1) {
+            this.clients.splice(idx, 1);
+        }
+    }
 
     public async listPorts(): Promise<PortInfo[]> {
         return await SerialPort.list();
@@ -91,6 +112,13 @@ export class SerialMonitorServer implements SerialMonitorBackedService, theia.Ps
             this.serialDevice.open(this.options);
             this.writeLine(`Opened with baud rate: ${this.options.baudRate}`);
         }
+    }
+
+    public pause(): void {
+        if(this.serialDevice) this.serialDevice.pause();
+    }
+    public resume(): void {
+        if(this.serialDevice) this.serialDevice.resume();
     }
 
     public close(): void {
