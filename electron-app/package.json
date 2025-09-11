@@ -67,7 +67,8 @@
     "@gestola/dashboard-viewer": "1.0.0",
     "@gestola/utils": "1.0.0",
     "@gestola/design-flow-editor": "1.0.0",
-    "@gestola/serial-monitor": "1.0.0"
+    "@gestola/serial-monitor": "1.0.0",
+    "@gestola/serial-monitor-widget": "1.0.0"
   },
   "devDependencies": {
     "@theia/cli": "1.64.1",

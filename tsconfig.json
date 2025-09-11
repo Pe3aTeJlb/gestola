@@ -47,6 +47,9 @@
         },
         {
           "path": "packages/serial-monitor"
+        },
+        {
+          "path": "packages/serial-monitor-widget"
         }
     ]
 }

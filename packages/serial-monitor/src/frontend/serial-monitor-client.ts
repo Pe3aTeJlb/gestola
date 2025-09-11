@@ -2,18 +2,17 @@ import { inject, injectable } from '@theia/core/shared/inversify';
 import { SerialFilter, SerialInfo, getName } from '../common/types';
 import { ISerialMonitorServer} from '../common/protocol';
 import { QuickPickService, QuickInputService, QuickPickValue, QuickPickItem } from '@theia/core/lib/common';
-import { PortInfo } from '@serialport/bindings-cpp';
 import { SerialMonitorWatcher } from '../common/serial-monitor-watcher';
 
-const CUSTOM_BAUD = 'Custom...';
-const BAUD_RATES = ['115200', '57600', '38400', '19200', '9600', '4800', '2400', '1800', '1200', '600', CUSTOM_BAUD];
+export const CUSTOM_BAUD = 'Custom...';
+export const BAUD_RATES = ['115200', '57600', '38400', '19200', '9600', '4800', '2400', '1800', '1200', '600', CUSTOM_BAUD];
 
 const isSerialPort = (portOrFilter?: SerialPort | SerialFilter): portOrFilter is SerialPort => !!(portOrFilter as SerialPort)?.getInfo;
 
 class PortItem implements QuickPickItem {
     public label: string;
     public constructor(public port: SerialInfo) {
-        this.label = getName(port as PortInfo);
+        this.label = getName(port);
     }
 }
 

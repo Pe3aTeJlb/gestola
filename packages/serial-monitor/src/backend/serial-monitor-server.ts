@@ -27,12 +27,12 @@ export class SerialMonitorServer implements ISerialMonitorServer, theia.Pseudote
     public closed = false;
 
     public constructor(){
-        console.log("create monitor bakcend");
+        this.onDidWrite(e => this.clients.forEach(c => c.onTransactionReceived(e)));
     }
 
     dispose(): void {  
         this.close();
-    } 
+    }
 
     setClient(client: ISerialMonitorClient): void {
         this.clients.push(client);
@@ -126,7 +126,7 @@ export class SerialMonitorServer implements ISerialMonitorServer, theia.Pseudote
     }
 
     public handleInput(data: string): void {
-        this.writeOutput(data);
+        this.writeOutput("client: " + data);
         if(this.serialDevice) this.serialDevice.send(data);
     }
 
@@ -137,7 +137,7 @@ export class SerialMonitorServer implements ISerialMonitorServer, theia.Pseudote
     protected writeOutput(message: string): void {
         // VS Code terminal needs carriage returns
         const output = message.replace(/\r/g, '').replace(/\n/g, '\r\n');
-        console.log(output);
+        console.log('server: ', output);
         this.writeEmitter.fire(output);
     }
 

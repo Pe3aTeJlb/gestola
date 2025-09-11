@@ -1,7 +1,5 @@
-import { PortInfo } from '@serialport/bindings-cpp';
-
 export const isSerialPort = (portOrFilter?: SerialPort | SerialFilter): portOrFilter is SerialPort => !!(portOrFilter as SerialPort)?.getInfo;
-export const getName = (port: PortInfo) => (port.manufacturer || port.serialNumber) ? `${port.path} (${port.manufacturer || port.serialNumber})` : port.path;
+export const getName = (port: SerialInfo) => (port.manufacturer || port.serialNumber) ? `${port.path} (${port.manufacturer || port.serialNumber})` : port.path;
 
 export interface SerialFilter {
     serialNumber?: string;
@@ -12,7 +10,7 @@ export interface SerialFilter {
 
 // The web version can ony populate vid/pid
 export interface SerialInfo {
-    path?: string;
+    path: string;
     serialNumber?: string;
     manufacturer?: string;
     productId?: string;
