@@ -74,7 +74,6 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             for(let e of this.dashboardDescription){
                 await this.processElement(e);
             }
-            console.log('zzzz', this.state, this.state.gridItems);
         }
         this.update();
     }
@@ -155,7 +154,6 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
                       }]
                     }
                   });
-                  console.log("filters",filters);
                 menu.buttons = [
                     {
                       label: menu.source,

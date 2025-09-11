@@ -45,7 +45,6 @@ class PlotlyEditor extends Component {
   }
 
   handleDivSelect(event) {
-    console.log('lolxd', this.state);
     const selectedGraphDiv = event.currentTarget.children[0];
     this.setState({selectedGraphDiv});
   }
@@ -141,7 +140,6 @@ class PlotlyEditor extends Component {
         e.buttons = [];
       });
 
-      console.log(tempData, tempLayout);
       return {
         i: el.i,
         x: el.x,
