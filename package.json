@@ -74,7 +74,6 @@
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
     "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
-    "eclipse-cdt.serial-monitor": "https://open-vsx.org/api/eclipse-cdt/serial-monitor/2.0.0/file/eclipse-cdt.serial-monitor-2.0.0.vsix",
     "ms-vscode.wasm-wasi-core": "https://ms-vscode.gallery.vsassets.io/_apis/public/gallery/publisher/ms-vscode/extension/wasm-wasi-core/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },
   "theiaPluginsExcludeIds": [

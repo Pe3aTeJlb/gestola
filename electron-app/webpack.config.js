@@ -122,6 +122,15 @@ nodeConfig.config.ignoreWarnings?.push(
     }
 );
 
+Object.assign(nodeConfig.config.externals, {
+    electron: 'require("electron")',
+    vscode: 'commonjs vscode',
+    '@serialport/bindings-cpp': 'commonjs @serialport/bindings-cpp',
+    'applicationinsights-native-metrics': 'commonjs applicationinsights-native-metrics'
+});
+
+
+
 nodeConfig.nativePlugin.nativeBinding("better_sqlite3.node", "better-sqlite3/build/Release/better_sqlite3.node");
 
 module.exports = [

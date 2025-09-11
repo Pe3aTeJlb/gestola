@@ -44,6 +44,9 @@
         },
         {
           "path": "packages/openfpgaloader"
+        },
+        {
+          "path": "packages/serial-monitor"
         }
     ]
 }
