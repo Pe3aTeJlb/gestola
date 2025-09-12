@@ -36,6 +36,7 @@ export class DashboardViewerFileOpener extends WidgetOpenHandler<DashboardViewer
         }
     }
 
+    /*
     override async open(uri: URI, options?: WidgetOpenerOptions): Promise<DashboardViewerWidget> {
 
         let widget;
@@ -46,7 +47,7 @@ export class DashboardViewerFileOpener extends WidgetOpenHandler<DashboardViewer
         }
         await this.doOpen(widget, uri, options);
         return widget;
-    }
+    }*/
 
     override async doOpen(widget: DashboardViewerWidget, uri: URI, maybeOptions?: WidgetOpenerOptions): Promise<void> {
         const options: WidgetOpenerOptions = {
@@ -54,7 +55,7 @@ export class DashboardViewerFileOpener extends WidgetOpenHandler<DashboardViewer
             ...maybeOptions
         };
         if (!widget.isAttached) {
-            this.attachWidget(widget, options);
+            await this.shell.addWidget(widget, options.widgetOptions || { area: 'main' });
         }
         if (options.mode === 'activate') {
             await this.shell.activateWidget(widget.id);
