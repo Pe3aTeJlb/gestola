@@ -135,9 +135,8 @@ export class SerialMonitorServer implements ISerialMonitorServer, theia.Pseudote
     }
 
     protected writeOutput(message: string): void {
-        // VS Code terminal needs carriage returns
         const output = message.replace(/\r/g, '').replace(/\n/g, '\r\n');
-        console.log('server: ', output);
+        //console.log('server :', output, '"');
         this.writeEmitter.fire(output);
     }
 

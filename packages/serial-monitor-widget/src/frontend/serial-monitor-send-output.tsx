@@ -38,25 +38,22 @@ export class SerialMonitorOutput extends React.Component<
   
 
   override render(): React.ReactNode {
-    console.log('render', this.state);
     return (
       <List<RowProps>
         rowComponent={this.RowComponent}
         rowCount={this.state.lines.length}
-        rowHeight={20}
+        rowHeight={30}
         rowProps={this.state}
         className="serial-monitor-messages"
         style={{ whiteSpace: 'nowrap' }}
+        listRef={this.listRef}
       >
       </List>
     );
   }
 
   RowComponent(props: RowComponentProps<RowProps>) {
-    const timestamp =
-      (props.timestamp &&
-        `${dateFormat(props.lines[props.index].timestamp, 'HH:MM:ss.l')} -> `) ||
-      '';
+    const timestamp = props.timestamp ? `${dateFormat(props.lines[props.index].timestamp, 'HH:MM:ss.l')} -> ` : '';
     return (
       (props.lines[props.index].lineLen && (
         <div style={props.style}>
@@ -78,9 +75,9 @@ export class SerialMonitorOutput extends React.Component<
   override componentDidMount(): void {
     this.scrollToBottom();
     this.toDisposeBeforeUnmount.pushAll([
-      this.props.proxy.onTransactionReceived((messages:string) => {
+      this.props.proxy.onTransactionReceived((message:string) => {
         const [newLines, totalCharCount] = messagesToLines(
-          [messages],
+          [...message],
           this.state.lines,
           this.state.charCount
         );
@@ -89,6 +86,7 @@ export class SerialMonitorOutput extends React.Component<
           {
             lines,
             charCount,
+            timestamp: this.props.timestamp,
           },
           () => this.scrollToBottom()
         );
@@ -105,8 +103,8 @@ export class SerialMonitorOutput extends React.Component<
   }
 
   private readonly scrollToBottom = () => {
-    if (this.listRef.current && this.props.autoscroll) {
-      this.listRef.current.scrollToRow({index: this.state.lines.length});
+    if (this.listRef.current && this.props.autoscroll && this.state.lines.length > 0) {
+      this.listRef.current.scrollToRow({index: this.state.lines.length - 1});
     }
   };
 

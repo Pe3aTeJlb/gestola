@@ -119,6 +119,16 @@ export class SerialMonitorWidget extends ReactWidget {
       }
     }
 
+    toggleTimestamp(): void {
+      this.timestamp = !this.timestamp;
+      this.update();
+    }
+
+    toggleAutoscroll(): void {
+      this.autoscroll = !this.autoscroll;
+      this.update();
+    }
+
     clearConsole(): void {
       this.clearOutputEmitter.fire(undefined);
       this.update();
