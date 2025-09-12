@@ -42,8 +42,6 @@
     "postinstall": "theia check:theia-version",
     "start:electron": "yarn --cwd electron-app start",
     "watch:electron": "lerna run --parallel watch --ignore electron-app",
-    "start:browser": "yarn --cwd browser-app start",
-    "watch:browser": "lerna run --parallel watch --ignore browser-app",
     "package:prod": "yarn rebuild:prod && yarn --cwd electron-app package:prod",
     "package:test": "yarn rebuild:prod && yarn --cwd electron-app package:test",
     "package:fast": "yarn --cwd electron-app rebuild && yarn --cwd electron-app package:fast",
@@ -64,7 +62,6 @@
     "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "play": "yarn --cwd electron-app start",
     "bundle": "yarn --cwd electron-app bundle",
-    "browser": "yarn rebuild && yarn --cwd browser-app build && yarn --cwd browser-app start",
     "script": "yarn ts-node scripts/test/test.ts"
   },
   "workspaces": [
