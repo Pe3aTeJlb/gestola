@@ -54,7 +54,6 @@ export class CustomSelect extends React.Component<Props> {
         components={{ DropdownIndicator }}
         theme={theme}
         styles={styles}
-        classNamePrefix="arduino-select"
         isSearchable={false}
       />
     );

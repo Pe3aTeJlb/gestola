@@ -9,6 +9,7 @@ import { SerialInfo, SerialFilter, getName } from '@gestola/serial-monitor/lib/c
 import { SerialMonitorOutput } from './serial-monitor-send-output';
 import { nls } from '@theia/core/lib/common';
 import { Emitter } from '@theia/core/lib/common/event';
+import { QuickInputService } from '@theia/core/lib/common';
 
 export type MonitorEOL = '' | '\n' | '\r' | '\r\n';
 export namespace MonitorEOL {
@@ -26,6 +27,9 @@ export class SerialMonitorWidget extends ReactWidget {
 
     @inject(ISerialMonitorServer)
     protected readonly serialMonitorBackend: ISerialMonitorServer;
+
+    @inject(QuickInputService)
+    private readonly quickInputService: QuickInputService;
 
     static readonly ID = 'serial-monitor:widget';
     static readonly LABEL = 'Gestola: Serial Monitor';
@@ -63,7 +67,7 @@ export class SerialMonitorWidget extends ReactWidget {
             value: '\r\n',
           },
         ];
-      }
+    }
 
     constructor(){
       super();
@@ -108,6 +112,7 @@ export class SerialMonitorWidget extends ReactWidget {
 
     protected override onCloseRequest(msg: Message): void {
       this.closing = true;
+      if(this.comPort) this.serialMonitorBackend.close();
       super.onCloseRequest(msg);
     }
   
@@ -140,14 +145,9 @@ export class SerialMonitorWidget extends ReactWidget {
         label: nls.localize('gestola/serial-monitor/baudRate', '{0} baud', b),
         value: b,
       }));
-      const baudrateSelectedOption = baudrateOptions?.find(
-        (b) => parseInt(b.value) === this.baudRate
-      );
+      const baudrateSelectedOption = baudrateOptions?.find((b) => parseInt(b.value) === this.baudRate);
   
-      const lineEnding =
-        this.lineEndings.find(
-          (item) => item.value === this.lineEnding
-        ) || MonitorEOL.DEFAULT;
+      const lineEnding = this.lineEndings.find((item) => item.value === this.lineEnding) || MonitorEOL.DEFAULT;
 
       let comPorts, comPort;
 
@@ -167,18 +167,15 @@ export class SerialMonitorWidget extends ReactWidget {
               />
             </div>
             <div className="config">
-              {this.comPorts && 
-              <div className="port">
-                <CustomSelect
-                  maxMenuHeight={this.widgetHeight - 40}
-                  options={comPorts}
-                  value={comPort}
-                  onChange={this.onChangeCOMPort}
-                />
-              </div>
-              }
-              {baudrateOptions && baudrateSelectedOption && (
-                <div className="select">
+                <div className="port">
+                  <CustomSelect
+                    maxMenuHeight={this.widgetHeight - 40}
+                    options={comPorts}
+                    value={comPort}
+                    onChange={this.onChangeCOMPort}
+                  />
+                </div>
+              <div className="select">
                   <CustomSelect
                     className="select"
                     maxMenuHeight={this.widgetHeight - 40}
@@ -186,8 +183,7 @@ export class SerialMonitorWidget extends ReactWidget {
                     value={baudrateSelectedOption}
                     onChange={this.onChangeBaudRate}
                   />
-                </div>
-              )}
+              </div>
               <div className="select">
                 <CustomSelect
                   maxMenuHeight={this.widgetHeight - 40}
@@ -213,16 +209,41 @@ export class SerialMonitorWidget extends ReactWidget {
 
     protected readonly onChangeLineEnding = (option: SerialMonitorOutput.SelectOption<MonitorEOL>): void => {
       this.lineEnding = option.value;
+      this.update();
     };
   
-    protected readonly onChangeBaudRate = ({value}: { value: string}): void => {
-      this.baudRate = parseInt(value);
-      this.serialMonitorBackend.changeBaudrate(this.baudRate);
+    protected readonly onChangeBaudRate = async ({value}: { value: string}) => {
+      if(value == CUSTOM_BAUD){
+        const baud = await this.quickInputService.input({
+          title: 'Custom Baud Rate',
+          prompt: 'Enter a custom baud rate',
+          validateInput: (value: string) => {
+              const num = parseInt(value);
+              return isNaN(num) || num <= 0 ? Promise.resolve('Please enter a valid positive number') : undefined;
+          }
+        });
+        if(baud) this.baudRate = parseInt(baud);
+      } else {
+        this.baudRate = parseInt(value);
+      }
+      if(this.comPort){
+        this.serialMonitorBackend.changeBaudrate(this.baudRate);
+      }
+      this.update();
     };
 
     protected readonly onChangeCOMPort = ({value}: { value: SerialInfo}): void => {
+      if(this.comPort){
+        this.serialMonitorBackend.close();
+      }
       this.comPort = value;
-      this.serialMonitorBackend.createSerialMonitor(this.comPort as SerialFilter);
+      this.serialMonitorBackend.createSerialMonitor(this.comPort as SerialFilter, {
+        baudRate: this.baudRate,
+        dataBits: 8,
+        parity: 'none',
+        stopBits: 1
+    });
+    this.update();
     };
 
 }
