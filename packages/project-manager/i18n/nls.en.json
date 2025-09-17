@@ -46,6 +46,29 @@
         "analytics-view":{
             "view-container-title": "Gestola: Analytics Module",
             "file-explorer-dashboards": "Dashboards"
+        },
+
+        "serial-monitor": {
+            "autoscroll": "Autoscroll",
+            "carriageReturn": "Carriage Return",
+            "connecting": "Connecting to '{0}' on '{1}'...",
+            "message": "Message (Enter to send message to '{0}' on '{1}')",
+            "newLine": "New Line",
+            "newLineCarriageReturn": "Both NL & CR",
+            "noLineEndings": "No Line Ending",
+            "notConnected": "Not connected. Select a board and a port to connect automatically.",
+            "openSerialPlotter": "Serial Plotter",
+            "timestamp": "Timestamp",
+            "toggleTimestamp": "Toggle Timestamp",
+            "alreadyConnectedError": "Could not connect to {0} {1} port. Already connected.",
+            "baudRate": "{0} baud",
+            "connectionFailedError": "Could not connect to {0} {1} port.",
+            "connectionFailedErrorWithDetails": "{0} Could not connect to {1} {2} port.",
+            "connectionTimeout": "Timeout. The IDE has not received the 'success' message from the monitor after successfully connecting to it",
+            "missingConfigurationError": "Could not connect to {0} {1} port. The monitor configuration is missing.",
+            "notConnectedError": "Not connected to {0} {1} port.",
+            "unableToCloseWebSocket": "Unable to close websocket",
+            "unableToConnectToWebSocket": "Unable to connect to websocket"
         }
 
 

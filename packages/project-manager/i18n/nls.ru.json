@@ -68,6 +68,29 @@
         "branding":{
             "report-issue": "Сообщить о проблеме",
             "documentation": "Документация"
+        },
+
+        "serial-monitor": {
+            "autoscroll": "Автопрокрутка",
+            "carriageReturn": "CR Возврат каретки",
+            "connecting": "Подключение к '{0}' на '{1}'...",
+            "message": "Сообщение (введите, чтобы отправить сообщение на '{0}' на '{1}')",
+            "newLine": "Новая строка",
+            "newLineCarriageReturn": "NL & CR",
+            "noLineEndings": "Нет конца строки",
+            "notConnected": "Нет соединения. Выберите плату и порт для автоматического подключения.",
+            "openSerialPlotter": "Построить графики из данных в мониторе порта",
+            "timestamp": "Время отметки",
+            "toggleTimestamp": "Переключить отметку времени",
+            "alreadyConnectedError": "Не удалось подключиться к {0} {1} порту. Уже подключились.",
+            "baudRate": "{0} бод",
+            "connectionFailedError": "Не удалось подключиться к {0} {1} порту.",
+            "connectionFailedErrorWithDetails": "{0} Не удалось подключиться к {1} {2} порту. ",
+            "connectionTimeout": "Таймаут. IDE не получила сообщение \"успех\" от монитора после успешного подключения к нему",
+            "missingConfigurationError": "Не удалось подключиться к {0} {1} порту. Отсутствует конфигурация монитора.",
+            "notConnectedError": "Не подключен к {0} {1} порту.",
+            "unableToCloseWebSocket": "Не удалось закрыть веб-сокет.",
+            "unableToConnectToWebSocket": "Не удается подключиться к веб-сокету."
         }
     }
    

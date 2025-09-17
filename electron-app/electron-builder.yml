@@ -24,13 +24,6 @@ files:
 extraResources:
   - from: ../plugins
     to: app/plugins
-  - from: ../node_modules/@node-red
-    to: app/node_modules/@node-red
-  - from: ../packages/df-nodes
-    to: app/node_modules/@gestola
-    filter: [
-      "**/*"
-    ]
 win:
   icon: resources/icons/WindowsLauncherIcon/TheiaBluePrint.ico
   target:
