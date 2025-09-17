@@ -184,7 +184,7 @@ read_ = (url) => {
 {
 }
 
-var out = Module['print'] || console.log.bind(console);
+var out = Module['print'] || console.warn.bind(console);
 var err = Module['printErr'] || console.error.bind(console);
 
 // Merge back in the overrides
@@ -6419,6 +6419,7 @@ function invoke_viiiiiiiiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a1
 // === Auto-generated postamble setup entry stuff ===
 
 Module['callMain'] = callMain;
+Module['rebindOutput'] = rebindOutput;
 Module['stackAlloc'] = stackAlloc;
 Module['stringToUTF8OnStack'] = stringToUTF8OnStack;
 Module['FS'] = FS;
@@ -6431,6 +6432,11 @@ dependenciesFulfilled = function runCaller() {
   if (!calledRun) run();
   if (!calledRun) dependenciesFulfilled = runCaller; // try this again later, after new deps are fulfilled
 };
+
+function rebindOutput(method){
+  out = method;
+  err = method;
+}
 
 function callMain(args = []) {
 
@@ -6452,7 +6458,7 @@ function callMain(args = []) {
     var ret = entryFunction(argc, argv);
 
     // if we're not running an evented main loop, it's time to exit
-    exitJS(ret, /* implicit = */ true);
+    //exitJS(ret, /* implicit = */ true);
     return ret;
   }
   catch (e) {
