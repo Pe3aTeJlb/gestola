@@ -32,7 +32,7 @@ export class SerialMonitorWidget extends ReactWidget {
     private readonly quickInputService: QuickInputService;
 
     static readonly ID = 'serial-monitor:widget';
-    static readonly LABEL = 'Gestola: Serial Monitor';
+    static readonly LABEL = nls.localize("gestola/serial-monitor/widget-title", 'Gestola: Serial Monitor');
     protected widgetHeight: number;
     protected lineEnding: MonitorEOL = MonitorEOL.DEFAULT;
     protected baudRate: number = 9600;

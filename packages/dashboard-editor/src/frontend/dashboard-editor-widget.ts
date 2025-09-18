@@ -1,6 +1,6 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { Message, Title, Widget } from '@theia/core/lib/browser';
-import { ILogger } from '@theia/core/lib/common';
+import { ILogger, nls } from '@theia/core/lib/common';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } from './base/navigatable-dashboard-editor-widget';
 import { DatasetSelectorWidget, TableSelectEvent } from './dataset-selector/dataset-selector-widget';
@@ -12,7 +12,7 @@ import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-ma
 export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {
 
     static readonly ID = 'dashboard-editor:widget';
-    static readonly LABEL = 'Gestola: Dashboard Editor Widget';
+    static readonly LABEL = nls.localize("gestola/dashboards/editor-title", 'Gestola: Dashboard Editor Widget');
 
     @inject(ProjectManager) 
     protected readonly projManager: ProjectManager;

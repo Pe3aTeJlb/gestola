@@ -72,8 +72,8 @@
     "rebuild:vivado-wrapper": "yarn --cwd packages/vivado-wrapper rebuild",
     "rebuild:waveform-viewer": "yarn --cwd packages/waveform-viewer rebuild",
     "debug": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
+    "debug:dev": "yarn rebuild:under-dev && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",
-    "debug:rdbp": "yarn rebuild:under-dev && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "play": "yarn --cwd electron-app start",
     "bundle": "yarn --cwd electron-app bundle",
     "script": "yarn ts-node scripts/test/test.ts"

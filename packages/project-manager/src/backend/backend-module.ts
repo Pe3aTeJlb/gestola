@@ -1,6 +1,4 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
-import { CustomLocalizationContribution } from './backend-localization-contribution';
-import { LocalizationContribution } from "@theia/core/lib/node/i18n/localization-contribution";
 import { ConnectionHandler, JsonRpcConnectionHandler } from '@theia/core/lib/common/messaging';
 import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_PATH, ProjectManagerBackendService, ProjectTemplateContribution, LLDTemplateContribution } from '../common/protocol';
 import { ProjectManagerBackendServiceImpl } from './project-manager-backend-service';
@@ -12,10 +10,6 @@ import { GestolaLLDTemplateContribution } from './lld-templates-contribution';
 export default new ContainerModule(bind => {
 
     console.log("Launch dir", __dirname);
-
-    //Localization
-    bind(CustomLocalizationContribution).toSelf().inSingletonScope();
-    bind(LocalizationContribution).toService(CustomLocalizationContribution);
 
     bind(GestolaProjectTemplateContribution).toSelf().inSingletonScope();
     bind(ProjectTemplateContribution).toService(GestolaProjectTemplateContribution);

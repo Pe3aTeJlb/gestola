@@ -44,7 +44,7 @@
         },
 
         "rtl-level":{
-            "view-container-title": "Гестола: RTl уровень",
+            "view-container-title": "Гестола: RTL уровень",
             "module-hierarchy": "Иерархия модуля",
             "testbenches-explorer-view-title": "Обозреватель тестовых окружений",
             "simulation-results": "Результаты симуляции"
@@ -59,9 +59,15 @@
             "view-container-title": "Гестола: Топологический уровень - VLSI"
         },
 
-        "analytics-view":{
+        "analytics":{
             "view-container-title": "Гестола: Аналитический модуль",
+            "database-explorer": "Обозреватель БД Аналитики",
             "file-explorer-dashboards": "Дашборды"
+        },
+
+        "dashboards": {
+            "editor-title": "Гестола: Редактор дашбардов",
+            "viewer-title": "Гестола: Просмотр дашборда"
         },
 
 
@@ -71,6 +77,7 @@
         },
 
         "serial-monitor": {
+            "widget-title": "Гестола: Монитор порта",
             "autoscroll": "Автопрокрутка",
             "carriageReturn": "CR Возврат каретки",
             "connecting": "Подключение к '{0}' на '{1}'...",
@@ -91,6 +98,14 @@
             "notConnectedError": "Не подключен к {0} {1} порту.",
             "unableToCloseWebSocket": "Не удалось закрыть веб-сокет.",
             "unableToConnectToWebSocket": "Не удается подключиться к веб-сокету."
+        },
+
+        "openfpgaloader": {
+            "widget-title": "Гестола: OpenFGPALoader (Прошивка ПЛИС)"
+        },
+
+        "waveform": {
+            "widget-title": "Гестола: Просмотр временных диаграмм"
         }
     }
    

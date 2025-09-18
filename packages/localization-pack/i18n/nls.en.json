@@ -43,12 +43,19 @@
             "view-container-title": "Gestola: Topology Level - VLSI"
         },
 
-        "analytics-view":{
+        "analytics":{
             "view-container-title": "Gestola: Analytics Module",
+            "database-explorer": "Analytics Database Explorer",
             "file-explorer-dashboards": "Dashboards"
         },
 
+        "dashboards": {
+            "editor-title": "Gestola: Dashboard Editor Widget",
+            "viewer-title": "Gestola: Dashboard Viewer"
+        },
+
         "serial-monitor": {
+            "widget-title": "Gestola: Serial Monitor",
             "autoscroll": "Autoscroll",
             "carriageReturn": "Carriage Return",
             "connecting": "Connecting to '{0}' on '{1}'...",
@@ -69,6 +76,14 @@
             "notConnectedError": "Not connected to {0} {1} port.",
             "unableToCloseWebSocket": "Unable to close websocket",
             "unableToConnectToWebSocket": "Unable to connect to websocket"
+        },
+
+        "openfpgaloader": {
+            "widget-title": "Gestola: OpenFGPALoader"
+        },
+
+        "waveform": {
+            "widget-title": "Gestola: Waveform Viewer"
         }
 
 

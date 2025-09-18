@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { injectable, postConstruct, inject } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
-import { MessageService, URI } from '@theia/core';
+import { MessageService, nls, URI } from '@theia/core';
 import { Message } from '@theia/core/lib/browser';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import * as plotly from 'plotly.js';
@@ -18,7 +18,7 @@ export interface NavigatableDashboardViewerOptions {
 export class DashboardViewerWidget extends ReactWidget {
 
     static readonly ID = 'dashboard-viewer:widget';
-    static readonly LABEL = 'Gestola: Dashboard Viewer';
+    static readonly LABEL = nls.localize("gestola/dashboards/viewer-title", 'Gestola: Dashboard Viewer');
     
     public opt: NavigatableDashboardViewerOptions;
     public uri: URI;

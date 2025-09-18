@@ -3,7 +3,7 @@ import { Message, Title, Widget } from '@theia/core/lib/browser';
 import { NavigatableWaveformViewerOptions, NavigatableTreeEditorWidget } from "../tree-editor-widget/navigatable-waveform-viewer-widget";
 import { NetlistTreeWidget } from "./netlist-tree-widget";
 import { WaveformWidget } from './waveform-widget';
-import { ILogger } from '@theia/core/lib/common';
+import { ILogger, nls } from '@theia/core/lib/common';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { WaveformViewerBackendService } from '../../common/protocol';
 import { IWaveformDumpDoc, MetadataPackage, TransactionPackage } from '../../common/waveform-doc-dto';
@@ -13,7 +13,7 @@ import { DocumentWatcher } from '../../common/document-watcher';
 export class WaveformViewerWidget extends NavigatableTreeEditorWidget {
 
     static readonly ID = 'waveform-viewer:widget';
-    static readonly LABEL = 'Gestola: Waveform Viewer';
+    static readonly LABEL = nls.localize("gestola/waveform/widget-title", 'Gestola: OpenFPGALoader');
 
     constructor(
         @inject(NetlistTreeWidget)

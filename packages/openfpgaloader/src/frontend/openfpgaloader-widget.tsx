@@ -2,7 +2,7 @@ import * as React from "react";
 import { ReactWidget } from "@theia/core/lib/browser/widgets/react-widget";
 import { FileDialogService } from "@theia/filesystem/lib/browser";
 import { inject, injectable, postConstruct } from "inversify";
-import { MessageService, URI } from "@theia/core";
+import { MessageService, nls, URI } from "@theia/core";
 import { Message, MessageLoop, Widget } from "@theia/core/lib/browser";
 import { SerialMonitorSendInput } from "./input-send";
 import { SerialMonitorOutput } from "./output";
@@ -17,7 +17,7 @@ export class OpenFpgaLoaderWidget extends ReactWidget {
   protected readonly messageService!: MessageService;
 
   static readonly ID = "openfpgaloader:widget";
-  static readonly LABEL = "Gestola: FPGA Loader";
+  static readonly LABEL = nls.localize("gestola/openfpgaloader/widget-title", 'Gestola: OpenFPGALoader');
 
   private bitstreamPath: string = "";
   private loader: any;

@@ -19,8 +19,7 @@ export const DATASET_SELECTOR_WIDGET_TREE_PROPS: TreeProps = {
 export class DatasetSelectorWidget extends TreeWidget {
 
     static readonly ID = 'gestola:dataset-selector';
-    static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Dataset Explorer")
-    static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Dataset Explorer");
+    static readonly VIEW_LABEL = nls.localize("gestola/analytics/database-explorer", "nalytics Database Explorer");
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
