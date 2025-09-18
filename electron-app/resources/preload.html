@@ -2,10 +2,16 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         html,
         body {
             background-color: black;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
 
         .theia-preload {
@@ -14,76 +20,107 @@
             left: 0;
             right: 0;
             bottom: 0;
-            /* Above styles copied from https://github.com/eclipse-theia/theia/blob/5aeef6c0c683b4e91713ab736957e6655b486adc/packages/core/src/browser/style/index.css#L147-L151 */
-            /* Otherwise, there is a flickering when Theia's CSS loads. */
-
             background-image: none;
         }
 
         .theia-preload::after {
-            /* remove default loading animation */
             content: none;
         }
 
         .spinner-container {
             display: flex;
-            flex-direction: center;
-            align-self: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             width: 100vw;
         }
 
         .custom-spinner {
-            align-self: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
 
         .custom-spinner svg {
-            width: 16vw;
-            height: 16vh;
-            animation-delay: 0;
+            width: 80%;
+            height: auto;
+            max-width: 1024px;
+            max-height: 512px;
+            animation-delay: 3s;
             animation-duration: 2s;
-            animation-iteration-count: infinite;
             animation-name: blueprint-spinner;
             animation-timing-function: ease;
         }
 
-        @keyframes blueprint-spinner {
-            0% {
-                filter: invert(49%) sepia(71%) saturate(5980%) hue-rotate(199deg) brightness(103%) contrast(101%);
-                transform: scale(1.0);
-            }
-
-            50% {
-                filter: invert(57%) sepia(52%) saturate(1900%) hue-rotate(160deg) brightness(100%) contrast(102%);
-                transform: scale(0.8);
-            }
-
-            100% {
-                filter: invert(49%) sepia(71%) saturate(5980%) hue-rotate(199deg) brightness(103%) contrast(101%);
-                transform: scale(1.0);
-            }
+    /* Ключевые кадры */
+    @keyframes blueprint-spinner {
+        0% {
+            filter:  brightness(103%) contrast(101%) drop-shadow(0 0 2px rgba(0, 140, 255, 0.5));
         }
+        100% {
+            filter:  brightness(110%) contrast(102%) drop-shadow(0 0 15px rgba(0, 225, 255, 0.8));
+        }
+    }
+
+    /* Анимация последовательного появления частей */
+    #spinner path {
+        opacity: 0;
+        animation-duration: 2s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: both;
+    }
+    #spinner path:nth-child(1) { animation-name: draw-path; animation-delay: 0.5s; }
+    #spinner path:nth-child(2) { animation-name: draw-path; animation-delay: 1s; }
+    #spinner path:nth-child(3) { animation-name: draw-path; animation-delay: 1.5s; }
+    #spinner path:nth-child(4) { animation-name: draw-path; animation-delay: 2s; }
+
+    @keyframes draw-path {
+        0% { opacity: 0; }
+        20% { opacity: 1; }
+        100% { opacity: 1; }
+    }
+
+
     </style>
 </head>
 
 <body>
     <div class='spinner-container'>
         <div class='custom-spinner'>
-            <svg id="spinner" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" preserveAspectRatio="xMinYMin meet"
-                viewBox="0, 0, 1150, 540.6">
-                <g id="Layer_1" fill="#FFFFFF">
-                    <path
-                        d="M880.199,2.8 C1028.1,2.8 1147.9,122.6 1147.9,270.5 C1147.9,418.3 1028.1,538.2 880.2,538.2 L290.1,538.2 C269,538.2 251.9,521.1 251.9,500 C251.9,478.9 269,461.8 290.1,461.8 L427.6,461.8 C448.6,461.8 465.7,444.7 465.7,423.6 C465.7,402.5 448.6,385.4 427.6,385.4 L396.999,385.4 C375.9,385.4 358.8,368.3 358.8,347.2 C358.8,326.1 375.9,309 397,309 L488.703,309 C509.918,308.941 526.373,291.65 526.9,270.8 C526.9,249.7 509.8,232.6 488.7,232.6 L167.8,232.6 C146.7,232.6 129.6,215.5 129.6,194.4 C129.6,173.3 146.7,156.2 167.8,156.2 L404.604,156.2 C425.818,156.141 442.273,138.85 442.8,118 C442.8,96.9 425.7,79.8 404.6,79.8 L351.2,79.8 C330.1,79.8 313,62.7 313,41.6 C313,20.5 330.1,2.4 351.2,2.4 L880.199,2.8 z M837.4,92 L837.4,92 C755.2,92 688.7,158.6 688.7,240.7 L688.7,300.2 C688.7,382.4 755.2,448.9 837.4,448.9 C919.5,448.9 986.1,382.4 986.1,300.2 L986.1,240.7 C986.1,158.6 919.5,92 837.4,92 L837.4,92 z M888.2,232.6 C908,232.6 924.1,248.7 924.1,268.5 L924.1,273.1 C924.1,292.9 908,309 888.2,309 L776.6,309 C756.8,309 740.7,292.9 740.7,273.1 L740.7,268.5 C740.7,248.7 756.8,232.6 776.6,232.6 L888.2,232.6 z" />
-                    <path
-                        d="M170.1,461.8 C190,461.8 206,477.8 206,497.7 L206,502.3 C206,522.1 190,538.2 170.1,538.2 L38,538.2 C18.2,538.2 2.1,522.1 2.1,502.3 L2.1,497.7 C2.1,477.8 18.2,461.8 38,461.8 L170.1,461.8 z" />
-                    <path
-                        d="M231.3,3.4 C251.1,3.4 267.1,19.5 267.1,39.3 L267.1,44 C267.1,63.8 251.1,79.8 231.3,79.8 L83.8,79.8 C64,79.8 47.9,63.8 47.9,44 L47.9,39.3 C47.9,19.5 64,3.4 83.8,3.4 L231.3,3.4 z" />
-                    <path
-                        d="M277.1,309 C296.9,309 313,325.1 313,344.9 L313,349.5 C313,369.3 296.9,385.4 277.1,385.4 L196.1,385.4 C176.3,385.4 160.2,369.3 160.2,349.5 L160.2,344.9 C160.2,325.1 176.3,309 196.1,309 L277.1,309 z" />
-                </g>
-            </svg>
+            <svg id="spinner" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                   <linearGradient id="lg0" gradientUnits="userSpaceOnUse" x1="78.41797%" y1="66.21094%" x2="90.82031%" y2="108.984375%">
+                      <stop offset="0%" style="stop-color:rgb(255,255,255);"></stop>
+                      <stop offset="73%" style="stop-color:rgb(228,228,228);"></stop>
+                      <stop offset="74%" style="stop-color:rgb(228,227,228);"></stop>
+                      <stop offset="97%" style="stop-color:rgb(218,218,218);"></stop>
+                      <stop offset="98%" style="stop-color:rgb(217,218,217);"></stop>
+                      <stop offset="100%" style="stop-color:rgb(216,217,217);"></stop>
+                   </linearGradient>
+                   <linearGradient id="lg1" gradientUnits="userSpaceOnUse" x1="25.195312%" y1="25.585938%" x2="25.195312%" y2="99.02344%">
+                      <stop offset="0%" style="stop-color:rgb(0,0,0);"></stop>
+                      <stop offset="1%" style="stop-color:rgb(255,255,255);"></stop>
+                      <stop offset="100%" style="stop-color:rgb(216,216,216);"></stop>
+                   </linearGradient>
+                   <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="47.265625%" y1="100.0%" x2="77.53906%" y2="65.234375%">
+                      <stop offset="0%" style="stop-color:rgb(216,216,216);"></stop>
+                      <stop offset="28%" style="stop-color:rgb(217,217,217);"></stop>
+                      <stop offset="29%" style="stop-color:rgb(217,218,217);"></stop>
+                      <stop offset="99%" style="stop-color:rgb(247,247,247);"></stop>
+                      <stop offset="100%" style="stop-color:rgb(248,247,248);"></stop>
+                   </linearGradient>
+                </defs>
+              <g fill="#000000">
+              </g>
+              <g fill="#ffffff">
+               <path fill="url(#lg1)" d="M0 470.8 l0 -41.3 67 -18.4 66.9 -18.4 120.7 -131.1 c66.4 -72.1 121 -131.2 121.3 -131.3 0.3 -0.1 15.9 18.8 34.6 42.2 l34 42.3 36.4 63.7 36.3 63.6 -21.2 85 -21.2 84.9 -237.4 0 -237.4 0 0 -41.2z"/>
+               <path fill="url(#lg2)" d="M477.2 510.8 c0.3 -0.7 9.7 -38.1 20.9 -83 11.2 -45 20.6 -81.8 20.9 -81.8 0.5 0 31 53.1 32.2 56.1 0.4 0.9 1 1.9 1.5 2.2 0.4 0.3 21.3 -4.1 46.3 -9.8 l45.5 -10.2 80.3 -26.3 c44.2 -14.4 80.6 -26 80.8 -25.7 0.2 0.2 -29.2 40.8 -65.3 90.1 l-65.8 89.6 -98.9 0 c-78.6 0 -98.7 -0.3 -98.4 -1.2z"/>
+               <path fill="url(#lg0)" d="M678 511.5 c0 -0.7 129.8 -177.6 131.9 -179.8 1.6 -1.6 2.5 -1.4 17.7 3.6 l15.9 5.4 9.4 -3.4 c9.1 -3.3 9.4 -3.3 12.1 -1.6 1.5 1 37.9 26.8 80.9 57.3 l78.1 55.5 0 31.7 0 31.8 -173 0 c-95.2 0 -173 -0.2 -173 -0.5z"/>
+               <path d="M550.2 395.3 c-23.6 -40.6 -100.2 -175.6 -99.9 -175.9 0.2 -0.2 43.6 36.1 96.4 80.8 66.5 56.4 95.5 81.5 94.6 82.1 -1 0.6 -85 19.7 -86.7 19.7 -0.3 0 -2.3 -3 -4.4 -6.7z"/>
+              </g>
+             </svg>
         </div>
     </div>
 </body>
