@@ -71,9 +71,8 @@
     "rebuild:verilator-wrapper": "yarn --cwd packages/verilator-wrapper rebuild",
     "rebuild:vivado-wrapper": "yarn --cwd packages/vivado-wrapper rebuild",
     "rebuild:waveform-viewer": "yarn --cwd packages/waveform-viewer rebuild",
-    "debug": "yarn rebuild && yarn --cwd electron-app start",
+    "debug": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",
-    "debug:rbp": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:rdbp": "yarn rebuild:under-dev && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "play": "yarn --cwd electron-app start",
     "bundle": "yarn --cwd electron-app bundle",
@@ -85,6 +84,7 @@
   ],
   "theiaPluginsDir": "plugins",
   "theiaPlugins": {
+    "MS-CEINTL.vscode-language-pack-ru": "https://open-vsx.org/api/MS-CEINTL/vscode-language-pack-ru/1.83.0/file/MS-CEINTL.vscode-language-pack-ru-1.83.0.vsix",
     "yy0931.vscode-sqlite3-editor": "https://yy0931.gallery.vsassets.io/_apis/public/gallery/publisher/yy0931/extension/vscode-sqlite3-editor/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
     "ms-vscode.wasm-wasi-core": "https://ms-vscode.gallery.vsassets.io/_apis/public/gallery/publisher/ms-vscode/extension/wasm-wasi-core/latest/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
   },

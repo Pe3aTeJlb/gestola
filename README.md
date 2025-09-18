@@ -1,112 +1,100 @@
-For God sake write it down
+# Gestola Overview
 
-Setup:
+Gestola is an ECAD based on Eclipse Theia
 
-install nvm
-nvm install 22.17.1
-nvm use 22.17.1
+## Getting Started
 
-yarn setup
-yarn debug:rbp
+Here listed all steps to setup project correctly
 
----------------
-Command description
+### Prerequisites
 
-setup: install packages, repack better-sqlite3 for current node version. After change target node version repack sqlite. download plugins from theiaPlugins section of package json and build some packages + simlinks. Download verilator docker and build project (may produce errors, use debug:rbp)
+    node 22.17.1 
+    electron 37.2.1
 
-repack-sqlite: repack better-sqlite3 for current using node version
-update:dependencies: update eclipse theia version in all packages
-update:plugins: update version of plugins in theiaPlugins. Modifying package.json
-download:plugins: download plugins from both open-vsx amd vscode marketplace via script
-build: clean old build data + build project
-build:vscode-ext: build vscode extension for gramma and verible
-clean:entire: clean all shit including node_modules, plugins, compiled .ts and node_modules simlinks
-clean:all: clean not all shit: compiled .ts
-rebuild: rebuild .ts files from all packages
-debug: rebuild + play
-debug:rb: read like debug:rebuild+bundle
-debug:rbp: read like debug:rebuild+bundle+play
-bundle: make electorn app build
-play: lol, start app
+install nvm and then install node 22.17.1 and use it
 
+    nvm install 22.17.1  
+    nvm use 22.17.1
 
-# gestola-core
-...The example of how to build the Theia-based applications with the gestola-core.
+Python3 is required for the build due to node-gyp
 
-## Getting started
+### Setup
 
-Please install all necessary [prerequisites](https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites).
+Run
 
-## Running the browser example
+    yarn setup
+to setup project.  
+This command will install npm packages, repack better-sqlite3 for current node version, download and build plugins from theiaPlugins section of package.json, download verilator docker and build project.
+(may produce errors, use debug:rbp)
 
-    yarn build:browser
-    yarn start:browser
+    yarn debug:rb
 
-*or:*
+This is an ultimative command to rebuild all project packages and build electron app.  
 
-    yarn build:browser
-    cd browser-app
-    yarn start
+### Running electron
 
-*or:* launch `Start Browser Backend` configuration from VS code.
+After build run
 
-Open http://localhost:3000 in the browser.
+    yarn play
+to start Gestola.
 
-## Running the Electron example
+## Common commands description
 
-    yarn build:electron
-    yarn start:electron
+    setup - install packages, repack better-sqlite3 for current node version. After change target node version repack sqlite. download plugins from theiaPlugins section of package json and build some packages + simlinks. Download verilator docker and build project (may produce errors, use debug:rbp)
 
-*or:*
+    repack-sqlite - repack better-sqlite3 for current using node version
 
-    yarn build:electron
-    cd electron-app
-    yarn start
+    update:dependencies - update eclipse theia version in all packages
+    update:plugins - update version of plugins in theiaPlugins. Modifying package.json
+    download:plugins - download plugins from both open-vsx amd vscode marketplace via script
 
-*or:* launch `Start Electron Backend` configuration from VS code.
+    build - clean old build data + build project
+    build:vscode-ext - build vscode extension for grammar and verible
 
+    clean:entire - clean all shit including node_modules, plugins, compiled .ts, node_modules and simlinks
+    clean:all - clean compiled .ts
 
-## Developing with the browser example
+    rebuild - rebuild all Gestola packages
+    rebuild:under-dev - rebuild specific packages under development (listed manually)
+    rebuild:prod - rebuild all Gestola packages for productive build
+    rebuild:"package-name" - rebuild specific package
 
-Start watching all packages, including `browser-app`, of your application with
+    debug - rebuild + bundle + play
+    debug:rb - read like debug: rebuild + bundle
+    debug:rdbp - read like debug: rebuild:under-dev + bundle + play
 
-    yarn watch:browser
+    bundle - make electorn app build
 
-*or* watch only specific packages with
+    play - start app
 
-    cd gestola-core
-    yarn watch
+## Development
 
-and the browser example.
+After adding new package to project:  
 
-    cd browser-app
-    yarn watch
+1. Add reference in ./tsconfig.json
+2. Add package to dependencies in ./electron-app
+3. Update packages structure with yarn
+4. Rebuild project
 
-Run the example as [described above](#Running-the-browser-example)
-## Developing with the Electron example
+## Troubleshooting
 
-Start watching all packages, including `electron-app`, of your application with
+### Better-sqlite problems
 
-    yarn watch:electron
+1. Delete package in project node_modules  
+2. Reinstall it with yarn
+3. Run repack-sqlite
 
-*or* watch only specific packages with
+## Usefull links for development
 
-    cd gestola-core
-    yarn watch
+Many of package scoped links listed in appropriated packages
 
-and the Electron example.
+### General
 
-    cd electron-app
-    yarn watch
+1. <https://github.com/eclipse-theia/theia> Eclipse Theia main github
+2. <https://github.com/eclipse-theia/theia-ide> Eclipse Theia app builder
 
-Run the example as [described above](#Running-the-Electron-example)
+### Theming
 
-## Publishing gestola-core
-
-Create a npm user and login to the npm registry, [more on npm publishing](https://docs.npmjs.com/getting-started/publishing-npm-packages).
-
-    npm login
-
-Publish packages with lerna to update versions properly across local packages, [more on publishing with lerna](https://github.com/lerna/lerna#publish).
-
-    npx lerna publish
+1. <https://code.visualstudio.com/api/references/icons-in-labels> VSCode icons reference
+2. <https://code.visualstudio.com/api/references/theme-color> VScode colortheme reference
+3. <https://fontawesome.ru/all-icons/> Font Awansome icons
