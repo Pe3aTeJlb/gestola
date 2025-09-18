@@ -14,13 +14,16 @@
 
         "explorer":{
             "view-container-title": "Gestola: Project Explorer",
+            "view-welcome": "You have not yet created project",
+            "create-project": "Create Project",
+            "open-project": "Open Project",
             "project-explorer-view-title": "Project Explorer",
             "lld-explorer-view-title": "Low Level Designes Explorer",
-            "file-explorer-systemLvl": "System Model", 
-            "file-explorer-rtlLvl": "RTL",
-            "file-explorer-topologyLvl-fpga": "FPGA",
-            "file-explorer-topologyLvl-vlsi": "VLSI", 
-            "file-explorer-miscFiles": "Other Files"
+            "file-navigator-systemLvl": "System Model", 
+            "file-navigator-rtlLvl": "RTL",
+            "file-navigator-topologyLvl-fpga": "FPGA",
+            "file-navigator-topologyLvl-vlsi": "VLSI", 
+            "file-navigator-miscFiles": "Other Files"
         },
 
         "system-level":{
@@ -36,7 +39,9 @@
 
         "topology-level-fpga":{
             "view-container-title": "Gestola: Topology Level - FPGA",
-            "constrains-explorer-view-title": "Constrains Explorer"
+            "constrains-explorer-view-title": "Constrains Explorer",
+            "synthesis-results": "Synthesis Results",
+            "implementation-results": "Implementation Results"
         },
 
         "topology-level-vlsi":{

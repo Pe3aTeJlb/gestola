@@ -78,10 +78,10 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "FPGA"); 
                 break;
             case "file-navigator-fpga-synth-results": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "Synthesis Results"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/topology-level-fpga/synthesis-results", "Synthesis Results"); 
                 break;
             case "file-navigator-fpga-impl-results": 
-                dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "Implementation Results"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/topology-level-fpga/implementation-results", "Implementation Results"); 
                 break;
             case "file-navigator-vlsi": 
                 dataset.visibilityCommandLabel = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "VLSI"); 
@@ -93,7 +93,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 dataset.visibilityCommandLabel = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
                 break;
             case "file-navigator-analytics":
-                dataset.visibilityCommandLabel = nls.localize("gestola/analytics-view/file-explorer-dashboards", "Dashboards"); 
+                dataset.visibilityCommandLabel = nls.localize("gestola/analytics/file-explorer-dashboards", "Dashboards"); 
                 break;
         }
         this.title.dataset = dataset;
@@ -119,22 +119,22 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
 
         switch(this.model.navigatorId){        
             case "file-navigator-system": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-systemLvl", "System Model");
                 break;
             case "file-navigator-rtl":   
                 this.title.label = nls.localize("gestola/explorer/file-navigator-rtlLvl", "RTL Model"); 
                 break;
             case "file-navigator-fpga": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "FPGA"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl-fpga", "FPGA");
                 break;
             case "file-navigator-fpga-synth-results": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "Synthesis Results"); 
+                this.title.label = nls.localize("gestola/topology-level-fpga/synthesis-results", "Synthesis Results"); 
                 break;
             case "file-navigator-fpga-impl-results": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-fpgaLvl", "Implementation Results"); 
+                this.title.label = nls.localize("gestola/topology-level-fpga/implementation-results", "Implementation Results"); 
                 break;
             case "file-navigator-vlsi": 
-                this.title.label = nls.localize("gestola/explorer/file-navigator-vlsi", "VLSI"); 
+                this.title.label = nls.localize("gestola/explorer/file-navigator-topologyLvl-vlsi", "VLSI"); 
                 break;
             case "file-navigator-misc": 
                 this.title.label = nls.localize("gestola/explorer/file-navigator-miscFiles", "Misc Files"); 
@@ -143,7 +143,7 @@ export class GestolaFileNavigatorWidget extends AbstractNavigatorTreeWidget {
                 this.title.label = nls.localize("gestola/rtl-level/simulation-results", "Simulation Restults"); 
                 break;
             case "file-navigator-analytics":
-                this.title.label = nls.localize("gestola/analytics-view/file-explorer-dashboards", "Dashboards"); 
+                this.title.label = nls.localize("gestola/analytics/file-explorer-dashboards", "Dashboards"); 
                 break;
         }
         this.title.caption = this.title.label;

@@ -6,10 +6,10 @@ import { DatabaseExplorerWidget } from '../../widgets/database-explorer/database
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const ANALYTICS_VIEW_CONTAINER_ID = 'gestola.analytics-view.view-container';
-export const ANALYTICS_VIEW_MENU_LABEL = nls.localize("gestola/analytics-view/view-container-title", "Gestola: Analytics Module")
-export const ANALYTICS_VIEW_LABEL = nls.localize("gestola/analytics-view/project-explorer-view-title", "Gestola: Analytics Module");
+export const ANALYTICS_VIEW_MENU_LABEL = nls.localize("gestola/analytics/view-container-title", "Gestola: Analytics Module")
+export const ANALYTICS_VIEW_LABEL = nls.localize("gestola/analytics/view-container-title", "Gestola: Analytics Module");
 export const ANALYTICS_VIEW_CONTAINER_TITLE_OPTIONS: ViewContainerTitleOptions = {
-    label: nls.localize("gestola/analytics-view/view-container-title", "Analytics Module"),
+    label: nls.localize("gestola/analytics/view-container-title", "Analytics Module"),
     iconClass: codicon('graph-line'),
     closeable: true
 };

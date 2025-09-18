@@ -26,17 +26,18 @@
 
         "explorer":{
             "view-container-title": "Гестола: Обозреватель Проектов",
-            "view-title": "Обозреватель Проектов",
             "view-welcome": "Вы еще не создали проект",
             "create-project": "Создать проект",
             "open-project": "Открыть проект",
             "project-explorer-view-title": "Обозреватель проектов",
-            "lld-explorer-view-title": "Обозреватель Low Level Design",
+            "lld-navigator-view-title": "Обозреватель Low Level Design",
             "file-navigator-systemLvl": "Системная Модель", 
             "file-navigator-rtlLvl": "RTL", 
             "file-navigator-topologyLvl-fpga": "ПЛИС",
             "file-navigator-topologyLvl-vlsi": "СБИС", 
-            "file-navigator-miscFiles": "Другие файлы"
+            "file-navigator-miscFiles": "Другие файлы",
+            "synthesis-results": "Результаты синтеза",
+            "implementation-results": "Результаты имплементации"
         },
 
         "system-level":{
@@ -52,7 +53,9 @@
 
         "topology-level-fpga":{
             "view-container-title": "Гестола: Топологический уровень - FPGA",
-            "constrains-explorer-view-title": "Обозреватель проектных ограничений"
+            "constrains-explorer-view-title": "Обозреватель проектных ограничений",
+            "synthesis-results": "Результаты синтеза",
+            "implementation-results": "Результаты имплементации"
         },
 
         "topology-level-vlsi":{
