@@ -19,7 +19,8 @@ export class Project {
     lldsRootUri: URI;
     miscUri: URI;
     databesUri: URI;
-    sqliteDBUri: URI;
+    analyticsDBUri: URI;
+    systemDBUri: URI;
     theiaUri: URI;
     configUri: URI;
     analyticsUri: URI;
@@ -57,13 +58,14 @@ export class Project {
         this.lldsRootUri = this.rootUri.resolve('low_level_design');
         this.miscUri = this.rootUri.resolve('misc');
         this.databesUri = this.rootUri.resolve('database');
-        this.sqliteDBUri = this.databesUri.resolve('sqlite.db');
+        this.analyticsDBUri = this.databesUri.resolve('analytics.db');
+        this.systemDBUri = this.databesUri.resolve('system.db');
         this.theiaUri = this.rootUri.resolve('.theia');
         this.configUri = this.rootUri.resolve('.config');
         this.analyticsUri = this.rootUri.resolve('analytics');
         this.dashboardsUri = this.analyticsUri.resolve('dashboards');
 
-        this.getDatabaseDescription(this.sqliteDBUri);
+        this.getDatabaseDescription(this.analyticsDBUri);
         this.getLowLevelDesignList(this.lldsRootUri);
 
     }

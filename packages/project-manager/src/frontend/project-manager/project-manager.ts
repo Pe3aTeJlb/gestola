@@ -139,7 +139,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         });
 
         this.onDidChangeProject((event: ProjectChangeEvent) => {
-            this.databaseBackendService.changeDBConnection(event.proj.sqliteDBUri);
+            this.databaseBackendService.changeDBConnection(event.proj.analyticsDBUri);
             let lld = event.proj.getCurrLLD();
             if(lld){
                 this.setLowLevelDesign(lld);
