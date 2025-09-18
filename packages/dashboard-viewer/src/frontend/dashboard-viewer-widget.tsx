@@ -2,7 +2,7 @@ import * as React from 'react';
 import { injectable, postConstruct, inject } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import { MessageService, nls, URI } from '@theia/core';
-import { Message } from '@theia/core/lib/browser';
+import { Message, Widget } from '@theia/core/lib/browser';
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
 import * as plotly from 'plotly.js';
 const RGE = require('react-grid-layout');
@@ -194,6 +194,15 @@ export class DashboardViewerWidget extends ReactWidget {
         const htmlElement = document.getElementById('displayMessageButton');
         if (htmlElement) {
             htmlElement.focus();
+        }
+    }
+
+    protected override onResize(msg: Widget.ResizeMessage): void {
+        super.onResize(msg);
+        if(this.plots){
+            this.plots.forEach(e => {
+                plotly.Plots.resize(e.props.children.props.divId);
+            });
         }
     }
 

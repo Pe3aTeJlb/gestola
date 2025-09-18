@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { injectable, postConstruct, inject } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
-import { MessageService } from '@theia/core';
-import { Message, StatefulWidget } from '@theia/core/lib/browser';
+import { Emitter, MessageService } from '@theia/core';
+import { Message, StatefulWidget, Widget } from '@theia/core/lib/browser';
 import * as plotly from 'plotly.js';
 import PlotlyEditor from "@gestola/react-chart-editor";
 import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
@@ -44,7 +44,9 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         dataSources: {},
         dataSourceOptions: [{}],
         dataSourceName: "",
-      };
+    };
+
+    protected readonly resizeEmitter = new Emitter<void>();
 
     @inject(MessageService)
     protected readonly messageService!: MessageService;
@@ -248,6 +250,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             onSaveDashboard={(widgets: any) => this.saveDashboard(widgets)}
             onPreviewDashboard={(widgets: any) => {console.log('widets', widgets)}}
             advancedTraceTypeSelector
+            additionalResizeHandler={this.resizeEmitter.event}
         />
         );
     }
@@ -262,6 +265,11 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
 
     protected displayMessage(): void {
         this.messageService.info('Congratulations: Dashboard Viewer Widget Successfully Created!');
+    }
+
+    protected override onResize(msg: Widget.ResizeMessage): void {
+        super.onResize(msg);
+        this.resizeEmitter.fire();
     }
 
     protected override onActivateRequest(msg: Message): void {

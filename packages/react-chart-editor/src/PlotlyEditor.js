@@ -42,6 +42,9 @@ class PlotlyEditor extends Component {
     this.onRemoveWidget = this.onRemoveWidget.bind(this);
 
     this.handleWidgetResize = this.handleWidgetResize.bind(this);
+    props.additionalResizeHandler(() =>
+      this.state.gridItems.forEach(el => this.props.plotly.Plots.resize(el.i))
+    )
   }
 
   handleDivSelect(event) {
@@ -72,7 +75,8 @@ class PlotlyEditor extends Component {
 
   handleWidgetResize(layout, oldItem, newItem, placeholder, e, element) {
     const selectedGraphDiv = this.state.selectedGraphDiv;
-    this.props.plotly.react(selectedGraphDiv, selectedGraphDiv.data, selectedGraphDiv.layout, selectedGraphDiv.config);
+    this.props.plotly.Plots.resize(selectedGraphDiv);
+    //this.props.plotly.react(selectedGraphDiv, selectedGraphDiv.data, selectedGraphDiv.layout, selectedGraphDiv.config);
   }
 
   onLayoutChange(gridItems) {
@@ -300,6 +304,7 @@ PlotlyEditor.propTypes = {
   fontOptions: PropTypes.array,
   chartHelp: PropTypes.object,
   customConfig: PropTypes.object,
+  additionalResizeHandler: PropTypes.any
 };
 
 PlotlyEditor.defaultProps = {
