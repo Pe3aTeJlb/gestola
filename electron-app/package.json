@@ -67,7 +67,6 @@
     "@gestola/vivado-wrapper": "1.0.0",
     "@gestola/dashboard-editor": "1.0.0",
     "@gestola/dashboard-viewer": "1.0.0",
-    "@gestola/design-flow-editor": "1.0.0",
     "@gestola/serial-monitor": "1.0.0",
     "@gestola/serial-monitor-widget": "1.0.0"
   },

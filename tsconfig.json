@@ -43,9 +43,6 @@
           "path": "packages/dashboard-viewer"
         },
         {
-          "path": "packages/design-flow-editor"
-        },
-        {
           "path": "packages/openfpgaloader"
         },
         {
