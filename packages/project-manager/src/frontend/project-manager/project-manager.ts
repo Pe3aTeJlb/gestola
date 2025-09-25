@@ -129,11 +129,15 @@ export class ProjectManager implements FrontendApplicationContribution {
             await this.refreshProjectsList();
 
             //If project is only folder in workspace
-            if(this.getProjectsCount() == 1){
-                this.setProject(this.getOpenedProjects()[0]);
-            } else if(this.projToSet !== undefined){
-                this.setProject(this.getOpenedProjects().filter(i => i.rootUri.path.fsPath() == this.projToSet?.path.fsPath())[0]);
-                this.projToSet = undefined;
+            if(this.getProjectsCount() > 0) {
+                if(this.getProjectsCount() == 1){
+                    this.setProject(this.getOpenedProjects()[0]);
+                } else if(this.projToSet !== undefined){
+                    this.setProject(this.getOpenedProjects().filter(i => i.rootUri.path.fsPath() == this.projToSet?.path.fsPath())[0]);
+                    this.projToSet = undefined;
+                } else {
+                    this.setProject(this.getOpenedProjects()[0]);
+                }
             }
 
         });
@@ -250,6 +254,15 @@ export class ProjectManager implements FrontendApplicationContribution {
                 }
             }
         }
+
+        this.openedProjects.sort((a, b) => {
+            if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
+              return a.projName.localeCompare(b.projName);	
+            } else {
+              return a.isFavorite ? -1 : 1;
+            }
+        });
+
         this.fireProjectsListChangeEvent();
     }
 
