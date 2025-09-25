@@ -157,10 +157,10 @@ class DefaultEditor extends Component {
             <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
           </SingleSidebarItem>
           <SingleSidebarItem>
-              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
+          {!this.context.isEDA&& <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />}
           </SingleSidebarItem>
           <SingleSidebarItem>
-            <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />
+            {!this.context.isEDA && <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />}
           </SingleSidebarItem>
           {children || null}
         </PanelMenuWrapper>
@@ -173,10 +173,10 @@ class DefaultEditor extends Component {
               <Button variant="primary" label={addWidget.label} onClick={() => addWidget.handler(this.context)} />
             </SingleSidebarItem>
             <SingleSidebarItem>
-              <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />
+            {!this.context.isEDA && <Button variant="primary" label={previewDashboard.label} onClick={() => previewDashboard.handler(this.context)} />}
             </SingleSidebarItem>
             <SingleSidebarItem>
-              <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />
+            {!this.context.isEDA && <Button variant="primary" label={saveDashboard.label} onClick={() => saveDashboard.handler(this.context)} />}
             </SingleSidebarItem>
           </PanelMenuWrapper>
           )
@@ -208,6 +208,7 @@ DefaultEditor.contextTypes = {
   fullLayout: PropTypes.object,
   layout: PropTypes.object,
   onUpdate: PropTypes.func,
+  isEDA: PropTypes.bool
 };
 
 export default DefaultEditor;

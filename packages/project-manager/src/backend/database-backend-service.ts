@@ -85,6 +85,12 @@ export class DatabaseBackendServiceImpl implements DatabaseBackendService {
                 : this.conn.prepare(`SELECT * FROM "${table}" LIMIT 1000;`).all() as Object[];
     }
 
+    async getReportDataFor(table: string, transpose?: boolean):  Promise<Object | Object[]> {
+        return  transpose 
+                ? sqlutils.transpose(this.conn.prepare(`SELECT * FROM "${table}";`).all() as Object[]) as {}
+                : this.conn.prepare(`SELECT * FROM "${table}";`).all() as Object[];
+    }
+
     async executeQuery(query: string, transpose?: boolean): Promise<Object | Object[]> {
         return transpose 
                 ? sqlutils.transpose(this.conn.prepare(query).all() as Object[]) as {}

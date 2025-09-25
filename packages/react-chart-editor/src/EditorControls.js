@@ -44,6 +44,7 @@ class EditorControls extends Component {
     const gd = this.props.selectedGraphDiv || {};
     return {
       gridItemsCount: this.props.gridItemsCount,
+      isEDA: this.props.isEDA,
       advancedTraceTypeSelector: this.props.advancedTraceTypeSelector,
       config: gd._context,
       srcConverters: this.props.srcConverters,
@@ -549,7 +550,7 @@ EditorControls.propTypes = {
   mapBoxAccess: PropTypes.bool,
   fontOptions: PropTypes.array,
   chartHelp: PropTypes.object,
-  customConfig: PropTypes.object,
+  customConfig: PropTypes.object
 };
 
 EditorControls.defaultProps = {
@@ -596,6 +597,7 @@ EditorControls.childContextTypes = {
   chartHelp: PropTypes.object,
   customConfig: PropTypes.object,
   hasValidCustomConfigVisibilityRules: PropTypes.bool,
+  isEDA: PropTypes.bool
 };
 
 export default EditorControls;

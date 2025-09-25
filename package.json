@@ -71,6 +71,7 @@
     "rebuild:verilator-wrapper": "yarn --cwd packages/verilator-wrapper rebuild",
     "rebuild:vivado-wrapper": "yarn --cwd packages/vivado-wrapper rebuild",
     "rebuild:waveform-viewer": "yarn --cwd packages/waveform-viewer rebuild",
+    "rebuild:exp-data-analysis-widget": "yarn --cwd packages/exp-data-analysis-widget rebuild",
     "debug": "yarn rebuild && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:dev": "yarn rebuild:dev && yarn --cwd electron-app bundle && yarn --cwd electron-app start",
     "debug:rb": "yarn rebuild && yarn --cwd electron-app bundle",

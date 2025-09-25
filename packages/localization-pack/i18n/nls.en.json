@@ -51,7 +51,8 @@
         "analytics":{
             "view-container-title": "Gestola: Analytics Module",
             "database-explorer": "Analytics Database Explorer",
-            "file-explorer-dashboards": "Dashboards"
+            "file-explorer-dashboards": "Dashboards",
+            "eda-widget-title": "Gestola: Exploratory Data Analysis Widget"
         },
 
         "dashboards": {

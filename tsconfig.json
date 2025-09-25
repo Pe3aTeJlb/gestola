@@ -50,6 +50,9 @@
         },
         {
           "path": "packages/serial-monitor-widget"
+        },
+        {
+          "path": "packages/exp-data-analysis-widget"
         }
     ]
 }

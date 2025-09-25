@@ -28,14 +28,17 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
     @inject(LabelProvider)
     protected readonly labelProvider: LabelProvider;
 
+    @inject(MessageService)
+    protected readonly messageService: MessageService;
+
     static readonly ID = 'dashboard-editor-widget:chart-editor';
     static readonly LABEL = 'Gestola: Chart Editor';
 
     public opt: NavigatableDashboardEditorOptions;
     public uri: URI | undefined;
-    private dashboardDescription: [];
-    private config = {editable: true, displaylogo: false};
-    private state = {
+    protected dashboardDescription: [];
+    protected config = {editable: true, displaylogo: false};
+    protected state = {
         data: [] as any,
         layout: [] as any,
         frames: [] as any,
@@ -45,11 +48,9 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         dataSourceOptions: [{}],
         dataSourceName: "",
     };
+    protected isEDA = false;
 
     protected readonly resizeEmitter = new Emitter<void>();
-
-    @inject(MessageService)
-    protected readonly messageService!: MessageService;
 
     constructor(
         @inject(NavigatableDashboardEditorOptions)
@@ -97,7 +98,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
         }
     }
 
-    private async processElement(el: any) {
+    protected async processElement(el: any) {
 
         this.state.gridItems.push({
             i: this.state.maxGridItemId.toString(),
@@ -179,7 +180,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
 
     }
 
-    private async saveDashboard(widgets: any){
+    protected async saveDashboard(widgets: any){
         const parent = await this.projManager.getCurrProject()!.dashboardsFstat();
         const parentUri = parent.resource;
         const targetUri = parentUri.resolve('Untitled');
@@ -251,6 +252,7 @@ export class ChartEditorWidget extends ReactWidget implements StatefulWidget {
             onPreviewDashboard={(widgets: any) => {console.log('widets', widgets)}}
             advancedTraceTypeSelector
             additionalResizeHandler={this.resizeEmitter.event}
+            isEDA={this.isEDA}
         />
         );
     }

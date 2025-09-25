@@ -245,6 +245,7 @@ class PlotlyEditor extends Component {
             onCollectWidgets={this.onCollectWidgets}
             onSaveDashboard={this.props.onSaveDashboard}
             onPreviewDashboard={this.props.onPreviewDashboard}
+            isEDA={this.props.isEDA}
           >
             {this.props.children}
           </EditorControls>
@@ -304,7 +305,8 @@ PlotlyEditor.propTypes = {
   fontOptions: PropTypes.array,
   chartHelp: PropTypes.object,
   customConfig: PropTypes.object,
-  additionalResizeHandler: PropTypes.any
+  additionalResizeHandler: PropTypes.any,
+  isEDA: PropTypes.bool
 };
 
 PlotlyEditor.defaultProps = {
