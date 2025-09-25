@@ -5,7 +5,7 @@ import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/br
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import  { Project }  from './project-model/project';
-import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
+import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction, PreferenceService, PreferenceScope } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
 import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, LLDTemplate } from '../common/protocol';
@@ -102,6 +102,9 @@ export class ProjectManager implements FrontendApplicationContribution {
     @inject(DatabaseBackendService)
     private readonly databaseBackendService: DatabaseBackendService;
 
+    @inject(PreferenceService)
+    private readonly preferenceService: PreferenceService;
+
     projRoot: FileStat | undefined;
 
     protected openedProjects: Project[] = [];
@@ -162,8 +165,14 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     onWillStop(app: FrontendApplication): boolean | undefined | OnWillStopAction<any>{
 
+        this.preferenceService.set("project.favorites", 
+            this.openedProjects.filter(e => e.isFavorite == true)
+            .map(e => e.rootUri.path.fsPath()),
+            PreferenceScope.Workspace
+        );
+
         return  {
-            action: async () => {
+            action: () => {
                 this.saveProjectsMetaData();
                 return true;
             },
@@ -253,6 +262,13 @@ export class ProjectManager implements FrontendApplicationContribution {
                     this.openedProjects.push(new Project(this, roots[j]));
                 }
             }
+        }
+
+        let favs: string[] | undefined = this.preferenceService.get("project.favorites");
+        if(favs){
+            this.openedProjects.forEach(e => {
+                e.isFavorite = favs.find(i => i == e.rootUri.path.fsPath()) != undefined 
+            });
         }
 
         this.openedProjects.sort((a, b) => {

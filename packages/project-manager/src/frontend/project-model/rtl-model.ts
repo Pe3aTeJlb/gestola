@@ -134,14 +134,23 @@ export class RTLModel {
     private async indexHDLFiles(): Promise<void>{
         this.indexedHDLFiles = [];
         await this.processDir(this.modelUri);
+
         if(await this.fileService.exists(this.rtlModelDesctiptionUri)){
             const data = JSON.parse((await this.fileService.read(this.rtlModelDesctiptionUri)).value);
             if(data.top_module){
                 this.topLevelModule = {name: data.top_module.name, uri:this.modelUri.resolve(data.top_module.relPath)} as HDLModuleRef;
-                this.testbenchesFiles.push(this.topLevelModule);
+                //add via testbenches later
+                //this.testbenchesFiles.push(this.topLevelModule);
             }
             this.designExcludedHDLFiles = data.design_exclude.map((e: string) => this.modelUri.resolve(e));
+            this.testbenchesFiles = data.testbenches.map((e: any) => {
+                return {
+                    name: e.name,
+                    uri: this.modelUri.resolve(e.uri)
+                } as HDLModuleRef
+            });
         }
+
         this.designIncludedHDLFiles = this.indexedHDLFiles.filter(e => this.designExcludedHDLFiles.find(i => i.isEqual(e)) === undefined);
 
         await this.updateVeribleMetaFile();
@@ -266,11 +275,16 @@ export class RTLModel {
                             relPath: this.modelUri.relative(this.topLevelModule.uri)?.toString()
                             } as TopModuleMetaDescription 
                         : undefined,
-            design_exclude: this.designExcludedHDLFiles.map(e => this.modelUri.relative(e)?.toString())
+            design_exclude: this.designExcludedHDLFiles.map(e => this.modelUri.relative(e)?.toString()),
+            testbenches: this.testbenchesFiles.map(e => {
+                return {
+                    name: e.name,
+                    uri: this.modelUri.relative(e.uri)!.toString()
+                }
+            })
        });
        this.fileService.write(this.rtlModelDesctiptionUri, string);
     }
-
 
     //Getters
 

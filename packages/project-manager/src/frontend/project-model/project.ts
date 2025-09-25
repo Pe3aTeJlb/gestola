@@ -110,7 +110,7 @@ export class Project {
 
 
     public async saveMetadata(){
-        this.LowLevelDesignes.forEach(async e => await e.getRTLModel().saveMetadata());
+        this.LowLevelDesignes.forEach(async e => await e.saveMetadata());
     }
 
 

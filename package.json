@@ -49,7 +49,7 @@
     "clean:all": "lerna run clean",
     "clean:node-modules": "rimraf .electron-app/node_modules && rimraf node_modules",
     "rebuild": "lerna run rebuild",
-    "rebuild:dev": "yarn rebuild:coffe",
+    "rebuild:dev": "yarn rebuild:project-manager",
     "rebuild:prod": "lerna run rebuild:prod",
     "rebuild:electron": "yarn --cwd electron-app rebuild",
     "rebuild:branding": "yarn --cwd packages/branding rebuild",

@@ -19,9 +19,10 @@ export class FPGATopologyModel {
     contrainsUri: URI;
     synthResults: URI;
     implResults: URI;
+    fpgaModelDesctiptionUri: URI;
 
     constrainsFiles: URI[];
-    constrainsFilesUsageMap: Map<URI, number> = new Map<URI, number>();
+    constrainsFilesUsageMap: Map<string, number> = new Map<string, number>();
 
     constructor(projManager: ProjectManager, fpgaModelRoot: URI){
 
@@ -34,6 +35,7 @@ export class FPGATopologyModel {
         this.contrainsUri = fpgaModelRoot.resolve('constrains');
         this.synthResults = fpgaModelRoot.resolve('synthresults');
         this.implResults = fpgaModelRoot.resolve('implresults');
+        this.fpgaModelDesctiptionUri = fpgaModelRoot.resolve('fpgamodel_description.json');
 
         this.fileService.onDidFilesChange((event) => event.changes.forEach(async i => {
             if(this.contrainsUri.isEqualOrParent(i.resource)){
@@ -41,14 +43,14 @@ export class FPGATopologyModel {
                 if(i.type == FileChangeType.ADDED){
 
                     this.constrainsFiles.push(i.resource);
-                    this.constrainsFilesUsageMap.set(i.resource, USED_IN_SYNTH_AND_IMPL);
+                    this.constrainsFilesUsageMap.set(i.resource.path.base, USED_IN_SYNTH_AND_IMPL);
 
                 } else if (i.type == FileChangeType.UPDATED) {
 
                     if(this.constrainsFiles.find(e => e.isEqual(i.resource)) === undefined){
 
                         this.constrainsFiles.push(i.resource);
-                        this.constrainsFilesUsageMap.set(i.resource, USED_IN_SYNTH_AND_IMPL);
+                        this.constrainsFilesUsageMap.set(i.resource.path.base, USED_IN_SYNTH_AND_IMPL);
                     }
 
                 } else if (i.type == FileChangeType.DELETED){
@@ -84,10 +86,31 @@ export class FPGATopologyModel {
             this.constrainsFiles = stats.children?.map(i => i.resource);
         }
 
+        if(await this.fileService.exists(this.fpgaModelDesctiptionUri)){
+            const data = JSON.parse((await this.fileService.read(this.fpgaModelDesctiptionUri)).value);
+            data.usage_types.forEach((e:any) => this.constrainsFilesUsageMap.set(e.uri, e.type));
+        }
+
+    }
+
+    public async saveMetadata (){
+        let entries = [];
+        for(let entrie of this.constrainsFilesUsageMap.entries()){
+            entries.push(
+                {
+                    type: entrie[1],
+                    uri: entrie[0]
+                }
+            );
+        }
+        let string = JSON.stringify({
+            usage_types: entries
+       });
+       this.fileService.write(this.fpgaModelDesctiptionUri, string);
     }
 
     public setConstainsFileUsageType(uri: URI, type: number){
-        this.constrainsFilesUsageMap.set(uri, type);
+        this.constrainsFilesUsageMap.set(uri.path.base, type);
     }
 
     public async constrainsFolderFStat(): Promise<FileStat> {

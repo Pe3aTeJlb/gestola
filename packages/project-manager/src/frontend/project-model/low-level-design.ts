@@ -73,6 +73,11 @@ export class LowLevelDesign {
         this.fpgaModels = this.fpgaModels.filter(e => e !== model);
     }
 
+    public async saveMetadata (){
+        await this.rtlModel.saveMetadata();
+        this.fpgaModels.forEach(async e => await e.saveMetadata());
+    }
+
     //Getters
 
     public getRTLModel(): RTLModel {
