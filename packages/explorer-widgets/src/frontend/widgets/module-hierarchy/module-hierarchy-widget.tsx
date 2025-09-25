@@ -4,7 +4,7 @@ import { URI, nls } from '@theia/core/lib/common';
 import { OpenerOptions, OpenerService, SelectableTreeNode, Tree, TreeImpl, TreeWidget, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { ModuleHierarchyTreeImpl, ModuleTreeNode, ModuleTreeRootNode } from './module-hierarchy-tree-impl';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const MODULES_HIERARCHY_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,

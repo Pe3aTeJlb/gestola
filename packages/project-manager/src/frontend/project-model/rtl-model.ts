@@ -1,15 +1,10 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileType, FileChangeType } from '@theia/filesystem/lib/common/files';
-import { ProjectManager } from './project-manager';
+import { ProjectManager } from '../project-manager';
 
 export const hdlExt: string[] = ['.v', '.vh', '.sv', '.svh'];
 export const hdlExtWtHeaders: string[] = ['.v', '.sv'];
-
-export const regexp =  [
-    new RegExp('rtl'),
-    new RegExp('topology'),
-];
 
 export const comment: RegExp = /\/\*[\s\S\n]*?\*\/|\/\/.*$/gmi;
 

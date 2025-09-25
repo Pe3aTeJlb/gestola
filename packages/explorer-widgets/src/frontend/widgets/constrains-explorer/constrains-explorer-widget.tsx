@@ -17,7 +17,7 @@ import { ConstrainsExplorerTreeModel } from './constrains-explorer-model';
 import { GestolaExplorerContextKeyService } from '../../views/project-explorer-view/gestola-explorer-context-key-service';
 import { CONSTRAINS_EXPLORER_CONTEXT_MENU } from './constrains-explorer-commands-contribution';
 import { NavigatorContextKeyService } from '@theia/navigator/lib/browser/navigator-context-key-service';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const CONSTRAINS_EXPLORER_PROPS: TreeProps = {
     ...defaultTreeProps,

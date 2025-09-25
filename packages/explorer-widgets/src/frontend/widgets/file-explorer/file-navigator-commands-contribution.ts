@@ -1,7 +1,7 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { CompositeTreeNode, KeybindingContribution, KeybindingRegistry, SelectableTreeNode, Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
 import { MenuContribution, MenuModelRegistry, MenuPath, SelectionService, URI, isOSX, nls } from '@theia/core';

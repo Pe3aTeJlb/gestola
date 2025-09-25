@@ -3,7 +3,7 @@ import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-con
 import { FrontendApplication } from '@theia/core/lib/browser/frontend-application';
 import { Command } from "@theia/core";
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';
 import { TOPOLOGY_LEVEL_FPGA_VIEW_CONTAINER_ID, TOPOLOGY_LEVEL_FPGA_VIEW_MENU_LABEL } from './fpga-view-widget-factory';
 import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-explorer-widget';

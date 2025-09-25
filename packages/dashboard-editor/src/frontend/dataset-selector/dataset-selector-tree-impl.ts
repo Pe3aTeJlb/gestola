@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode, ExpandableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { Column, Table } from "@gestola/project-manager/lib/common/database";
+import { ProjectManager } from '@gestola/project-manager';
+import { Column, Table } from "@gestola/project-manager";
 import { v4 } from 'uuid';
 
 @injectable()

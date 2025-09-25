@@ -5,7 +5,7 @@ import { ProjectExplorerWidget } from '../../widgets/project-explorer/project-ex
 import { GESTOLA_PROJECT_EXPLORER_VIEW_CONTAINER_ID } from './gestola-project-explorer-widget-factory';
 import { Command } from "@theia/core";
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { GestolaExplorerContextKeyService } from './gestola-explorer-context-key-service';
 import { GestolaFileNavigatorWidget } from '../../widgets/file-explorer/file-navigator-widget';
 import { FileNavigatorPreferences } from '@theia/navigator/lib/browser/navigator-preferences';

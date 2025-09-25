@@ -4,14 +4,14 @@ import { MessageService, QuickInputService, QuickPickService, QuickPickValue, nl
 import { OpenFileDialogProps, FileDialogService } from '@theia/filesystem/lib/browser';
 import { Event, Emitter, URI } from "@theia/core";
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import  { Project }  from './project';
+import  { Project }  from './project-model/project';
 import { ConfirmDialog, Dialog, FrontendApplication, FrontendApplicationContribution, OnWillStopAction } from '@theia/core/lib/browser';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, LLDTemplate } from '../../common/protocol';
-import { LowLevelDesign } from './low-level-design';
-import { HDLModuleRef, RTLModel } from './rtl-model';
-import { FPGATopologyModel } from './fpga-topology-model';
+import { DatabaseBackendService, ProjectManagerBackendService, ProjectTemplate, LLDTemplate } from '../common/protocol';
+import { LowLevelDesign } from './project-model/low-level-design';
+import { HDLModuleRef, RTLModel } from './project-model/rtl-model';
+import { FPGATopologyModel } from './project-model/fpga-topology-model';
 
 export interface ProjectChangeEvent {
     readonly proj: Project;

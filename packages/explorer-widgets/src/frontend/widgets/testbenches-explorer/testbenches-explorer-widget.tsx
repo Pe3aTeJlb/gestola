@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, SelectableTreeNode, Tree, TreeImpl, TreeNode, TreeSelection, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { TestBenchExplorerTreeImpl, TestbenchTreeNode } from './testbenches-explorer-tree-impl';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { TESTBENCHES_EXPLORER_CONTEXT_MENU } from './testbenches-explorer-commands-contribution';
 
 export const TESTBENCHS_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {

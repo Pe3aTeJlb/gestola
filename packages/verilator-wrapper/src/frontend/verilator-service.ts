@@ -1,8 +1,8 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
-import { ProjectManager } from "@gestola/project-manager/lib/frontend/project-manager/project-manager";
+import { ProjectManager } from "@gestola/project-manager";
 import { VerilatorBackendService } from '../common/protocol';
 import moment = require('moment');
-import { HDLModuleRef } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
+import { HDLModuleRef } from '@gestola/project-manager';
 
 @injectable()
 export class VerilatorFrontendService {

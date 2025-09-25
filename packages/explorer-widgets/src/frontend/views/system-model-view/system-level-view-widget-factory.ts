@@ -1,7 +1,7 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { codicon, ViewContainer, ViewContainerTitleOptions, WidgetFactory, WidgetManager } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common/nls';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { GESTOLA_FILE_NAVIGATOR_ID, GestolaFileNavigatorOptions } from '../../widgets/file-explorer/file-navigator-widget';
 
 export const SYSTEM_LEVEL_VIEW_CONTAINER_ID = 'gestola.system-level.view-container';

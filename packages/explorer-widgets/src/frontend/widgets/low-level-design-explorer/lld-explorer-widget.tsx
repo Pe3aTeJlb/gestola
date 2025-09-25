@@ -4,7 +4,7 @@ import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeWidget, codicon, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { LLDExplorerTreeImpl, LLDTreeNode } from './lld-explorer-tree-impl';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const LLD_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,

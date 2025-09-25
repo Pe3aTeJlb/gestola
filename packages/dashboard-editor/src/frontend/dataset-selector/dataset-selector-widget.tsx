@@ -3,7 +3,7 @@ import { injectable, inject, interfaces, Container } from '@theia/core/shared/in
 import { nls } from '@theia/core/lib/common';
 import { CompositeTreeNode, Tree, TreeImpl, TreeWidget, createTreeContainer, defaultTreeProps } from '@theia/core/lib/browser';
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { DatasetSelectorTreeImpl, TableTreeNode } from './dataset-selector-tree-impl';
 import { Event, Emitter } from "@theia/core";
 

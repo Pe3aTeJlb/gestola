@@ -5,7 +5,7 @@ import { EDAChartEditorWidget } from './eda-chart-editor-widget';
 import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } from '@gestola/dashboard-editor/lib/frontend/base/navigatable-dashboard-editor-widget';
 import { DatasetSelectorWidget, TableSelectEvent } from '@gestola/dashboard-editor/lib/frontend/dataset-selector/dataset-selector-widget';
 import { DataPreviewWidget } from '@gestola/dashboard-editor/lib/frontend/data-preview/data-preview-widget';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 
 @injectable()

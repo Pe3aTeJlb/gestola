@@ -3,7 +3,7 @@ import { Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
 import { LLDExplorerCommands } from './lld-explorer-commands';
 import { LLDExplorerWidget } from './lld-explorer-widget';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { nls } from '@theia/core';
 

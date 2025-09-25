@@ -6,7 +6,7 @@ import { NavigatableDashboardEditorOptions, NavigatableDashboardEditorWidget } f
 import { DatasetSelectorWidget, TableSelectEvent } from './dataset-selector/dataset-selector-widget';
 import { ChartEditorWidget } from './chart-editor/react-chart-editor-widget';
 import { DataPreviewWidget } from './data-preview/data-preview-widget';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 
 @injectable()
 export class DashboardEditorWidget extends NavigatableDashboardEditorWidget {

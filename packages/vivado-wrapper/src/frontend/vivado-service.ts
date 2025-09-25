@@ -1,7 +1,7 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
-import { ProjectManager } from "@gestola/project-manager/lib/frontend/project-manager/project-manager";
+import { ProjectManager } from "@gestola/project-manager";
 import { VivadoBackendService } from '../common/protocol';
-import { FPGATopologyModel, USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager/lib/frontend/project-manager/fpga-topology-model';
+import { FPGATopologyModel, USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager';
 
 @injectable()
 export class VivadoFrontendService {

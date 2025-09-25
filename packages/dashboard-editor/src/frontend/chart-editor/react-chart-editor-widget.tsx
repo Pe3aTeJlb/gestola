@@ -5,7 +5,7 @@ import { Emitter, MessageService } from '@theia/core';
 import { Message, StatefulWidget, Widget } from '@theia/core/lib/browser';
 import * as plotly from 'plotly.js';
 import PlotlyEditor from "@gestola/react-chart-editor";
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { FileSystemUtils } from '@theia/filesystem/lib/common';
 import { WorkspaceInputDialog } from '@theia/workspace/lib/browser/workspace-input-dialog';
 import { nls } from '@theia/core';

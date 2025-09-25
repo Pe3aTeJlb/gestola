@@ -8,10 +8,10 @@ import { FrontendApplicationStateService } from '@theia/core/lib/browser/fronten
 import { ProgressService } from '@theia/core/lib/common/progress-service';
 import { Deferred } from '@theia/core/lib/common/promise-util';
 import { Disposable } from '@theia/core/lib/common/disposable';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { SelectionService } from '@theia/core';
 import { WorkspaceCommandContribution } from '@theia/workspace/lib/browser';
-import { FPGATopologyModel } from '@gestola/project-manager/src/frontend/project-manager/fpga-topology-model';
+import { FPGATopologyModel } from '@gestola/project-manager';
 
 @injectable()
 export class ConstrainsExplorerTreeModel extends FileTreeModel {

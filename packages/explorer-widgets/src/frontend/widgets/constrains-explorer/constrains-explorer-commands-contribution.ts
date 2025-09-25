@@ -1,7 +1,7 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { CommonCommands, CompositeTreeNode, ExpandableTreeNode, LabelProvider, Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { MenuContribution, MenuModelRegistry, MenuPath, SelectionService, URI, nls } from '@theia/core';
 import { UriAwareCommandHandler, UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
@@ -20,7 +20,7 @@ import { WorkspaceInputDialog } from '@theia/workspace/lib/browser/workspace-inp
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 const validFilename: (arg: string) => boolean = require('valid-filename');
 import { FileStat } from '@theia/filesystem/lib/common/files';
-import { USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager/lib/frontend/project-manager/fpga-topology-model';
+import { USED_IN_IMPL_ONLY, USED_IN_NONE, USED_IN_SYNTH_AND_IMPL, USED_IN_SYTH_ONLY } from '@gestola/project-manager';
 import { VivadoFrontendService } from "@gestola/vivado-wrapper/lib/frontend/vivado-service";
 
 export const CONSTRAINS_EXPLORER_CONTEXT_MENU: MenuPath = ['constrains-explorer-context-menu'];

@@ -1,8 +1,8 @@
 import { injectable, inject } from '@theia/core/shared/inversify';
 import URI from '@theia/core/lib/common/uri';
 import { UriCommandHandler } from '@theia/core/lib/common/uri-command-handler';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { hdlExtWtHeaders } from '@gestola/project-manager/lib/frontend/project-manager/rtl-model';
+import { ProjectManager } from '@gestola/project-manager';
+import { hdlExtWtHeaders } from '@gestola/project-manager';
 
 @injectable()
 export class RTLModelSetTopModuleHandler implements UriCommandHandler<URI> {

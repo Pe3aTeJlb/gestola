@@ -7,7 +7,6 @@ import { Message, MessageLoop, Widget } from "@theia/core/lib/browser";
 import { SerialMonitorSendInput } from "./input-send";
 import { SerialMonitorOutput } from "./output";
 import { Emitter } from '@theia/core/lib/common/event';
-//import { ProjectManager } from "@gestola/project-manager/lib/frontend/project-manager/project-manager";
 const openfpgaloader = require("./openFPGALoader");
 
 @injectable()

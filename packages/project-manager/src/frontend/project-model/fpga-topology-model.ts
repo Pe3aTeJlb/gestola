@@ -1,5 +1,5 @@
 import { URI } from "@theia/core";
-import { ProjectManager } from "./project-manager";
+import { ProjectManager } from "../project-manager";
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileChangeType } from '@theia/filesystem/lib/common/files';
 

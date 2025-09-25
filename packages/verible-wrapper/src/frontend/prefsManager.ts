@@ -4,7 +4,7 @@ import { PreferenceService  } from '@theia/core/lib/browser/preferences/preferen
 import { EnvVariablesServer } from '@theia/core/lib/common/env-variables';
 import URI from '@theia/core/lib/common/uri';
 import * as path from 'path';
-import { ProjectManager, LLDChangeEvent } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager, LLDChangeEvent } from '@gestola/project-manager';
 import { CommandService } from '@theia/core/lib/common/command';
 
 @injectable()

@@ -1,7 +1,7 @@
 import { inject, injectable } from '@theia/core/shared/inversify';
 import { CommonMenus, Widget } from '@theia/core/lib/browser';
 import { CommandRegistry, CommandContribution } from '@theia/core/lib/common/command';
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
+import { ProjectManager } from '@gestola/project-manager';
 import { TabBarToolbarContribution, TabBarToolbarRegistry } from '@theia/core/lib/browser/shell/tab-bar-toolbar';
 import { MenuContribution, MenuModelRegistry, nls } from '@theia/core';
 import { ProjectExplorerCommands } from './projec-explorer-commands';

@@ -1,7 +1,7 @@
 import { URI } from '@theia/core/lib/common/uri';
 import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat, FileDeleteOptions } from '@theia/filesystem/lib/common/files';
-import { ProjectManager } from './project-manager';
+import { ProjectManager } from '../project-manager';
 import { RTLModel } from './rtl-model';
 import { FPGATopologyModel } from './fpga-topology-model';
 

@@ -1,7 +1,7 @@
 import {TreeImpl,CompositeTreeNode,TreeNode,SelectableTreeNode } from "@theia/core/lib/browser";
 import { inject, injectable } from "@theia/core/shared/inversify";
-import { ProjectManager } from '@gestola/project-manager/lib/frontend/project-manager/project-manager';
-import { LowLevelDesign } from "@gestola/project-manager/lib/frontend/project-manager/low-level-design";
+import { ProjectManager } from '@gestola/project-manager';
+import { LowLevelDesign } from "@gestola/project-manager";
 
 @injectable()
 export class LLDExplorerTreeImpl extends TreeImpl {
