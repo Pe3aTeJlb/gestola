@@ -69,7 +69,8 @@
     "@gestola/dashboard-viewer": "1.0.0",
     "@gestola/serial-monitor": "1.0.0",
     "@gestola/serial-monitor-widget": "1.0.0",
-    "@gestola/exp-data-analysis-widget": "1.0.0"
+    "@gestola/exp-data-analysis-widget": "1.0.0",
+    "@gestola/project-settings-editor": "1.0.0"
   },
   "devDependencies": {
     "@theia/cli": "1.64.1",

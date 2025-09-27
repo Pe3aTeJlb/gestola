@@ -1956,6 +1956,11 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+"@eclipse-emfcloud/theia-tree-editor@next":
+  version "0.7.0-next.1fac72c"
+  resolved "https://registry.yarnpkg.com/@eclipse-emfcloud/theia-tree-editor/-/theia-tree-editor-0.7.0-next.1fac72c.tgz#8e255c075c802d064485392eb794d6dbeeaa271a"
+  integrity sha512-DO3ZnndERCZx/P6nPtKE42uYvOuKMvlo4L5mmHlZ/ggIxTHCTL3PeBDrn1vrU9l5ZIk/H2CvgIYMN3na7l21GA==
+
 "@electron/get@^2.0.0":
   version "2.0.3"
   resolved "https://registry.npmjs.org/@electron/get/-/get-2.0.3.tgz"
@@ -2914,6 +2919,30 @@
   version "4.4.2"
   resolved "https://registry.npmjs.org/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
+
+"@jsonforms/core@^3.1.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@jsonforms/core/-/core-3.6.0.tgz#3b03db6d15899decfea4d82631083d59e275bccc"
+  integrity sha512-Qz7qJPf/yP4ybqknZ500zggIDZRJfcufu+3efp/xNWf05mpXvxN9TdfmA++BdXi5Nr4UAgjos2kFmQpZpQaCDw==
+  dependencies:
+    "@types/json-schema" "^7.0.3"
+    ajv "^8.6.1"
+    ajv-formats "^2.1.0"
+    lodash "^4.17.21"
+
+"@jsonforms/react@^3.1.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@jsonforms/react/-/react-3.6.0.tgz#d43db626c2c7809ce73fdd7114ba6158192b5c85"
+  integrity sha512-dor7FYltCkNkAM+SVZGtabjpUhGlj0/coAqx7GIZ8h+leET+d1sLEAc8kfxxh6gZBq9C4KAErb0Pj3uHedOs9Q==
+  dependencies:
+    lodash "^4.17.21"
+
+"@jsonforms/vanilla-renderers@^3.1.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@jsonforms/vanilla-renderers/-/vanilla-renderers-3.6.0.tgz#ac541f0cc047e4bfe5300ff6eae30ed30a55eb94"
+  integrity sha512-KAEoUSv/Jdj+3W9P6T+HJADY61xJXXcngBELlicEfkelJHBjs+YfhPP09g1AEMdU2MOeCq/QDkXIX2HMN6qmGQ==
+  dependencies:
+    lodash "^4.17.21"
 
 "@juggle/resize-observer@^3.3.1":
   version "3.4.0"
@@ -6359,7 +6388,7 @@
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-4.0.9.tgz#cd82382c4f902fed9691a2ed79ec68c5898af4c2"
   integrity sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==
 
-"@types/json-schema@*", "@types/json-schema@^7.0.15", "@types/json-schema@^7.0.4", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
+"@types/json-schema@*", "@types/json-schema@^7.0.15", "@types/json-schema@^7.0.3", "@types/json-schema@^7.0.4", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.15"
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
@@ -7494,7 +7523,7 @@ airbnb-prop-types@^2.16.0:
     prop-types-exact "^1.2.0"
     react-is "^16.13.1"
 
-ajv-formats@^2.1.1:
+ajv-formats@^2.1.0, ajv-formats@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/ajv-formats/-/ajv-formats-2.1.1.tgz"
   integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
@@ -7523,7 +7552,7 @@ ajv@^6.10.0, ajv@^6.12.0, ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5, aj
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.0, ajv@^8.0.1, ajv@^8.6.0, ajv@^8.6.2, ajv@^8.6.3, ajv@^8.9.0:
+ajv@^8.0.0, ajv@^8.0.1, ajv@^8.6.0, ajv@^8.6.1, ajv@^8.6.2, ajv@^8.6.3, ajv@^8.9.0:
   version "8.17.1"
   resolved "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz"
   integrity sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==

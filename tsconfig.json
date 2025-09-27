@@ -53,6 +53,10 @@
         },
         {
           "path": "packages/exp-data-analysis-widget"
+        },
+        {
+          "path": "packages/project-settings-editor"
         }
+        
     ]
 }

@@ -1,0 +1,47 @@
+{
+  "name": "@gestola/project-settings-editor",
+  "private": true,
+  "keywords": [
+    "gestola",
+    "gestola-extension"
+  ],
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pe3aTeJlb/gestola.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pe3aTeJlb/gestola/issues"
+  },
+  "homepage": "https://github.com/Pe3aTeJlb/gestola",
+  "version": "1.0.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@gestola/project-manager": "1.0.0",
+    "@eclipse-emfcloud/theia-tree-editor": "next",
+    "@jsonforms/core": "^3.1.0",
+    "@jsonforms/react": "^3.1.0",
+    "@jsonforms/vanilla-renderers": "^3.1.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "rimraf": "3.0.2"
+  },
+  "scripts": {
+    "rebuild:prod": "yarn rebuild",
+    "rebuild": "yarn clean && yarn compile",
+    "clean": "rimraf lib && rimraf tsconfig.tsbuildinfo",
+    "clean:entire": "yarn clean && rimraf node_modules",
+    "compile": "tsc -b",
+    "watch": "tsc -w",
+    "update:next": "ts-node ../../scripts/update-theia-version.ts"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/frontend/frontend-module"
+    }
+  ]
+}
