@@ -7,6 +7,9 @@ import { Database } from '../../common/database';
 
 export class Project {
 
+    id = "";
+    typeId = "ProjectModel";
+
     projManager: ProjectManager;
     fileService: FileService;
 

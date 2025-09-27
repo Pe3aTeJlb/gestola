@@ -12,6 +12,9 @@ export const regexp =  [
 
 export class LowLevelDesign {
 
+    id = "";
+    typeId = "LowLevelDesignModel";
+
     projManager: ProjectManager;
     fileService: FileService;
 

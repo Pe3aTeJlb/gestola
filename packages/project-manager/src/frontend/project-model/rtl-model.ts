@@ -40,6 +40,9 @@ export interface TopModuleMetaDescription {
 
 export class RTLModel {
 
+    id = "";
+    typeId = "RTLModel";
+
     projManager: ProjectManager;
     fileService: FileService;
 

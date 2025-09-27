@@ -10,6 +10,9 @@ export const USED_IN_IMPL_ONLY = 3;
 
 export class FPGATopologyModel {
 
+    id = "";
+    typeId = "FPGAModel";
+
     projManager: ProjectManager;
     fileService: FileService;
 

@@ -1,6 +1,6 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution, WebSocketConnectionProvider } from '@theia/core/lib/browser';
-import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_PATH, ProjectManagerBackendService } from '../../../project-manager/src/common/protocol';
+import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_PATH, ProjectManagerBackendService } from '../common/protocol';
 import { ProjectManager } from './project-manager';
 
 export default new ContainerModule((bind, _unbind) => {
