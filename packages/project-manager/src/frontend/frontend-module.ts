@@ -1,8 +1,7 @@
 import { ContainerModule } from '@theia/core/shared/inversify';
-import { FrontendApplicationContribution, PreferenceContribution, WebSocketConnectionProvider } from '@theia/core/lib/browser';
+import { FrontendApplicationContribution, WebSocketConnectionProvider } from '@theia/core/lib/browser';
+import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_PATH, ProjectManagerBackendService } from '../../../project-manager/src/common/protocol';
 import { ProjectManager } from './project-manager';
-import { DATABASE_BACKEND_PATH, DatabaseBackendService, PROJECT_MANAGER_BACKEND_PATH, ProjectManagerBackendService } from '../common/protocol';
-import { projectPreferenceSchema } from './preferences';
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -19,12 +18,5 @@ export default new ContainerModule((bind, _unbind) => {
         const connection = ctx.container.get(WebSocketConnectionProvider);
         return connection.createProxy<DatabaseBackendService>(DATABASE_BACKEND_PATH);
     }).inSingletonScope();
-
-    
-    bind(PreferenceContribution).toConstantValue(
-        {
-            schema: projectPreferenceSchema
-        }
-    );
 
 });
