@@ -8,16 +8,16 @@ import { ProjectSettingsEditorWidget } from './project-settings-editor';
 const DEFAULT_COLOR = 'black';
 
 const ICON_CLASSES: Map<string, string> = new Map([
-    [ProjectModel.Type.ProjectModel, 'fa-fire ' + DEFAULT_COLOR],
-    [ProjectModel.Type.SystemModel, 'fa-server ' + DEFAULT_COLOR],
-    [ProjectModel.Type.LowLevelDesignModel, 'fa-arrows-alt ' + DEFAULT_COLOR],
-    [ProjectModel.Type.RTLModel, 'fa-inbox ' + DEFAULT_COLOR],
-    [ProjectModel.Type.FPGAModel, 'fa-tv ' + DEFAULT_COLOR],
-    [ProjectModel.Type.VLSIModel, 'fa-cogs ' + DEFAULT_COLOR],
+    [ProjectModel.Type.ProjectModel, 'fa-folder ' + DEFAULT_COLOR],
+    [ProjectModel.Type.SystemModel, 'fa-code ' + DEFAULT_COLOR],
+    [ProjectModel.Type.LowLevelDesignModel, 'fa-cubes ' + DEFAULT_COLOR],
+    [ProjectModel.Type.RTLModel, 'fa-code ' + DEFAULT_COLOR],
+    [ProjectModel.Type.FPGAModel, 'fa-microchip  ' + DEFAULT_COLOR],
+    [ProjectModel.Type.VLSIModel, 'fa-microchip ' + DEFAULT_COLOR],
 ]);
 
 /* Icon for unknown types */
-const UNKNOWN_ICON = 'fa-question-circle ' + DEFAULT_COLOR;
+const UNKNOWN_ICON = 'fa-sitemap ' + DEFAULT_COLOR;
 
 @injectable()
 export class TreeLabelProvider implements LabelProviderContribution {
@@ -41,14 +41,13 @@ export class TreeLabelProvider implements LabelProviderContribution {
         return iconClass ? 'fa ' + iconClass : 'fa ' + UNKNOWN_ICON;
     }
 
-    public getName(element: object): string | undefined {
+    public getName(element: any): string | undefined {
         const data = TreeEditor.Node.is(element) ? element.jsonforms.data : element;
-        if (data.name) {
-            return data.name;
+        if (element.name) {
+            return element.name;
         } else if (data.typeId) {
             return this.getTypeName(data.typeId);
         }
-
         return undefined;
     }
 

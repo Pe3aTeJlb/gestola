@@ -2,61 +2,6 @@
 
 import { JsonSchema7 } from "@jsonforms/core";
 
-export const projectModelView = {
-    'type': 'VerticalLayout',
-    'elements': [
-        {
-            'type': 'Control',
-            'label': 'Name',
-            'scope': '#/properties/projName'
-        }
-    ]
-};
-
-export const lowLevelDesignModelView = {
-    'type': 'VerticalLayout',
-    'elements': [
-        {
-            'type': 'Control',
-            'label': 'Name',
-            'scope': '#/properties/name'
-        }
-    ]
-};
-
-export const rtlModelView = {
-    'type': 'VerticalLayout',
-    'elements': [
-        {
-            'type': 'Control',
-            'label': 'Name',
-            'scope': '#/properties/name'
-        }
-    ]
-};
-
-export const fpgaModelView = {
-    'type': 'VerticalLayout',
-    'elements': [
-        {
-            'type': 'Control',
-            'label': 'Name',
-            'scope': '#/properties/name'
-        }
-    ]
-};
-
-export const vlsiModelView = {
-    'type': 'VerticalLayout',
-    'elements': [
-        {
-            'type': 'Control',
-            'label': 'Name',
-            'scope': '#/properties/name'
-        }
-    ]
-};
-
 export const projectSchema: JsonSchema7 = {
     definitions: {
         project: {
@@ -69,8 +14,9 @@ export const projectSchema: JsonSchema7 = {
                 typeId: {
                     const: 'ProjectModel'
                 },
-                projName: {
+                name: {
                     type: 'string',
+                    readOnly: true,
                     minLength: 3,
                     maxLength: 20
                 },
@@ -87,8 +33,13 @@ export const projectSchema: JsonSchema7 = {
                     },
                 },
             },
-            required: ['projName'],
+            required: ['name'],
         },
+    }
+};
+
+export const systemModelSchema: JsonSchema7 = {
+    definitions: {
         systemModel: {
             title: 'System Model',
             type: 'object',
@@ -103,12 +54,14 @@ export const projectSchema: JsonSchema7 = {
                     type: 'string',
                     minLength: 3,
                     maxLength: 20
-                },
-                parent: {
-                    $ref: '#/definitions/project'
                 }
             },
         },
+    }
+}
+
+export const lowLevelDesignModelSchema: JsonSchema7 = {
+    definitions: {
         lowLevelDesign: {
             title: 'Low Level Design',
             type: 'object',
@@ -119,7 +72,7 @@ export const projectSchema: JsonSchema7 = {
                 typeId: {
                     const: 'LowLevelDesignModel'
                 },
-                lldName: {
+                name: {
                     type: 'string',
                     minLength: 3,
                     maxLength: 20
@@ -132,12 +85,14 @@ export const projectSchema: JsonSchema7 = {
                     items: {
                         $ref: '#/definitions/fpgaModel'
                     },
-                },
-                parent: {
-                    $ref: '#/definitions/project'
                 }
             },
         },
+    }
+}
+
+export const rtlModelSchema: JsonSchema7 = {
+    definitions: {
         rtlModel: {
             title: 'RTL Model',
             type: 'object',
@@ -152,12 +107,14 @@ export const projectSchema: JsonSchema7 = {
                     type: 'string',
                     minLength: 3,
                     maxLength: 20
-                },
-                parent: {
-                    $ref: '#/definitions/lowLevelDesign'
                 }
             },
         },
+    }
+}
+
+export const fpgaModelSchema: JsonSchema7 = {
+    definitions: {
         fpgaModel: {
             title: 'FPGA Topology Model',
             type: 'object',
@@ -172,12 +129,14 @@ export const projectSchema: JsonSchema7 = {
                     type: 'string',
                     minLength: 3,
                     maxLength: 20
-                },
-                parent: {
-                    $ref: '#/definitions/lowLevelDesign'
                 }
             },
         },
+    }
+}
+
+export const vlsiModelSchema: JsonSchema7 = {
+    definitions: {
         vlsiModel: {
             title: 'VLSI Topology Model',
             type: 'object',
@@ -192,12 +151,20 @@ export const projectSchema: JsonSchema7 = {
                     type: 'string',
                     minLength: 3,
                     maxLength: 20
-                },
-                parent: {
-                    $ref: '#/definitions/lowLevelDesign'
                 }
             },
         },
+    }
+}
+
+export const dataModel: JsonSchema7 = {
+    definitions: {
+    ...projectSchema.definitions,
+    ...systemModelSchema.definitions,
+    ...lowLevelDesignModelSchema.definitions,
+    ...rtlModelSchema.definitions,
+    ...fpgaModelSchema.definitions,
+    ...vlsiModelSchema.definitions,
     },
     $ref: '#/definitions/project'
-};
+}

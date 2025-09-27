@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { ILogger } from '@theia/core';
 import { inject, injectable } from '@theia/core/shared/inversify';
-import { ProjectModel } from './tree-model';
+//import { ProjectModel } from './tree-model';
 import { TreeLabelProvider } from './tree-label-provider';
 import { TreeEditor } from '@eclipse-emfcloud/theia-tree-editor';
 import { ProjectSettingsEditorWidget } from './project-settings-editor';
@@ -52,32 +52,67 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
             parent.expanded = true;
         }
 
-        switch(data.typeId){
-            case "ProjectModel":  
-            //this.mapData(data.systemModel, node, 'systemModel');
+        if(data.typeId == "ProjectModel"){
+
+            this.mapData(data.systemModel, node, 'systemModel');
+            
+            const fakeSubRoot = {
+                ...this.defaultNode(),
+                editorId: ProjectSettingsEditorWidget.ID,
+                name: "Low Level Designes",
+                parent: parent,
+            };
+
             data.lowLevelDesignes.forEach((element: any, idx: any) => {
-                this.mapData(element, node, 'lowLevelDesignes', idx);
+                this.mapData(element, fakeSubRoot, 'lowLevelDesignes', idx);
             });
-            break;
-            case "LowLevelDesignModel":  
+
+            if (node) {
+                node.children.push(fakeSubRoot);
+                node.expanded = true;
+            }
+
+        }
+
+        if(data.typeId == "LowLevelDesignModel"){
+
             this.mapData(data.rtlModel, node, 'rtlModel');
+
+            const fakeSubRoot = {
+                ...this.defaultNode(),
+                editorId: ProjectSettingsEditorWidget.ID,
+                name: "FPGA Models",
+                parent: parent,
+            };
+
             data.fpgaModels.forEach((element: any, idx: any) => {
-                this.mapData(element, node, 'fpgaModels', idx);
+                this.mapData(element, fakeSubRoot, 'fpgaModels', idx);
             });
-            break;
-            case "RTLModel":  ;
-            break;
-            case "FPGAModel":  ;
-            break;
-            case "VLSIModel":  ;
-            break;
+
+            const fakeSubRoot2 = {
+                ...this.defaultNode(),
+                editorId: ProjectSettingsEditorWidget.ID,
+                name: "VLSI Models",
+                parent: parent,
+            };
+
+            data.vlsiModels.forEach((element: any, idx: any) => {
+                this.mapData(element, fakeSubRoot2, 'vlsiModels', idx);
+            });
+
+            if (node) {
+                node.children.push(fakeSubRoot, fakeSubRoot2);
+                node.expanded = true;
+            }
+
         }
 
         return node;
     }
 
     hasCreatableChildren(node: TreeEditor.Node): boolean {
-        return node ? ProjectModel.childrenMapping.get(node.jsonforms.type) !== undefined : false;
+        //return node ? ProjectModel.childrenMapping.get(node.jsonforms.type) !== undefined : false;
+        return false;
     }
 
     protected defaultNode(): Omit<TreeEditor.Node, 'editorId'> {

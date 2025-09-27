@@ -1,21 +1,21 @@
-import { ILogger } from '@theia/core';
-import { inject, injectable } from '@theia/core/shared/inversify';
+import { injectable } from '@theia/core/shared/inversify';
 import { ProjectModel } from './tree-model';
 import { TreeEditor } from '@eclipse-emfcloud/theia-tree-editor';
+import {
+    dataModel
+} from '@gestola/project-manager';
 import {
     projectModelView,
     lowLevelDesignModelView,
     rtlModelView,
     fpgaModelView,
     vlsiModelView,
-    projectSchema
-} from './tree-schema';
+    emptyView
+} from '@gestola/project-manager';
 import { JsonSchema7 } from '@jsonforms/core';
 
 @injectable()
 export class TreeModelService implements TreeEditor.ModelService {
-
-    constructor(@inject(ILogger) private readonly logger: ILogger) { }
 
     getDataForNode(node: TreeEditor.Node): void {
         return node.jsonforms.data;
@@ -23,7 +23,7 @@ export class TreeModelService implements TreeEditor.ModelService {
 
     getSchemaForNode(node: TreeEditor.Node): JsonSchema7 {
         return {
-            definitions: projectSchema.definitions,
+            definitions: dataModel.definitions,
             ...this.getSubSchemaForNode(node)
         };
     }
@@ -41,7 +41,7 @@ export class TreeModelService implements TreeEditor.ModelService {
         if (!type) {
             return undefined;
         }
-        return (projectSchema.definitions ? Object.entries(projectSchema.definitions) : [])
+        return (dataModel.definitions ? Object.entries(dataModel.definitions) : [])
             .map(entry => entry[1])
             .find((definition: JsonSchema7) => definition.properties && definition.properties.typeId.const === type);
     }
@@ -60,8 +60,7 @@ export class TreeModelService implements TreeEditor.ModelService {
             case ProjectModel.Type.VLSIModel:
                 return vlsiModelView;
             default:
-                this.logger.warn("Can't find registered ui schema for type " + type);
-                return undefined;
+                return emptyView;
         }
     }
 
