@@ -8,8 +8,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  *******************************************************************************/
-import { Command, CommandHandler, CommandRegistry, MenuModelRegistry } from '@theia/core';
-import { AbstractViewContribution } from '@theia/core/lib/browser';
+import { Command, CommandHandler, CommandRegistry, MenuModelRegistry, URI } from '@theia/core';
+import { AbstractViewContribution, WidgetOpenerOptions } from '@theia/core/lib/browser';
 import { TreeEditor } from '@eclipse-emfcloud/theia-tree-editor';
 import { TreeAnchor, TreeContextMenu } from '@eclipse-emfcloud/theia-tree-editor';
 import { generateAddCommandDescriptions } from '@eclipse-emfcloud/theia-tree-editor';
@@ -17,6 +17,7 @@ import { TreeModelService } from './tree-model-service';
 import { inject } from 'inversify';
 import { TreeLabelProvider } from './tree-label-provider';
 import { ProjectSettingsEditorWidget } from './project-settings-editor';
+import { ProjectManager } from '@gestola/project-manager';
 
 export const TreeEditorIntegrationCommand: Command = { id: 'tree-editor:command', label: 'Tree Editor' };
 
@@ -26,6 +27,7 @@ export class TreeEditorContribution extends AbstractViewContribution<ProjectSett
 
     @inject(TreeModelService) modelService: TreeEditor.ModelService;
     @inject(TreeLabelProvider) labelProvider: TreeLabelProvider;
+    @inject(ProjectManager) projManager: ProjectManager;
 
     constructor(
        
@@ -37,9 +39,66 @@ export class TreeEditorContribution extends AbstractViewContribution<ProjectSett
             toggleCommandId: TreeEditorIntegrationCommand.id
         });
     }
-    /**
-     * @returns maps property names to type identifiers to their corresponding add command
-     */
+/*
+    async open(args: Partial<OpenViewArguments> = {}, uri: URI): Promise<ProjectSettingsEditorWidget> {
+        const shell = this.shell;
+        const widget = await this.widgetManager.getOrCreateWidget(this.options.viewContainerId || this.viewId, uri);
+        const tabBar = shell.getTabBarFor(widget);
+        const area = shell.getAreaFor(widget);
+        if (!tabBar) {
+            // The widget is not attached yet, so add it to the shell
+            const widgetArgs: OpenViewArguments = {
+                ...this.defaultViewOptions,
+                ...args
+            };
+            await shell.addWidget(widget, widgetArgs);
+        } else if (args.toggle && area && shell.isExpanded(area) && tabBar.currentTitle === widget.title) {
+            // The widget is attached and visible, so collapse the containing panel (toggle)
+            switch (area) {
+                case 'left':
+                case 'right':
+                    await shell.collapsePanel(area);
+                    break;
+                case 'bottom':
+                    // Don't collapse the bottom panel if it's currently split
+                    if (shell.bottomAreaTabBars.length === 1) {
+                        await shell.collapsePanel('bottom');
+                    }
+                    break;
+                default:
+                    // The main area cannot be collapsed, so close the widget
+                    await this.closeView();
+            }
+            return this.widget;
+        }
+        if (widget.isAttached && args.activate) {
+            await shell.activateWidget(this.viewId);
+        } else if (widget.isAttached && args.reveal) {
+            await shell.revealWidget(this.viewId);
+        }
+        return this.widget;
+    }
+*/
+    async open(uri: URI) {
+        const widget: ProjectSettingsEditorWidget = await this.widgetManager.getOrCreateWidget(ProjectSettingsEditorWidget.ID, uri);
+        await this.doOpen(widget, uri);
+        return widget;
+    }
+    
+    protected async doOpen(widget: ProjectSettingsEditorWidget, uri: URI): Promise<void> {
+        const op: WidgetOpenerOptions = {
+            mode: 'activate',
+        };
+        if (!widget.isAttached) {
+            await this.shell.addWidget(widget, op.widgetOptions || { area: 'main' });
+        }
+        if (op.mode === 'activate') {
+            await this.shell.activateWidget(widget.id);
+        } else if (op.mode === 'reveal') {
+            await this.shell.revealWidget(widget.id);
+        }
+    }
+
     private getCommandMap(): Map<string, TreeEditor.AddCommandDescription> {
         if (!this.commandMap) {
             this.commandMap = generateAddCommandDescriptions(this.modelService);
@@ -49,8 +108,13 @@ export class TreeEditorContribution extends AbstractViewContribution<ProjectSett
 
     override registerCommands(commands: CommandRegistry): void {
         commands.registerCommand(TreeEditorIntegrationCommand, {
-            execute: () => super.openView({ activate: true})
+            execute: (uri: URI) => {
+                uri
+                ? this.open(uri)
+                : this.open(this.projManager.getCurrProject()!.uri.withoutFragment())
+            }
         });
+
         this.getCommandMap().forEach((description, _commandId, _map) => {
             commands.registerCommand(
                 description.command,

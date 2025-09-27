@@ -5,6 +5,8 @@ import { CompositeTreeNode, NodeProps, Tree, TreeImpl, TreeViewWelcomeWidget, Tr
 import { ContextMenuRenderer, TreeModel, TreeProps } from "@theia/core/lib/browser";
 import { ProjectExplorerTreeImpl, ProjectTreeNode } from './project-explorer-tree-impl';
 import { ProjectManager } from '@gestola/project-manager';
+import { CommandService } from '@theia/core/lib/common/command';
+import { TreeEditorIntegrationCommand } from '@gestola/project-settings-editor/lib/frontend/tree-contribution';
 
 export const PROJECT_EXPLORER_WIDGET_TREE_PROPS: TreeProps = {
     ...defaultTreeProps,
@@ -20,6 +22,8 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     static readonly ID = 'gestola:project-explorer';
     static readonly MENU_LABEL = nls.localize("gestola/explorer/view-container-title", "Gestola: Projects Explorer")
     static readonly VIEW_LABEL = nls.localize("gestola/explorer/project-explorer-view-title", "Project Explorer");
+
+    @inject(CommandService) readonly commandService: CommandService;
 
     constructor(
         @inject(TreeProps) override readonly props: TreeProps,
@@ -112,10 +116,15 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 
     protected override renderTailDecorations(node: ProjectTreeNode, props: NodeProps): React.ReactNode {
         return  <div className='result-node-buttons-prebuffer'>
+                    {this.renderSettingsButton(node)}
                     {this.renderSetFavoriteButton(node)}
                     {this.renderRemoveButton(node)}
                     {this.renderCurrentProjectPointer(node)}
                 </div>;
+    }
+
+    protected renderSettingsButton(node: ProjectTreeNode): React.ReactNode {
+        return <span className={`result-node-buttons1 ${codicon('gear')}`} onClick={() => this.commandService.executeCommand(TreeEditorIntegrationCommand.id, node.project.uri.withoutFragment())}></span>;
     }
 
     protected renderSetFavoriteButton(node: ProjectTreeNode): React.ReactNode {

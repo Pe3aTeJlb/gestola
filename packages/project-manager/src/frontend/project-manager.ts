@@ -671,6 +671,10 @@ export class ProjectManager implements FrontendApplicationContribution {
         return this.getCurrLLD()?.getRTLModel();
     }
 
+    public getProjectByUri(uri: URI): Project | undefined {
+        return this.openedProjects.find(e => e.uri.isEqual(uri));
+    }
+
     public getFileSerivce(): FileService {
         return this.fileService;
     }

@@ -11,8 +11,9 @@ import { TreeModelService } from './tree-model-service';
 import { TreeNodeFactory } from './tree-node-factory';
 import { TreeLabelProvider } from './tree-label-provider';
 import { DetailFormWidget, MasterTreeWidget, TREE_PROPS, TreeEditor } from '@eclipse-emfcloud/theia-tree-editor';
-import { ProjectSettingsEditorWidget } from './project-settings-editor';
+import { ProjectSettingsEditorOptions, ProjectSettingsEditorWidget } from './project-settings-editor';
 import { TreeWidget as TheiaTreeWidget } from '@theia/core/lib/browser/tree';
+import { URI } from '@theia/core';
 
 export default new ContainerModule((bind, _unbind) => {
 
@@ -26,7 +27,7 @@ export default new ContainerModule((bind, _unbind) => {
 
     bind<WidgetFactory>(WidgetFactory).toDynamicValue(context => ({
         id: ProjectSettingsEditorWidget.ID,
-        createWidget: () => {
+        createWidget: (uri: URI) => {
 
             const treeContainer = context.container.createChild();
             treeContainer.bind(TreeEditor.ModelService).to(TreeModelService);
@@ -34,6 +35,8 @@ export default new ContainerModule((bind, _unbind) => {
             treeContainer.bind(DetailFormWidget).toSelf();
             treeContainer.bind(MasterTreeWidget).toDynamicValue(context => createTreeWidget(context.container));
             treeContainer.bind(ProjectSettingsEditorWidget).toSelf();
+
+            treeContainer.bind(ProjectSettingsEditorOptions).toConstantValue({ uri });
 
             return treeContainer.get(ProjectSettingsEditorWidget);
         }

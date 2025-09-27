@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Title } from '@lumino/widgets';
 import { BaseWidget, Message, Saveable, SplitPanel, Widget } from '@theia/core/lib/browser';
-import { ILogger } from '@theia/core/lib/common';
+import { ILogger, URI } from '@theia/core/lib/common';
 import { WorkspaceService } from '@theia/workspace/lib/browser/workspace-service';
 import { inject, injectable, postConstruct } from 'inversify';
 import { debounce, isEqual } from 'lodash';
@@ -9,6 +9,10 @@ import { createRoot } from 'react-dom/client';
 import { AddCommandProperty, DetailFormWidget, MasterTreeWidget, TreeEditor } from '@eclipse-emfcloud/theia-tree-editor';
 import { ProjectManager } from '@gestola/project-manager';
 
+export const ProjectSettingsEditorOptions = Symbol('ProjectSettingsEditorOptions');
+export interface ProjectSettingsEditorOptions {
+    uri: URI;
+}
 
 @injectable()
 export abstract class ProjectSettingsEditorWidget extends BaseWidget {
@@ -20,6 +24,7 @@ export abstract class ProjectSettingsEditorWidget extends BaseWidget {
 
     public selectedNode: TreeEditor.Node | undefined;
     protected instanceData: any;
+    private opts: ProjectSettingsEditorOptions;
 
     constructor(
         @inject(MasterTreeWidget)
@@ -33,9 +38,12 @@ export abstract class ProjectSettingsEditorWidget extends BaseWidget {
         protected readonly nodeFactory: TreeEditor.NodeFactory,
         @inject(ProjectManager)
         readonly projManager: ProjectManager,
+        @inject(ProjectSettingsEditorOptions)
+        readonly options: ProjectSettingsEditorOptions,
     ) {
         super();
         this.id = ProjectSettingsEditorWidget.ID;
+        this.opts = options;
         this.splitPanel = new SplitPanel();
         this.addClass(ProjectSettingsEditorWidget.Styles.EDITOR);
         this.splitPanel.addClass(ProjectSettingsEditorWidget.Styles.SASH);
@@ -76,7 +84,7 @@ export abstract class ProjectSettingsEditorWidget extends BaseWidget {
     protected setTreeData(error: boolean): Promise<void> {
         const treeData: TreeEditor.TreeData = {
             error,
-            data: this.projManager.getCurrProject()
+            data: this.projManager.getProjectByUri(this.opts.uri)
         };
         return this.treeWidget.setData(treeData);
     }
