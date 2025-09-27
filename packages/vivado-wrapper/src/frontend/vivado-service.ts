@@ -39,7 +39,7 @@ export class VivadoFrontendService {
 
                 for(let file of model.constrainsFiles){
                     tclScript.push(`add_files -fileset constr_set_${i} ${file.path.fsPath()}`);
-                    switch(model.constrainsFilesUsageMap.get(file)){
+                    switch(model.constrainsFilesUsageMap.get(file.path.base)){
                         case USED_IN_NONE:
                             tclScript.push(`set_property used_in_synthesis false [get_files  ${file.path.fsPath()}]`);
                             tclScript.push(`set_property used_in_implementation false [get_files  ${file.path.fsPath()}]`);
