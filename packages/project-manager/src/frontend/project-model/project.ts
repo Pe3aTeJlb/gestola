@@ -4,19 +4,20 @@ import { FileService } from '@theia/filesystem/lib/browser/file-service';
 import { FileStat } from '@theia/filesystem/lib/common/files';
 import { ProjectManager } from '../project-manager';
 import { Database } from '../../common/database';
+import { SystemModel } from './system-model';
 
 export class Project {
-
-    id = "";
-    typeId = "ProjectModel";
 
     projManager: ProjectManager;
     fileService: FileService;
 
-    projName: string;
+    id = "";
+    typeId = "ProjectModel";
+
+    name: string;
 
     rootFStat: FileStat;
-    rootUri: URI;
+    uri: URI;
 
     systemUri: URI;
     lldsRootUri: URI;
@@ -29,8 +30,10 @@ export class Project {
     analyticsUri: URI;
     dashboardsUri: URI;
 
+    systemModel: SystemModel;
+
     curLLD: LowLevelDesign | undefined;
-    LowLevelDesignes: LowLevelDesign[] = [];
+    lowLevelDesignes: LowLevelDesign[] = [];
     rtlModelDepTree: undefined;
 
     reportDatabaseDescription: Database;
@@ -54,20 +57,21 @@ export class Project {
 
         this.rootFStat = projectRoot;
 
-        this.projName = projectRoot.name;
+        this.name = projectRoot.name;
 
-        this.rootUri = this.rootFStat.resource.normalizePath();
-        this.systemUri = this.rootUri.resolve('system');
-        this.lldsRootUri = this.rootUri.resolve('low_level_design');
-        this.miscUri = this.rootUri.resolve('misc');
-        this.databesUri = this.rootUri.resolve('database');
+        this.uri = this.rootFStat.resource.normalizePath();
+        this.systemUri = this.uri.resolve('system');
+        this.lldsRootUri = this.uri.resolve('low_level_design');
+        this.miscUri = this.uri.resolve('misc');
+        this.databesUri = this.uri.resolve('database');
         this.analyticsDBUri = this.databesUri.resolve('analytics.db');
         this.systemDBUri = this.databesUri.resolve('system.db');
-        this.theiaUri = this.rootUri.resolve('.theia');
-        this.configUri = this.rootUri.resolve('.config');
-        this.analyticsUri = this.rootUri.resolve('analytics');
+        this.theiaUri = this.uri.resolve('.theia');
+        this.configUri = this.uri.resolve('.config');
+        this.analyticsUri = this.uri.resolve('analytics');
         this.dashboardsUri = this.analyticsUri.resolve('dashboards');
 
+        this.systemModel = new SystemModel(this.projManager, this.systemUri)
         this.getDatabaseDescription(this.analyticsDBUri);
         this.getLowLevelDesignList(this.lldsRootUri);
 
@@ -86,11 +90,11 @@ export class Project {
         for(let dir of dirs){
             let uri = new URI(lldsRoot.path.join(dir[0]).fsPath());
             if(await this.checkLLDStruct(uri)){
-                this.LowLevelDesignes.push(new LowLevelDesign(this.projManager, uri));
+                this.lowLevelDesignes.push(new LowLevelDesign(this.projManager, uri));
             }
         }
 
-        this.curLLD = this.LowLevelDesignes[0];
+        this.curLLD = this.lowLevelDesignes[0];
 
     }
 
@@ -113,7 +117,7 @@ export class Project {
 
 
     public async saveMetadata(){
-        this.LowLevelDesignes.forEach(async e => await e.saveMetadata());
+        this.lowLevelDesignes.forEach(async e => await e.saveMetadata());
     }
 
 
@@ -126,17 +130,17 @@ export class Project {
     }
 
     public removeLLD(lld: LowLevelDesign[]){
-        this.LowLevelDesignes = this.LowLevelDesignes.filter(i => !lld.includes(i));
+        this.lowLevelDesignes = this.lowLevelDesignes.filter(i => !lld.includes(i));
     }
 
     public addLLD(lld: LowLevelDesign){
-        this.LowLevelDesignes.push(lld);
+        this.lowLevelDesignes.push(lld);
     }
 
 
 
     public getRootUri(): URI{
-        return this.rootUri;
+        return this.uri;
     }
 
     public getSystemUri(): URI{

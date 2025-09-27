@@ -10,15 +10,15 @@ export const USED_IN_IMPL_ONLY = 3;
 
 export class FPGATopologyModel {
 
-    id = "";
-    typeId = "FPGAModel";
-
     projManager: ProjectManager;
     fileService: FileService;
 
-    name: string;
+    id = "";
+    typeId = "FPGAModel";
 
-    rootUri: URI;
+    name: string;
+    uri: URI;
+
     contrainsUri: URI;
     synthResults: URI;
     implResults: URI;
@@ -34,7 +34,7 @@ export class FPGATopologyModel {
 
         this.name = fpgaModelRoot.path.name;
 
-        this.rootUri = fpgaModelRoot;
+        this.uri = fpgaModelRoot;
         this.contrainsUri = fpgaModelRoot.resolve('constrains');
         this.synthResults = fpgaModelRoot.resolve('synthresults');
         this.implResults = fpgaModelRoot.resolve('implresults');

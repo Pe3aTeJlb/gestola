@@ -30,7 +30,7 @@ export class TestbenchesAddHandler implements UriCommandHandler<URI> {
         let rtlModel = this.projManager.getCurrRTLModel();
 
         if(!rtlModel) return false;
-        if(!rtlModel?.rtlUri.isEqualOrParent(uri)) return false;
+        if(!rtlModel?.uri.isEqualOrParent(uri)) return false;
         if(this.projManager.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(uri)) !== undefined){
             return false;
         }  

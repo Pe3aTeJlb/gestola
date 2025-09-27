@@ -40,17 +40,16 @@ export interface TopModuleMetaDescription {
 
 export class RTLModel {
 
-    id = "";
-    typeId = "RTLModel";
-
     projManager: ProjectManager;
     fileService: FileService;
 
+    id = "";
+    typeId = "RTLModel";
 
-    lldName: string;
+    name: string;
+    uri: URI;
+
     lldUri: URI;
-
-    rtlUri: URI;
     configUri: URI;
     modelUri: URI;
     simResultsUri: URI;
@@ -74,13 +73,13 @@ export class RTLModel {
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
-        this.lldName = lldRoot.path.name;
+        this.name = lldRoot.path.name;
         this.lldUri = lldRoot.normalizePath();
         
-        this.rtlUri = this.lldUri.resolve('rtl');
-        this.modelUri = this.rtlUri.resolve('model');
-        this.simResultsUri = this.rtlUri.resolve('simresults');
-        this.configUri = this.rtlUri.resolve('.config');
+        this.uri = this.lldUri.resolve('rtl');
+        this.modelUri = this.uri.resolve('model');
+        this.simResultsUri = this.uri.resolve('simresults');
+        this.configUri = this.uri.resolve('.config');
         this.veribleFilelistUri = this.configUri.resolve('verible.filelist');
         this.rtlModelDesctiptionUri = this.configUri.resolve('rtlmodel_description.json');
 
@@ -292,7 +291,7 @@ export class RTLModel {
     //Getters
 
     public getRootUri(): URI{ 
-        return this.rtlUri;
+        return this.uri;
     }
     
     public getModelUri(): URI{

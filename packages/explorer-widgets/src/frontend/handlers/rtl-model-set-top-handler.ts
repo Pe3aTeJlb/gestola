@@ -22,7 +22,7 @@ export class RTLModelSetTopModuleHandler implements UriCommandHandler<URI> {
     isEnabled(uri: URI): boolean {
         let rtlModel = this.projManager.getCurrRTLModel();
         if(rtlModel) {
-            return (rtlModel.designIncludedHDLFiles.find(e => uri.isEqual(e)) !== undefined && !rtlModel.topLevelModule?.uri.isEqual(uri) && rtlModel.rtlUri.isEqualOrParent(uri));
+            return (rtlModel.designIncludedHDLFiles.find(e => uri.isEqual(e)) !== undefined && !rtlModel.topLevelModule?.uri.isEqual(uri) && rtlModel.uri.isEqualOrParent(uri));
         } else {
             return false;
         }

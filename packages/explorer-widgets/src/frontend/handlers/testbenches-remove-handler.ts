@@ -31,7 +31,7 @@ export class TestbenchesRemoveHandler implements UriCommandHandler<URI[]> {
 
         let rtlModel = this.projManager.getCurrRTLModel();
         if(!rtlModel) return false;
-        if(uris.filter(e => rtlModel?.rtlUri.isEqualOrParent(e)).length < uris.length) return false;
+        if(uris.filter(e => rtlModel?.uri.isEqualOrParent(e)).length < uris.length) return false;
         if(uris.filter(e => this.projManager.getCurrRTLModel()?.designExcludedHDLFiles.find(i => i.isEqual(e)) !== undefined).length > 0){
             return false;
         }  

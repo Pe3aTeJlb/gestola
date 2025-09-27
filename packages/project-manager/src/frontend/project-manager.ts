@@ -133,7 +133,7 @@ export class ProjectManager implements FrontendApplicationContribution {
                 if(this.getProjectsCount() == 1){
                     this.setProject(this.getOpenedProjects()[0]);
                 } else if(this.projToSet !== undefined){
-                    this.setProject(this.getOpenedProjects().filter(i => i.rootUri.path.fsPath() == this.projToSet?.path.fsPath())[0]);
+                    this.setProject(this.getOpenedProjects().filter(i => i.uri.path.fsPath() == this.projToSet?.path.fsPath())[0]);
                     this.projToSet = undefined;
                 } else {
                     this.setProject(this.getOpenedProjects()[0]);
@@ -226,8 +226,8 @@ export class ProjectManager implements FrontendApplicationContribution {
                     this.messageService.error("Selected directory is not a Gestola project");
                 } else {
                     if(await this.checkForGestolaProject(uri)){
-                        if(this.openedProjects.filter(i => i.rootUri === uri).length > 0) {
-                            this.setProject(this.openedProjects.filter(i => i.rootUri === uri)[0]);
+                        if(this.openedProjects.filter(i => i.uri === uri).length > 0) {
+                            this.setProject(this.openedProjects.filter(i => i.uri === uri)[0]);
                         } else {
                             this.messageService.info("Is Gestola project");
                             this.projToSet = uri;
@@ -249,7 +249,7 @@ export class ProjectManager implements FrontendApplicationContribution {
         for(let i = 0; i < roots.length; i++){
             if(await this.checkForGestolaProject(roots[i].resource)){
                 let j = i;
-                if(this.openedProjects.filter(e => e.rootUri.isEqual(roots[j].resource)).length == 0){
+                if(this.openedProjects.filter(e => e.uri.isEqual(roots[j].resource)).length == 0){
                     this.openedProjects.push(new Project(this, roots[j]));
                 }
             }
@@ -257,7 +257,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
         this.openedProjects.sort((a, b) => {
             if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
-              return a.projName.localeCompare(b.projName);	
+              return a.name.localeCompare(b.name);	
             } else {
               return a.isFavorite ? -1 : 1;
             }
@@ -286,7 +286,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
     async removeProject(proj: Project[]){
         proj.forEach(async e => await this.saveProjectMetaData(e));
-        this.workspaceService.removeRoots(proj.map(i => i.rootUri));
+        this.workspaceService.removeRoots(proj.map(i => i.uri));
     }
 
     setProject(proj: Project){
@@ -315,7 +315,7 @@ export class ProjectManager implements FrontendApplicationContribution {
             return;
         }
 
-        if(this.currProj.LowLevelDesignes.map(e => e.lldName).includes(quickInputResult)){
+        if(this.currProj.lowLevelDesignes.map(e => e.name).includes(quickInputResult)){
             this.messageService.error(`Low Level Design ${quickInputResult} already exists`);
             return;
         }
@@ -349,7 +349,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
             const shouldDelete = await new ConfirmDialog({
                 title: 'Delete confirmation',
-                msg: model.length > 1 ? `Confirm the deletion of multiple rtl models` : `Confirm the deletion of ${model[0].lldName}`,
+                msg: model.length > 1 ? `Confirm the deletion of multiple rtl models` : `Confirm the deletion of ${model[0].name}`,
                 ok: Dialog.YES,
                 cancel: Dialog.CANCEL,
             }).open();
@@ -358,7 +358,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 
                 this.currProj.removeLLD(model);
                 for(let s of model){
-                    await this.fileService.delete(s.lldUri, {
+                    await this.fileService.delete(s.uri, {
                         recursive: true,
                         useTrash: true
                     });
@@ -519,7 +519,7 @@ export class ProjectManager implements FrontendApplicationContribution {
 		return this.onDidChangeLLDListEmitter.event;
 	}
     private fireLLDListChangeEvent(){
-        this.onDidChangeLLDListEmitter.fire({lld: this.currProj?.LowLevelDesignes} as LLDListChangeEvent);
+        this.onDidChangeLLDListEmitter.fire({lld: this.currProj?.lowLevelDesignes} as LLDListChangeEvent);
     }
 
 
@@ -648,11 +648,11 @@ export class ProjectManager implements FrontendApplicationContribution {
     }
 
     public getOpenedProject(uri: URI) : Project[] {
-        return this.openedProjects.filter(i => i.rootUri.path.fsPath() === uri.path.fsPath());
+        return this.openedProjects.filter(i => i.uri.path.fsPath() === uri.path.fsPath());
     }
 
     public isOpenedProject(uri: URI) : boolean{
-        return this.openedProjects.filter(i => i.rootUri.path.fsPath() === uri.path.fsPath()).length > 0;
+        return this.openedProjects.filter(i => i.uri.path.fsPath() === uri.path.fsPath()).length > 0;
     }
 
     public getProjectsCount(): number {

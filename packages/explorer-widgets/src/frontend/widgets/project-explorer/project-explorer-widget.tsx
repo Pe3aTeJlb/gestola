@@ -46,7 +46,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
 		this.projManager.onDidChangeProjectFavoriteStatus(() => this.model.refresh())
 		this.projManager.onDidChangeProject((event) => {
 			if(event.proj){
-				this.title.label = ProjectExplorerWidget.VIEW_LABEL + ": " + event.proj.projName;
+				this.title.label = ProjectExplorerWidget.VIEW_LABEL + ": " + event.proj.name;
 			} else {
 				this.title.label = ProjectExplorerWidget.VIEW_LABEL;
 			}
@@ -131,7 +131,7 @@ export class ProjectExplorerWidget extends TreeViewWelcomeWidget {
     }
 
     protected renderCurrentProjectPointer(node: ProjectTreeNode): React.ReactNode {
-        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.rootUri === node.project.rootUri){
+        if(this.projManager.getCurrProject() && this.projManager.getCurrProject()?.uri === node.project.uri){
             return <span className={`result-node-buttons2 ${codicon('arrow-left')}`}></span>;
         } else {
             return '';

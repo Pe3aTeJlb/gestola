@@ -13,7 +13,7 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
 
     return Promise.resolve(this.projManager.getOpenedProjects().sort((a, b) => {
       if((a.isFavorite && b.isFavorite) || (!a.isFavorite && !b.isFavorite)){
-        return a.projName.localeCompare(b.projName);	
+        return a.name.localeCompare(b.name);	
       } else {
         return a.isFavorite ? -1 : 1;
       }
@@ -23,8 +23,8 @@ export class ProjectExplorerTreeImpl extends TreeImpl {
 
     makeTreeNode(proj: Project) {
       const node: ProjectTreeNode = {
-        id: proj.projName,
-        name: proj.projName,
+        id: proj.name,
+        name: proj.name,
         parent: undefined,
         selected: false,
         visible: true,

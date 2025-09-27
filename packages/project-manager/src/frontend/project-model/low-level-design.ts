@@ -4,6 +4,7 @@ import { FileStat, FileDeleteOptions } from '@theia/filesystem/lib/common/files'
 import { ProjectManager } from '../project-manager';
 import { RTLModel } from './rtl-model';
 import { FPGATopologyModel } from './fpga-topology-model';
+import { VLSITopologyModel } from './vlsi-topology-model';
 
 export const regexp =  [
     new RegExp('rtl'),
@@ -12,16 +13,14 @@ export const regexp =  [
 
 export class LowLevelDesign {
 
-    id = "";
-    typeId = "LowLevelDesignModel";
-
     projManager: ProjectManager;
     fileService: FileService;
 
-    chip: string = 'xc7a100tcsg324-1';
+    id = "";
+    typeId = "LowLevelDesignModel";
 
-    lldName: string;
-    lldUri: URI;
+    name: string;
+    uri: URI;
 
     rtlModel: RTLModel;
 
@@ -32,18 +31,22 @@ export class LowLevelDesign {
     fpgaModels: FPGATopologyModel[] = [];
 
     vlsiUri: URI;
+    currVLSIModel: VLSITopologyModel | undefined;
+    vlsiModels: VLSITopologyModel[] = [];
+
+    chip: string = 'xc7a100tcsg324-1';
     
     constructor(projManager: ProjectManager, lldRoot: URI){
 
         this.projManager = projManager;
         this.fileService = this.projManager.getFileSerivce();
 
-        this.lldName = lldRoot.path.name;
-        this.lldUri = lldRoot.normalizePath();
+        this.name = lldRoot.path.name;
+        this.uri = lldRoot.normalizePath();
 
-        this.rtlModel = new RTLModel(this.projManager, this.lldUri);
+        this.rtlModel = new RTLModel(this.projManager, this.uri);
 
-        this.topologyUri = this.lldUri.resolve('topology');
+        this.topologyUri = this.uri.resolve('topology');
         this.fpgaUri = this.topologyUri.resolve('fpga');
         this.vlsiUri = this.topologyUri.resolve('vlsi');
     
@@ -61,6 +64,14 @@ export class LowLevelDesign {
             }
         }
 
+        stats = await this.fileService.resolve(this.vlsiUri);
+
+        if(stats.children){
+            for(let i of stats.children){
+                this.vlsiModels.push(new VLSITopologyModel(this.projManager, i.resource));
+            }
+        }
+
     }
 
     public setCurrFPGATopologyModel(model: FPGATopologyModel | undefined) {
@@ -72,7 +83,7 @@ export class LowLevelDesign {
     }
 
     public removeFPGATopologyModel(model: FPGATopologyModel){
-        this.fileService.delete(model.rootUri, {recursive: true} as FileDeleteOptions);
+        this.fileService.delete(model.uri, {recursive: true} as FileDeleteOptions);
         this.fpgaModels = this.fpgaModels.filter(e => e !== model);
     }
 
@@ -92,7 +103,7 @@ export class LowLevelDesign {
     }
 
     public getRootUri(): URI{ 
-        return this.lldUri;
+        return this.uri;
     }
 
     public getFPGAUri(): URI{

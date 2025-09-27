@@ -44,7 +44,7 @@ export class LLDExplorerWidget extends TreeWidget {
         this.projManager.onDidChangeLLDList(() => this.model.refresh());
 		this.projManager.onDidChangeLLD((event) => {
 			if(event.lld){
-				this.title.label = LLDExplorerWidget.VIEW_LABEL + ": " + event.lld.lldName;
+				this.title.label = LLDExplorerWidget.VIEW_LABEL + ": " + event.lld.name;
 			} else {
 				this.title.label = LLDExplorerWidget.VIEW_LABEL;
 			}

@@ -13,8 +13,8 @@ export class LLDExplorerTreeImpl extends TreeImpl {
     let proj = this.projManager.getCurrProject();
     if(proj){
     
-      return Promise.resolve(proj.LowLevelDesignes.sort((a, b) => {
-        return a.lldName.localeCompare(b.lldName);
+      return Promise.resolve(proj.lowLevelDesignes.sort((a, b) => {
+        return a.name.localeCompare(b.name);
       }).map(i => this.makeTreeNode(i)));
 
     } else {
@@ -25,8 +25,8 @@ export class LLDExplorerTreeImpl extends TreeImpl {
 
     makeTreeNode(mdl: LowLevelDesign) {
       const node: LLDTreeNode = {
-        id: mdl.lldName,
-        name: mdl.lldName,
+        id: mdl.name,
+        name: mdl.name,
         parent: undefined,
         selected: false,
         visible: true,

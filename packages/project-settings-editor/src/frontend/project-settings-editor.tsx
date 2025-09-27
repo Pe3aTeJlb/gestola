@@ -166,8 +166,8 @@ export abstract class ProjectSettingsEditorWidget extends BaseWidget {
      * @param title The title object configuring this editor's title tab in Theia
      */
     protected configureTitle(title: Title<Widget>): void{
-        title.label = this.projManager.getCurrProject()!.projName;
-        title.caption = this.projManager.getCurrProject()!.projName;
+        title.label = this.projManager.getCurrProject()!.name;
+        title.caption = this.projManager.getCurrProject()!.name;
         title.closable = true;
     }
 }
